@@ -5,6 +5,14 @@
     <link rel="bookmark" href="https://timeplns.netlify.app/" title="TIMEPASS PREMIUM">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timepass Premium | Official</title>
+    <meta name="description" content="TIMEPASS PREMIUM — Market se sasta OTT. Movies & Web Series, Adult aur Combo plans. Instant UPI payment aur fast verification.">
+    <meta name="theme-color" content="#060109">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TIMEPASS PREMIUM | Official">
+    <meta property="og:description" content="Market se sasta OTT — Movies, Web Series, Adult aur Combo plans. Instant UPI payment, fast verification.">
+    <meta property="og:image" content="https://i.ibb.co/7xC7jC8y/your-image.jpg">
+    <meta name="twitter:card" content="summary">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Inter:wght@400;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -564,10 +572,56 @@
             .log-grid{grid-template-columns:1fr}
             .admin-toolbar{align-items:flex-start}
         }
+
+        /* ===== Polish & UX upgrades (added) ===== */
+        ::selection { background: rgba(160,32,240,0.55); color:#fff; }
+        ::-webkit-scrollbar { width:9px; height:9px; }
+        ::-webkit-scrollbar-track { background:#0a0610; }
+        ::-webkit-scrollbar-thumb { background:linear-gradient(180deg,#7c3aed,#a020f0); border-radius:99px; border:2px solid #0a0610; }
+        ::-webkit-scrollbar-thumb:hover { background:#c084fc; }
+        html { scroll-behavior:smooth; }
+
+        /* Cards: subtle hover lift */
+        .card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+        .card:hover { transform: translateY(-3px); border-color: rgba(160,32,240,0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 0 18px rgba(160,32,240,0.12); }
+        @media (hover:none) { .card:hover { transform:none; } }
+
+        /* Buy buttons: press feedback */
+        .glow-wrap { transition: filter .2s ease; }
+        .glow-wrap:active { filter: brightness(1.35); }
+        .glow-wrap:active .btn-live { transform: scale(.97); }
+
+        /* Plan cards: hover + press */
+        .plan-card { transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+        .plan-card:hover { border-color: rgba(160,32,240,0.5); transform: translateY(-2px); }
+        .plan-card:active { transform: scale(.97); }
+
+        /* Header button press */
+        #headerBtn, .welcome-harsh, .premium-copy { transition: transform .15s ease, box-shadow .2s ease; }
+        #headerBtn:active, .welcome-harsh:active, .premium-copy:active { transform: scale(.94); }
+
+        /* Keyboard accessibility */
+        a:focus-visible, button:focus-visible, [onclick]:focus-visible, input:focus-visible {
+            outline: 2px solid #00eaff; outline-offset: 2px; border-radius: 6px;
+        }
+
+        /* Toast notification */
+        #toastHost { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); z-index:999999; display:flex; flex-direction:column; gap:8px; align-items:center; pointer-events:none; width:max-content; max-width:92vw; }
+        .toast { background:rgba(12,6,20,.96); border:1px solid rgba(160,32,240,.65); color:#f0e6ff; font-size:12px; font-weight:700; letter-spacing:.5px; padding:11px 18px; border-radius:999px; box-shadow:0 0 22px rgba(160,32,240,.45); backdrop-filter:blur(10px); animation: toastIn .25s ease both; }
+        .toast.out { animation: toastOut .3s ease both; }
+        @keyframes toastIn { from { opacity:0; transform:translateY(14px) scale(.92); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes toastOut { to { opacity:0; transform:translateY(10px) scale(.94); } }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+            html { scroll-behavior:auto; }
+        }
 </style>
 
 </head>
 <body>
+    <div id="toastHost" aria-live="polite"></div>
 
     <!-- Popup Modal -->
     <div id="customModal" class="modal-overlay">
@@ -593,7 +647,7 @@
 
         <div class="qr-box">
           <div class="qr-code-img">
-            <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=https%3A%2F%2Ftimeplns.netlify.app%2F" alt="Telegram QR Code">
+            <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=https%3A%2F%2Ftimeplns.netlify.app%2F" alt="Telegram QR Code" loading="lazy" decoding="async">
           </div>
           <div class="qr-details">
             <span class="qr-title">OFFICIAL QR CODE</span>
@@ -692,7 +746,7 @@
         <div class="hero">
             <button class="welcome-harsh" onclick="trackHarsh()">WELCOME HARSH 🚩</button>
             <br>
-            <img src="https://i.ibb.co/7xC7jC8y/your-image.jpg" class="hero-img" alt="Timepass">
+            <img src="https://i.ibb.co/7xC7jC8y/your-image.jpg" class="hero-img" alt="TIMEPASS PREMIUM" width="140" height="140" decoding="async">
             <h1 class="main-title">TIMEPASS PREMIUM</h1>
             <p style="font-size:10px; letter-spacing:4px; color:rgba(255,255,255,0.3);">MARKET SE SASTA OTT 🔥</p>
         </div>
@@ -755,7 +809,7 @@
                 <div class="upi-pay-card">
                     <div class="upi-qr-wrap">
                         <div class="upi-qr-frame">
-                            <img id="upiQrImage" alt="Dynamic UPI QR Code">
+                            <img id="upiQrImage" alt="Dynamic UPI QR Code" decoding="async">
                         </div>
                     </div>
 
@@ -917,6 +971,17 @@
         function closeModal() {
             const modal = document.getElementById('customModal');
             if (modal) modal.style.display = 'none';
+        }
+
+        /* Lightweight toast — blocking alert() ki jagah */
+        function showToast(msg) {
+            const host = document.getElementById('toastHost');
+            if (!host) { alert(msg); return; }
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            host.appendChild(t);
+            setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 320); }, 1800);
         }
 
         setTimeout(() => {
@@ -1250,14 +1315,6 @@
     }
 }
 
-
-            const error = document.getElementById("adminError");
-            if (error) {
-                error.textContent = "Invalid admin credentials.";
-                error.classList.add("show");
-            }
-        }
-
         function exportAdminLogs() {
             const data = JSON.stringify(readLocalVisits(), null, 2);
             const blob = new Blob([data], { type: "application/json" });
@@ -1517,8 +1574,18 @@
         }
 
         function copyUPI() {
-            navigator.clipboard.writeText(UPI);
-            alert("UPI ID Copied!");
+            const done = () => showToast("✅ UPI ID Copied!");
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(UPI).then(done).catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = UPI; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    document.body.appendChild(ta); ta.select();
+                    try { document.execCommand('copy'); done(); } catch (_) { alert("UPI ID: " + UPI); }
+                    ta.remove();
+                });
+            } else {
+                alert("UPI ID: " + UPI);
+            }
 
             const msg =
 `📋 <b>CLIPBOARD · UPI COPIED</b>
