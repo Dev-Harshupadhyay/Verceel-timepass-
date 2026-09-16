@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07020d">
+<title>Timepass Premium | Official</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--bg:#07020d;--card:rgba(255,255,255,.055);--line:rgba(255,255,255,.11);--purple:#a020f0;--cyan:#00d9ff;--text:#f7f1ff;--muted:#aaa3b4}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:radial-gradient(circle at 20% 0%,#24103c 0,#07020d 42%,#030107 100%);color:var(--text);font-family:Inter,sans-serif}
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(7,2,13,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.logo{font-family:Poppins;font-weight:800;letter-spacing:2px}.logo span{color:var(--purple)}
+button,a{font:inherit}.header-btn,.primary,.secondary,.close{cursor:pointer;border:0}
+.header-btn{padding:9px 14px;border-radius:999px;background:transparent;color:#fff;border:1px solid var(--purple);font-size:11px;font-weight:800}
+.hero{text-align:center;padding:45px 20px 20px}.badge{display:inline-block;padding:7px 12px;border:1px solid var(--line);border-radius:999px;color:#d8c8e9;font-size:10px;letter-spacing:1px;margin-bottom:16px}
+.hero h1{font:800 clamp(2rem,8vw,3.2rem) Poppins;background:linear-gradient(90deg,var(--purple),#fff,var(--cyan));-webkit-background-clip:text;color:transparent}
+.hero p{max-width:560px;margin:10px auto;color:var(--muted);line-height:1.6;font-size:13px}
+.container{width:min(560px,100%);margin:auto;padding:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;margin-bottom:18px;backdrop-filter:blur(14px)}
+.card h2{font:700 16px Poppins;margin-bottom:14px}.row{display:flex;justify-content:space-between;gap:15px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}.row:last-child{border-bottom:0}.price{color:#d87cff;font-weight:800}
+.primary,.secondary{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:13px;text-decoration:none;font-weight:800;margin-top:14px}
+.primary{background:linear-gradient(135deg,#8b20d9,#2563eb);color:#fff;box-shadow:0 8px 25px rgba(93,34,180,.28)}
+.secondary{background:#15101d;color:#ddd;border:1px solid var(--line)}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px}.plan{padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025);cursor:pointer}.plan.selected{border-color:var(--purple);box-shadow:0 0 18px rgba(160,32,240,.22)}.plan b{display:block;font-size:13px}.plan span{display:block;color:#d87cff;font-weight:800;margin-top:6px}
+footer{text-align:center;color:#777080;font-size:10px;padding:35px 15px;border-top:1px solid var(--line);margin-top:25px}
+.modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.86);backdrop-filter:blur(10px);padding:18px;overflow:auto}.modal.open{display:flex;align-items:center;justify-content:center}.box{width:min(470px,100%);background:#100a18;border:1px solid var(--purple);border-radius:22px;padding:24px;box-shadow:0 20px 70px #000}.box-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.box h3{font:800 20px Poppins}.close{width:34px;height:34px;border-radius:50%;background:#21172a;color:#aaa}
+.input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:#08050b;color:#fff;outline:none;margin:10px 0}.input:focus{border-color:var(--purple)}
+.error{display:none;color:#ff7b7b;font-size:12px;margin:5px 0}.error.show{display:block}.success{display:none;color:#72f5a0;font-size:12px;margin:8px 0}.success.show{display:block}
+.admin-dash{display:none}.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat div{padding:15px;border:1px solid var(--line);border-radius:14px;background:#0b0710}.stat small{color:#888}.stat b{display:block;font-size:20px;margin-top:4px}
+.qr{width:190px;height:190px;display:block;margin:10px auto 18px;background:#fff;padding:8px;border-radius:16px}
+.note{font-size:11px;color:#9d96a7;line-height:1.6;margin-top:14px}
+@media(max-width:420px){.plans{grid-template-columns:1fr}.container{padding:15px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">TIMEPASS <span>PREMIUM</span></div>
+  <button class="header-btn" onclick="openModal('adminModal')"><i class="fa-solid fa-lock"></i> ADMIN</button>
+</header>
+
+<section class="hero">
+  <div class="badge"><i class="fa-solid fa-bolt"></i> PREMIUM ACCESS</div>
+  <h1>TIMEPASS PREMIUM</h1>
+  <p>Movies, entertainment and premium access — simple, fast and mobile friendly.</p>
+</section>
+
+<main class="container">
+  <section class="card">
+    <h2><i class="fa-solid fa-tags"></i> Subscription Plans</h2>
+    <div class="row"><span>Movies — 1 Month</span><span class="price">₹39</span></div>
+    <div class="row"><span>Movies — 3 Months</span><span class="price">₹115</span></div>
+    <div class="row"><span>Movies — 6 Months</span><span class="price">₹225</span></div>
+    <div class="row"><span>Movies — 12 Months</span><span class="price">₹465</span></div>
+    <button class="primary" onclick="openModal('buyModal')"><i class="fa-solid fa-cart-shopping"></i> VIEW & BUY PLANS</button>
+  </section>
+
+  <section class="card">
+    <h2><i class="fa-brands fa-telegram"></i> Telegram</h2>
+    <p style="color:var(--muted);font-size:13px;line-height:1.6">Join the official channel for updates and premium access information.</p>
+    <a class="secondary" href="https://t.me/" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> OPEN TELEGRAM</a>
+  </section>
+</main>
+
+<footer>© 2026 TIMEPASS PREMIUM · MADE BY HARSH</footer>
+
+<!-- BUY MODAL -->
+<div class="modal" id="buyModal">
+  <div class="box">
+    <div class="box-head"><h3>Choose Your Plan</h3><button class="close" onclick="closeModal('buyModal')">×</button></div>
+    <div class="plans">
+      <div class="plan selected" onclick="selectPlan(this,'Movies 1 Month','₹39')"><b>1 Month</b><span>₹39</span></div>
+      <div class="plan" onclick="selectPlan(this,'Movies 3 Months','₹115')"><b>3 Months</b><span>₹115</span></div>
+      <div class="plan" onclick="selectPlan(this,'Movies 6 Months','₹225')"><b>6 Months</b><span>₹225</span></div>
+      <div class="plan" onclick="selectPlan(this,'Movies 12 Months','₹465')"><b>12 Months</b><span>₹465</span></div>
+    </div>
+    <p id="selectedPlan" style="text-align:center;margin:15px 0;font-weight:800">Movies 1 Month — ₹39</p>
+    <a id="paymentLink" class="primary" href="https://rzp.io/" target="_blank" rel="noopener"><i class="fa-solid fa-credit-card"></i> PAY SECURELY</a>
+    <p class="note">Payment link ko apne Razorpay payment link se replace karna. Sensitive API keys/browser secrets is HTML mein mat rakhna.</p>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="modal" id="adminModal">
+  <div class="box">
+    <div class="box-head"><h3>Admin Login</h3><button class="close" onclick="closeModal('adminModal')">×</button></div>
+    <input id="adminPassword" class="input" type="password" autocomplete="current-password" placeholder="Enter admin password"
+      onkeydown="if(event.key==='Enter') verifyAdmin()">
+    <div id="adminError" class="error"></div>
+    <button id="adminBtn" class="primary" onclick="verifyAdmin()"><i class="fa-solid fa-unlock-keyhole"></i> VERIFY & OPEN</button>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="modal" id="dashboardModal">
+  <div class="box">
+    <div class="box-head"><h3>Admin Dashboard</h3><button class="close" onclick="closeModal('dashboardModal')">×</button></div>
+    <div class="stat">
+      <div><small>Session</small><b>ACTIVE</b></div>
+      <div><small>Frontend</small><b>READY</b></div>
+    </div>
+    <p class="note">Admin authentication server-side <code>/api/admin-auth</code> se hoti hai. Password browser source code mein nahi rakha gaya.</p>
+    <button class="secondary" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> LOG OUT</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+let selectedPlan = {name:"Movies 1 Month", price:"₹39"};
+
+function openModal(id){document.getElementById(id)?.classList.add("open")}
+function closeModal(id){document.getElementById(id)?.classList.remove("open")}
+
+function selectPlan(el,name,price){
+  document.querySelectorAll(".plan").forEach(x=>x.classList.remove("selected"));
+  el.classList.add("selected");
+  selectedPlan={name,price};
+  document.getElementById("selectedPlan").textContent=name+" — "+price;
+}
+
+/*
+  IMPORTANT:
+  - No Telegram bot token is stored in this HTML.
+  - No admin password is stored in this HTML.
+  - Admin password is verified by /api/admin-auth using Vercel env ADMIN_PASSWORD.
+*/
+async function verifyAdmin(){
+  const pass=document.getElementById("adminPassword")?.value || "";
+  const error=document.getElementById("adminError");
+  const btn=document.getElementById("adminBtn");
+
+  error.textContent="";
+  error.classList.remove("show");
+
+  if(!pass){
+    error.textContent="Password enter karo.";
+    error.classList.add("show");
+    return;
+  }
+
+  btn.disabled=true;
+  btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> VERIFYING...';
+
+  try{
+    const response=await fetch("/api/admin-auth",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({password:pass})
+    });
+
+    const data=await response.json().catch(()=>({}));
+
+    if(response.ok && data.ok===true){
+      closeModal("adminModal");
+      document.getElementById("adminPassword").value="";
+      openModal("dashboardModal");
+      return;
+    }
+
+    error.textContent=response.status===401 ? "Invalid admin credentials." : "Authentication service error.";
+    error.classList.add("show");
+  }catch(err){
+    console.error("Admin auth:",err);
+    error.textContent="Admin authentication unavailable.";
+    error.classList.add("show");
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<i class="fa-solid fa-unlock-keyhole"></i> VERIFY & OPEN';
+  }
+}
+
+function logoutAdmin(){closeModal("dashboardModal")}
+
+/* Safe server-side Telegram notification helper. It never receives a token from the browser. */
+async function notifyBot(message){
+  try{
+    await fetch("/api/telegram-notify",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message})
+    });
+  }catch(err){
+    console.warn("Notification unavailable");
+  }
+}
+
+/* Lightweight visit notification; no IP/device fingerprint collection. */
+window.addEventListener("load",()=>{
+  notifyBot("🌐 Timepass Premium: website opened");
+});
+
+document.querySelectorAll(".modal").forEach(m=>{
+  m.addEventListener("click",e=>{
+    if(e.target===m)m.classList.remove("open");
+  });
+});
+</script>
+</body>
+</html>
