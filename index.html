@@ -632,48 +632,201 @@
         .theme-chip span { font-size:8.5px; font-weight:900; letter-spacing:.8px; color:var(--muted); line-height:1.3; }
         .theme-chip.active span { color:var(--gold-hi); }
 
-        /* ═══════════ ADMIN ═══════════ */
-        .admin-overlay { position:fixed; inset:0; background:rgba(var(--scrim-rgb),.88); backdrop-filter:blur(12px); z-index:7000; display:none; }
+        /* ═══════════════════════ ADMIN CONTROL CENTER ═══════════════════════ */
+        .admin-overlay { position:fixed; inset:0; background:rgba(var(--scrim-rgb),.92); backdrop-filter:blur(14px);
+            z-index:7000; display:none; overflow-y:auto; overscroll-behavior:contain; }
         .admin-overlay.open { display:block; }
-        .admin-shell { max-width:640px; margin:0 auto; min-height:100%; border-radius:0;
-            background:linear-gradient(180deg,var(--surf-1),var(--bg)); border-left:1px solid var(--line); border-right:1px solid var(--line); }
-        .admin-header { padding:22px 20px 16px; border-bottom:1px solid var(--line); }
-        .admin-gate { display:flex; flex-direction:column; justify-content:center; min-height:76vh; padding:20px; text-align:center; }
-        .lock-ico { width:56px; height:56px; margin:0 auto 16px; border-radius:18px; display:grid; place-items:center;
-            background:rgba(var(--acc-rgb),.1); color:var(--gold); font-size:1.3rem; border:1px solid var(--line-hi); }
+        .admin-shell { max-width:720px; margin:0 auto; min-height:100%;
+            background:linear-gradient(180deg, var(--surf-1), var(--bg) 60%);
+            border-left:1px solid var(--line); border-right:1px solid var(--line);
+            display:flex; flex-direction:column; }
+
+        .admin-header { position:sticky; top:0; z-index:5; padding:16px 18px 14px; border-bottom:1px solid var(--line);
+            background:rgba(var(--bg-rgb),.9); backdrop-filter:blur(16px); }
+        .admin-header .ah-row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+        .admin-header h3 { font-family:'Playfair Display',serif; font-size:clamp(.95rem,3.6vw,1.1rem); margin-top:3px; }
+
+        /* ---- GATE ---- */
+        .admin-gate { display:flex; flex-direction:column; justify-content:center; align-items:center;
+            min-height:70vh; padding:24px 20px; text-align:center; }
+        .gate-box { width:100%; max-width:360px; }
+        .lock-ico { width:64px; height:64px; margin:0 auto 18px; border-radius:21px; display:grid; place-items:center;
+            background:rgba(var(--acc-rgb),.1); color:var(--gold); font-size:1.5rem; border:1px solid var(--line-hi);
+            box-shadow:0 0 30px rgba(var(--acc-rgb),.18), inset 0 1px 0 rgba(var(--hl-rgb),.08); }
+        .pw-wrap { position:relative; }
         .admin-input {
-            width:100%; padding:15px 16px; border-radius:14px; text-align:center; letter-spacing:3px;
-            background:rgba(var(--shadow-rgb),.4); border:1px solid var(--line-hi); color:var(--gold-hi);
-            font-family:'Space Mono',monospace; font-size:14px; outline:none;
+            width:100%; padding:16px 48px 16px 16px; border-radius:15px; text-align:center; letter-spacing:3px;
+            background:rgba(var(--shadow-rgb),.35); border:1px solid var(--line-hi); color:var(--gold-hi);
+            font-family:'Space Mono',monospace; font-size:14px; outline:none; transition:border-color .2s, box-shadow .2s;
         }
-        .admin-input:focus { border-color:var(--gold); box-shadow:0 0 18px rgba(var(--acc-rgb),.22); }
+        .admin-input:focus { border-color:var(--gold); box-shadow:0 0 20px rgba(var(--acc-rgb),.24); }
+        .pw-eye { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:36px; height:36px;
+            border:none; background:transparent; color:var(--faint); cursor:pointer; font-size:.85rem; border-radius:10px; }
+        .pw-eye:hover { color:var(--gold-hi); }
         .admin-primary {
-            width:100%; padding:15px; margin-top:12px; border:1px solid rgba(var(--acc-hi-rgb),.85); border-radius:14px; cursor:pointer;
+            width:100%; padding:16px; margin-top:12px; border:1px solid rgba(var(--acc-hi-rgb),.85); border-radius:15px; cursor:pointer;
             background:var(--gold-grad); background-size:220% 100%; animation:goldslide 6s linear infinite;
             color:var(--on-acc); font-weight:900; letter-spacing:2px; font-size:11px;
             box-shadow:0 8px 26px rgba(var(--acc-rgb),.3), inset 0 1px 0 rgba(var(--hl-rgb),.5);
+            transition:filter .2s, transform .15s;
         }
+        .admin-primary:hover:not(:disabled) { filter:brightness(1.08); }
+        .admin-primary:active:not(:disabled) { transform:scale(.98); }
         .admin-primary:disabled { opacity:.6; cursor:wait; }
-        .admin-error { color:var(--err); font-size:10.5px; margin-top:10px; min-height:14px; letter-spacing:.5px; }
-        .admin-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
-        .stat-card { padding:14px 10px; text-align:center; border:1px solid var(--line); border-radius:15px; background:var(--lacquer); }
-        .stat-card b { font-family:'Space Mono'; font-size:1.15rem; display:block; color:var(--gold-hi); }
-        .stat-card small { font-size:8px; letter-spacing:1.5px; color:var(--faint); font-weight:900; }
+        .admin-error { color:var(--err); font-size:10.5px; margin-top:11px; min-height:15px; letter-spacing:.4px; line-height:1.5; }
+
+        /* ---- WELCOME BANNER ---- */
+        .admin-welcome {
+            position:relative; overflow:hidden; margin:14px 16px 0; padding:18px 17px; border-radius:20px;
+            border:1px solid var(--line-hi); background:var(--lacquer);
+            box-shadow:0 14px 34px rgba(var(--shadow-rgb),.4), inset 0 1px 0 rgba(var(--hl-rgb),.06);
+        }
+        .admin-welcome::after { content:''; position:absolute; top:-70px; right:-50px; width:190px; height:190px;
+            border-radius:50%; background:radial-gradient(circle, rgba(var(--acc-rgb),.26), transparent 68%); pointer-events:none; }
+        .aw-row { display:flex; align-items:center; gap:14px; position:relative; }
+        .aw-crown { width:52px; height:52px; border-radius:17px; display:grid; place-items:center; flex:0 0 auto;
+            font-size:1.3rem; color:var(--on-acc); background:var(--gold-grad); background-size:220% auto;
+            animation:goldslide 6s linear infinite; box-shadow:0 0 24px rgba(var(--acc-rgb),.42), inset 0 1px 0 rgba(var(--hl-rgb),.5); }
+        .aw-txt { min-width:0; }
+        .aw-hi { display:block; font-size:8px; letter-spacing:2px; color:var(--gold); font-weight:900; }
+        .aw-name { display:block; font-family:'Playfair Display',serif; font-size:clamp(1.1rem,4.6vw,1.4rem); line-height:1.2; margin-top:3px; }
+        .aw-sub { display:block; font-family:'Space Mono',monospace; font-size:9px; color:var(--faint); margin-top:4px; }
+        .aw-logout { margin-left:auto; flex:0 0 auto; border:1px solid var(--line-hi); background:rgba(var(--acc-rgb),.07);
+            color:var(--gold-hi); border-radius:99px; padding:8px 13px; font-size:9px; font-weight:900;
+            letter-spacing:1.2px; cursor:pointer; white-space:nowrap; }
+        .aw-logout:active { transform:scale(.94); }
+
+        /* ---- storage status chip ---- */
+        .store-chip { display:inline-flex; align-items:center; gap:7px; margin-top:13px; padding:7px 13px;
+            border-radius:99px; font-size:8.5px; font-weight:900; letter-spacing:1.2px; border:1px solid var(--line-hi);
+            background:rgba(var(--acc-rgb),.06); color:var(--muted); position:relative; }
+        .store-chip i { font-size:7px; }
+        .store-chip.live   { color:#6ee7a8; border-color:rgba(110,231,168,.45); background:rgba(110,231,168,.09); }
+        .store-chip.draft  { color:#f5c451; border-color:rgba(245,196,81,.45);  background:rgba(245,196,81,.09); }
+        .store-chip.code   { color:var(--muted); }
+
+        /* ---- TABS ---- */
+        .admin-tabs { display:flex; gap:6px; padding:14px 16px 0; overflow-x:auto; scrollbar-width:none; }
+        .admin-tabs::-webkit-scrollbar { display:none; }
+        .atab { flex:0 0 auto; border:1px solid var(--line); background:rgba(var(--acc-rgb),.04); color:var(--muted);
+            border-radius:13px; padding:10px 14px; font-size:9.5px; font-weight:900; letter-spacing:1.2px;
+            cursor:pointer; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; }
+        .atab i { font-size:10px; }
+        .atab:hover { border-color:var(--line-hi); color:var(--ink); }
+        .atab.active { color:var(--on-acc); background:var(--gold-grad); background-size:220% auto;
+            border-color:transparent; box-shadow:0 6px 18px rgba(var(--acc-rgb),.28); animation:goldslide 6s linear infinite; }
+        .apane { display:none; padding:16px 16px calc(34px + var(--safe-b)); }
+        .apane.active { display:block; animation:fadeUp .25s ease both; }
+
+        /* ---- stats ---- */
+        .admin-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:16px; }
+        .stat-card { padding:15px 9px; text-align:center; border:1px solid var(--line); border-radius:16px; background:var(--lacquer); }
+        .stat-card b { font-family:'Space Mono',monospace; font-size:clamp(.95rem,4vw,1.2rem); display:block; color:var(--gold-hi); }
+        .stat-card small { font-size:7.5px; letter-spacing:1.3px; color:var(--faint); font-weight:900; }
+
+        /* ---- generic admin blocks ---- */
+        .ablock { border:1px solid var(--line); border-radius:19px; padding:15px 14px; margin-bottom:13px; background:var(--lacquer); }
+        .ablock-head { display:flex; align-items:center; gap:10px; margin-bottom:13px; }
+        .ablock-head .abh-ico { width:34px; height:34px; border-radius:11px; display:grid; place-items:center; flex:0 0 auto;
+            background:rgba(var(--acc-rgb),.1); border:1px solid var(--line); color:var(--gold); font-size:.82rem; }
+        .ablock-head b { font-family:'Playfair Display',serif; font-size:.98rem; display:block; }
+        .ablock-head small { font-size:8.5px; letter-spacing:1.3px; color:var(--faint); font-weight:900; }
+
+        /* ---- price editor rows ---- */
+        .prow { display:grid; grid-template-columns:1fr 104px; gap:9px; align-items:center;
+            padding:10px 0; border-bottom:1px dashed rgba(var(--acc-rgb),.14); }
+        .prow:last-child { border-bottom:none; }
+        .prow-lab { min-width:0; }
+        .prow-lab b { display:block; font-size:11.5px; font-weight:700; color:var(--ink); }
+        .prow-lab small { display:block; font-size:8px; letter-spacing:1px; color:var(--faint); font-weight:800; margin-top:2px; }
+        .price-input-wrap { position:relative; }
+        .price-input-wrap::before { content:'₹'; position:absolute; left:11px; top:50%; transform:translateY(-50%);
+            color:var(--gold); font-family:'Space Mono',monospace; font-size:12px; font-weight:700; pointer-events:none; }
+        .price-input {
+            width:100%; padding:11px 10px 11px 25px; border-radius:12px; text-align:right;
+            background:rgba(var(--shadow-rgb),.3); border:1px solid var(--line-hi); color:var(--gold-hi);
+            font-family:'Space Mono',monospace; font-size:14px; font-weight:700; outline:none;
+            -moz-appearance:textfield; transition:border-color .2s, box-shadow .2s;
+        }
+        .price-input::-webkit-outer-spin-button, .price-input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+        .price-input:focus { border-color:var(--gold); box-shadow:0 0 16px rgba(var(--acc-rgb),.22); }
+        .price-input.changed { border-color:#f5c451; box-shadow:0 0 14px rgba(245,196,81,.25); }
+
+        .rzp-line { grid-column:1 / -1; display:flex; align-items:center; gap:8px; margin-top:-2px; }
+        .rzp-line label { font-size:7.5px; letter-spacing:1.1px; color:var(--faint); font-weight:900; flex:0 0 auto; }
+        .rzp-input { flex:1 1 auto; min-width:0; padding:8px 11px; border-radius:10px;
+            background:rgba(var(--shadow-rgb),.25); border:1px solid var(--line); color:var(--muted);
+            font-family:'Space Mono',monospace; font-size:10px; outline:none; }
+        .rzp-input:focus { border-color:var(--line-hi); color:var(--gold-hi); }
+        .rzp-input::placeholder { color:var(--faint); opacity:.6; }
+
+        /* ---- settings fields ---- */
+        .afield { margin-bottom:12px; }
+        .afield label { display:block; font-size:8.5px; letter-spacing:1.4px; color:var(--faint); font-weight:900; margin-bottom:6px; }
+        .atext { width:100%; padding:12px 13px; border-radius:12px;
+            background:rgba(var(--shadow-rgb),.3); border:1px solid var(--line-hi); color:var(--ink);
+            font-family:'Inter',sans-serif; font-size:12.5px; outline:none; transition:border-color .2s, box-shadow .2s; }
+        .atext:focus { border-color:var(--gold); box-shadow:0 0 16px rgba(var(--acc-rgb),.2); }
+        .afield small.hint { display:block; font-size:8.5px; color:var(--faint); margin-top:5px; line-height:1.5; }
+
+        /* ---- action bar ---- */
+        .admin-actions { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:14px; }
+        .admin-actions .wide { grid-column:1 / -1; }
+        .soft-btn { width:100%; padding:13px 10px; border-radius:13px; border:1px solid var(--line-hi);
+            background:rgba(var(--acc-rgb),.06); color:var(--gold-hi); font-size:10px; font-weight:900;
+            letter-spacing:1.3px; cursor:pointer; transition:all .18s; display:flex; align-items:center;
+            justify-content:center; gap:7px; }
+        .soft-btn:hover { background:rgba(var(--acc-rgb),.12); }
+        .soft-btn:active { transform:scale(.97); }
+        .soft-btn.danger { color:#f0a3a3; border-color:rgba(240,163,163,.4); background:rgba(240,163,163,.07); }
         .admin-toolbar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
-        .admin-toolbar .soft-btn { flex:1; min-width:120px; }
-        .admin-log { border:1px solid var(--line); border-radius:15px; padding:14px; margin-bottom:10px; background:rgba(var(--acc-rgb),.03); }
-        .log-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-        .log-live { font-size:8.5px; letter-spacing:2px; color:var(--gold-hi); font-weight:900; display:flex; align-items:center; gap:6px; }
+        .admin-toolbar .soft-btn { flex:1; min-width:130px; }
+
+        /* ---- code output ---- */
+        .code-out { width:100%; min-height:190px; margin-top:11px; padding:13px; border-radius:14px; resize:vertical;
+            background:rgba(var(--shadow-rgb),.4); border:1px solid var(--line-hi); color:var(--gold-hi);
+            font-family:'Space Mono',monospace; font-size:10px; line-height:1.65; outline:none; white-space:pre; }
+
+        /* ---- notes ---- */
+        .anote { border:1px solid var(--line); border-radius:14px; padding:13px 14px; font-size:10px;
+            color:var(--muted); line-height:1.75; background:rgba(var(--acc-rgb),.04); margin-top:12px; }
+        .anote b { color:var(--gold-hi); }
+        .anote.warn { border-color:rgba(245,196,81,.4); background:rgba(245,196,81,.07); }
+        .anote ol, .anote ul { margin:7px 0 0 16px; }
+        .anote li { margin-bottom:5px; }
+
+        /* ---- visitor logs ---- */
+        .admin-log { border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:10px; background:rgba(var(--acc-rgb),.03); }
+        .log-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:11px; gap:10px; }
+        .log-live { font-size:8.5px; letter-spacing:1.8px; color:var(--gold-hi); font-weight:900; display:flex; align-items:center; gap:6px; }
         .log-live i { width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); animation:pulse 1.5s infinite; }
-        .log-top time { font-size:9px; color:var(--faint); }
-        .log-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+        .log-top time { font-size:9px; color:var(--faint); white-space:nowrap; }
+        .log-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
         @media(min-width:520px){ .log-grid { grid-template-columns:repeat(4,1fr); } }
-        .log-grid small { display:block; font-size:7.5px; letter-spacing:1.5px; color:var(--faint); font-weight:900; }
+        .log-grid small { display:block; font-size:7.5px; letter-spacing:1.3px; color:var(--faint); font-weight:900; }
         .log-grid b { font-size:10.5px; color:var(--ink); word-break:break-word; }
-        .admin-empty { text-align:center; padding:44px 16px; color:var(--faint); }
-        .admin-empty i { font-size:1.6rem; color:var(--gold); opacity:.6; }
-        .admin-empty b { display:block; margin:10px 0 4px; color:var(--muted); font-size:12px; }
+        .admin-empty { text-align:center; padding:46px 16px; color:var(--faint); }
+        .admin-empty i { font-size:1.7rem; color:var(--gold); opacity:.6; }
+        .admin-empty b { display:block; margin:11px 0 4px; color:var(--muted); font-size:12px; }
         .admin-empty small { font-size:10px; }
+
+        /* ---- admin responsive ---- */
+        @media(max-width:400px){
+            .admin-welcome { margin:12px 12px 0; padding:15px 14px; border-radius:18px; }
+            .aw-crown { width:46px; height:46px; font-size:1.15rem; border-radius:15px; }
+            .aw-logout { padding:7px 10px; font-size:8.5px; }
+            .admin-tabs { padding:12px 12px 0; gap:5px; }
+            .atab { padding:9px 11px; font-size:9px; letter-spacing:.9px; }
+            .apane { padding:14px 12px calc(30px + var(--safe-b)); }
+            .ablock { padding:13px 12px; border-radius:17px; }
+            .prow { grid-template-columns:1fr 92px; gap:8px; }
+            .price-input { font-size:13px; padding:10px 8px 10px 23px; }
+            .admin-actions { gap:8px; }
+        }
+        @media(max-width:330px){
+            .prow { grid-template-columns:1fr 82px; }
+            .admin-actions { grid-template-columns:1fr; }
+        }
 
         /* ═══════════ TOAST ═══════════ */
         #toastHost { position:fixed; left:50%; bottom:calc(24px + var(--safe-b)); transform:translateX(-50%); z-index:99999;
@@ -836,7 +989,7 @@
             <button class="x-btn" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             <div class="eyebrow">● TIMEPASS PREMIUM NOTICE</div>
             <h2>Join Our Official Telegram Channel</h2>
-            <a class="tg-btn-main" href="https://t.me/TIMEPASS_BACKUP_1" target="_blank" rel="noopener noreferrer">
+            <a class="tg-btn-main" data-link="channel" href="https://t.me/TIMEPASS_BACKUP_1" target="_blank" rel="noopener noreferrer">
                 <span><b>OFFICIAL CHANNEL</b><small>JOIN TELEGRAM CHANNEL</small></span>
                 <i class="fa-solid fa-arrow-right"></i>
             </a>
@@ -895,7 +1048,7 @@
                 <div class="dev-tags">
                     <span>HTML / CSS</span><span>JavaScript</span><span>Python</span><span>Telegram Bots</span><span>UI / UX</span>
                 </div>
-                <a class="dev-cta" href="https://t.me/pmharsh" target="_blank" rel="noopener noreferrer">
+                <a class="dev-cta" data-link="telegram" href="https://t.me/pmharsh" target="_blank" rel="noopener noreferrer">
                     <i class="fa-brands fa-telegram"></i> HIRE / CONTACT HARSH
                 </a>
             </section>
@@ -906,14 +1059,14 @@
 
             <!-- ░░ CONTACT ░░ -->
             <div class="drawer-section-title"><i class="fa-solid fa-link"></i> CONTACT &amp; LINKS</div>
-            <a class="drawer-link" href="https://t.me/pmharsh" target="_blank" rel="noopener noreferrer">
+            <a class="drawer-link" data-link="telegram" href="https://t.me/pmharsh" target="_blank" rel="noopener noreferrer">
                 <span class="dl-ico"><i class="fa-brands fa-telegram"></i></span>
-                <span class="dl-txt"><b>CONTACT HARSH</b><small>Telegram · @pmharsh</small></span>
+                <span class="dl-txt"><b>CONTACT HARSH</b><small data-text="telegram">Telegram · @pmharsh</small></span>
                 <i class="fa-solid fa-chevron-right arr"></i>
             </a>
-            <a class="drawer-link" href="mailto:pmharshu2035@gmail.com">
+            <a class="drawer-link" data-link="email" href="mailto:pmharshu2035@gmail.com">
                 <span class="dl-ico"><i class="fa-solid fa-envelope"></i></span>
-                <span class="dl-txt"><b>EMAIL SUPPORT</b><small>pmharshu2035@gmail.com</small></span>
+                <span class="dl-txt"><b>EMAIL SUPPORT</b><small data-text="email">pmharshu2035@gmail.com</small></span>
                 <i class="fa-solid fa-chevron-right arr"></i>
             </a>
             <a class="drawer-link" href="https://new-profotilo-flame.vercel.app/" target="_blank" rel="noopener noreferrer">
@@ -924,12 +1077,12 @@
 
             <!-- ░░ TIMEPASS ░░ -->
             <div class="drawer-section-title"><i class="fa-solid fa-bolt"></i> TIMEPASS PREMIUM</div>
-            <a class="drawer-link" href="https://t.me/Trackerhhbot" target="_blank" rel="noopener noreferrer">
+            <a class="drawer-link" data-link="bot" href="https://t.me/Trackerhhbot" target="_blank" rel="noopener noreferrer">
                 <span class="dl-ico"><i class="fa-solid fa-robot"></i></span>
                 <span class="dl-txt"><b>PURCHASE TRACKER BOT</b><small>@Trackerhhbot · Purchase tracking</small></span>
                 <i class="fa-solid fa-chevron-right arr"></i>
             </a>
-            <a class="drawer-link" href="https://t.me/TIMEPASS_BACKUP_1" target="_blank" rel="noopener noreferrer">
+            <a class="drawer-link" data-link="channel" href="https://t.me/TIMEPASS_BACKUP_1" target="_blank" rel="noopener noreferrer">
                 <span class="dl-ico"><i class="fa-brands fa-telegram"></i></span>
                 <span class="dl-txt"><b>OFFICIAL TELEGRAM CHANNEL</b><small>Updates &amp; announcements</small></span>
                 <i class="fa-solid fa-chevron-right arr"></i>
@@ -1103,12 +1256,12 @@
 
                 <div class="pay-heading">MORE PAYMENT OPTIONS</div>
                 <div id="rzpButtonMount"></div>
-                <a class="universal-btn" style="margin-top:10px;" href="https://razorpay.me/@pmharsh" target="_blank" rel="noopener noreferrer" onclick="trackUniversal()">
+                <a class="universal-btn" data-link="razorpay" style="margin-top:10px;" href="https://razorpay.me/@pmharsh" target="_blank" rel="noopener noreferrer" onclick="trackUniversal()">
                     <i class="fa-solid fa-bolt"></i> PAY UNIVERSAL · RAZORPAY.ME/@PMHARSH
                 </a>
 
                 <p class="contact-line">
-                    Issue aaye toh <a href="https://t.me/pmharsh" target="_blank" rel="noopener noreferrer">Telegram · @pmharsh</a> ya <a href="mailto:pmharshu2035@gmail.com">email</a> karo.
+                    Issue aaye toh <a data-link="telegram" data-text="telegram" href="https://t.me/pmharsh" target="_blank" rel="noopener noreferrer">Telegram · @pmharsh</a> ya <a data-link="email" href="mailto:pmharshu2035@gmail.com">email</a> karo.
                 </p>
             </div>
         </div>
@@ -1125,8 +1278,8 @@
                 <tr><th>QUALITY</th><td>4K / High bitrate encodes</td></tr>
                 <tr><th>PAYMENT</th><td>UPI · QR · Razorpay</td></tr>
                 <tr><th>SUPPORT</th><td>Telegram @pmharsh · 24×7</td></tr>
-                <tr><th>TRACKER BOT</th><td>@Trackerhhbot</td></tr>
-                <tr><th>CHANNEL</th><td>@TIMEPASS_BACKUP_1</td></tr>
+                <tr><th>TRACKER BOT</th><td data-text="bot">@Trackerhhbot</td></tr>
+                <tr><th>CHANNEL</th><td data-text="channel">@TIMEPASS_BACKUP_1</td></tr>
             </table>
             <a class="tg-btn-main" href="https://t.me/TIMEPASS_BACKUP_1" target="_blank" rel="noopener noreferrer">
                 <span><b>JOIN OFFICIAL CHANNEL</b><small>UPDATES · ANNOUNCEMENTS</small></span>
@@ -1136,41 +1289,188 @@
         </div>
     </div>
 
-    <!-- ============ ADMIN PANEL ============ -->
+    <!-- ============ ADMIN CONTROL CENTER ============ -->
     <div id="adminPanel" class="admin-overlay" aria-hidden="true">
         <div class="admin-shell">
             <div class="admin-header">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="ah-row">
                     <div>
                         <div class="eyebrow">PRIVATE CONTROL CENTER</div>
-                        <h3 style="font-family:'Playfair Display',serif; font-size:1.05rem; margin-top:3px;">TIMEPASS ADMIN</h3>
+                        <h3>TIMEPASS ADMIN</h3>
                     </div>
                     <button class="x-btn" style="position:static;" onclick="closeAdminPanel()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
 
-            <!-- Gate -->
+            <!-- ░░ LOGIN GATE ░░ -->
             <div id="adminGate" class="admin-gate" style="display:flex;">
-                <div class="lock-ico"><i class="fa-solid fa-key"></i></div>
-                <div class="pay-label" style="margin-bottom:16px;">RESTRICTED ACCESS</div>
-                <input id="adminPassword" class="admin-input" type="password" placeholder="••••••••" autocomplete="off">
-                <div id="adminError" class="admin-error"></div>
-                <button class="admin-primary" onclick="verifyAdmin()">UNLOCK ADMIN PANEL</button>
-                <p style="font-size:9px; color:var(--faint); margin-top:14px; line-height:1.6;">Admin password server-side environment variable mein stored hai.<br>Ye panel sirf owner ke liye hai.</p>
+                <div class="gate-box">
+                    <div class="lock-ico"><i class="fa-solid fa-fingerprint"></i></div>
+                    <div class="pay-label" style="margin-bottom:16px;">RESTRICTED ACCESS</div>
+                    <div class="pw-wrap">
+                        <input id="adminPassword" class="admin-input" type="password" placeholder="••••••••"
+                               autocomplete="current-password" onkeydown="if(event.key==='Enter')verifyAdmin()">
+                        <button type="button" class="pw-eye" onclick="togglePw()" aria-label="Show password"><i id="pwEyeIcon" class="fa-solid fa-eye"></i></button>
+                    </div>
+                    <div id="adminError" class="admin-error"></div>
+                    <button class="admin-primary" onclick="verifyAdmin()">UNLOCK ADMIN PANEL</button>
+                    <p style="font-size:9px; color:var(--faint); margin-top:15px; line-height:1.7;">
+                        Password server-side environment variable mein stored hai.<br>Ye panel sirf owner ke liye hai.
+                    </p>
+                </div>
             </div>
 
-            <!-- Dashboard -->
-            <div id="adminDashboard" style="display:none; padding:14px 16px 30px;">
-                <div class="admin-stats">
-                    <div class="stat-card"><b id="adminLogCount">0</b><small>VISITS (LOCAL)</small></div>
-                    <div class="stat-card"><b>UPI</b><small>PAYMENT MODE</small></div>
-                    <div class="stat-card"><b>24×7</b><small>SUPPORT</small></div>
+            <!-- ░░ DASHBOARD ░░ -->
+            <div id="adminDashboard" style="display:none;">
+                <!-- welcome -->
+                <div class="admin-welcome">
+                    <div class="aw-row">
+                        <div class="aw-crown"><i class="fa-solid fa-crown"></i></div>
+                        <div class="aw-txt">
+                            <span class="aw-hi">ACCESS GRANTED</span>
+                            <span class="aw-name">Welcome Admin</span>
+                            <span class="aw-sub" id="awSession">—</span>
+                        </div>
+                        <button class="aw-logout" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</button>
+                    </div>
+                    <span id="storeChip" class="store-chip code"><i class="fa-solid fa-circle"></i> CHECKING STORAGE…</span>
                 </div>
-                <div class="admin-toolbar">
-                    <button class="soft-btn" onclick="exportAdminLogs()"><i class="fa-solid fa-file-export"></i>&nbsp; EXPORT JSON</button>
-                    <button class="soft-btn" onclick="clearLocalVisits()"><i class="fa-solid fa-trash"></i>&nbsp; CLEAR LOGS</button>
+
+                <!-- tabs -->
+                <div class="admin-tabs" role="tablist">
+                    <button class="atab active" data-tab="overview" onclick="adminTab('overview')"><i class="fa-solid fa-gauge-high"></i> OVERVIEW</button>
+                    <button class="atab" data-tab="pricing" onclick="adminTab('pricing')"><i class="fa-solid fa-indian-rupee-sign"></i> PRICING</button>
+                    <button class="atab" data-tab="settings" onclick="adminTab('settings')"><i class="fa-solid fa-sliders"></i> SETTINGS</button>
+                    <button class="atab" data-tab="visitors" onclick="adminTab('visitors')"><i class="fa-solid fa-users"></i> VISITORS</button>
                 </div>
-                <div id="adminLogs"></div>
+
+                <!-- ── OVERVIEW ── -->
+                <div id="pane-overview" class="apane active">
+                    <div class="admin-stats">
+                        <div class="stat-card"><b id="adminLogCount">0</b><small>VISITS (LOCAL)</small></div>
+                        <div class="stat-card"><b id="adminPlanCount">12</b><small>ACTIVE PLANS</small></div>
+                        <div class="stat-card"><b id="adminLowest">₹50</b><small>LOWEST PRICE</small></div>
+                    </div>
+                    <div class="ablock">
+                        <div class="ablock-head">
+                            <span class="abh-ico"><i class="fa-solid fa-tags"></i></span>
+                            <span><b>Current Live Prices</b><small>SAB PACKS KA SNAPSHOT</small></span>
+                        </div>
+                        <div id="adminPriceSummary"></div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="soft-btn" onclick="adminTab('pricing')"><i class="fa-solid fa-pen-to-square"></i> EDIT PRICES</button>
+                        <button class="soft-btn" onclick="adminTab('settings')"><i class="fa-solid fa-sliders"></i> SITE SETTINGS</button>
+                    </div>
+                </div>
+
+                <!-- ── PRICING ── -->
+                <div id="pane-pricing" class="apane">
+                    <div id="priceEditor"></div>
+
+                    <div class="admin-actions">
+                        <button class="admin-primary wide" onclick="savePricingLive()" id="saveLiveBtn">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>&nbsp; SAVE LIVE (SABKE LIYE)
+                        </button>
+                        <button class="soft-btn" onclick="previewPricingLocal()"><i class="fa-solid fa-eye"></i> PREVIEW</button>
+                        <button class="soft-btn" onclick="showPricingCode()"><i class="fa-solid fa-code"></i> COPY CODE</button>
+                        <button class="soft-btn danger wide" onclick="resetPricing()"><i class="fa-solid fa-rotate-left"></i> RESET TO CODE DEFAULTS</button>
+                    </div>
+
+                    <div id="codeBox" style="display:none;">
+                        <div class="anote warn">
+                            <b>Code paste karne ka tarika:</b>
+                            <ol>
+                                <li>Neeche wala code <b>COPY</b> karo</li>
+                                <li>GitHub pe <code>index.html</code> kholo → ✏️ edit</li>
+                                <li><code>const PRICING = {</code> dhoondo, poora block replace karo</li>
+                                <li>Commit → Vercel auto-deploy kar dega</li>
+                            </ol>
+                        </div>
+                        <textarea id="codeOut" class="code-out" readonly spellcheck="false"></textarea>
+                        <div class="admin-actions">
+                            <button class="soft-btn" onclick="copyPricingCode()"><i class="fa-solid fa-copy"></i> COPY TO CLIPBOARD</button>
+                            <a class="soft-btn" style="text-decoration:none;" target="_blank" rel="noopener noreferrer"
+                               href="https://github.com/Dev-Harshupadhyay/Verceel-timepass-/edit/main/index.html">
+                               <i class="fa-brands fa-github"></i> OPEN GITHUB EDITOR</a>
+                        </div>
+                    </div>
+
+                    <div class="anote">
+                        <b>⚠️ Razorpay button ID:</b> Razorpay button ka amount uske dashboard mein <b>fixed</b> hota hai.
+                        Price badla hai to naya button banao aur uski ID (<code>pl_xxxx</code>) yahan daalo.
+                        Khali chhodoge to woh plan UPI + Universal Razorpay par jayega — amount hamesha sahi jayega. ✅
+                    </div>
+                </div>
+
+                <!-- ── SETTINGS ── -->
+                <div id="pane-settings" class="apane">
+                    <div class="ablock">
+                        <div class="ablock-head">
+                            <span class="abh-ico"><i class="fa-solid fa-wallet"></i></span>
+                            <span><b>Payment</b><small>UPI & RAZORPAY</small></span>
+                        </div>
+                        <div class="afield">
+                            <label>UPI ID</label>
+                            <input class="atext" id="setUpi" placeholder="pmharsh@fam">
+                            <small class="hint">QR code aur "PAY VIA UPI" button isi ID pe paisa bhejenge.</small>
+                        </div>
+                        <div class="afield">
+                            <label>RAZORPAY UNIVERSAL LINK</label>
+                            <input class="atext" id="setRazorpay" placeholder="https://razorpay.me/@pmharsh">
+                        </div>
+                    </div>
+
+                    <div class="ablock">
+                        <div class="ablock-head">
+                            <span class="abh-ico"><i class="fa-brands fa-telegram"></i></span>
+                            <span><b>Telegram &amp; Contact</b><small>SUPPORT LINKS</small></span>
+                        </div>
+                        <div class="afield">
+                            <label>SUPPORT USERNAME (@ ke bina)</label>
+                            <input class="atext" id="setTelegram" placeholder="pmharsh">
+                        </div>
+                        <div class="afield">
+                            <label>CHANNEL USERNAME (@ ke bina)</label>
+                            <input class="atext" id="setChannel" placeholder="TIMEPASS_BACKUP_1">
+                        </div>
+                        <div class="afield">
+                            <label>TRACKER BOT (@ ke bina)</label>
+                            <input class="atext" id="setBot" placeholder="Trackerhhbot">
+                        </div>
+                        <div class="afield">
+                            <label>EMAIL</label>
+                            <input class="atext" id="setEmail" placeholder="pmharshu2035@gmail.com">
+                        </div>
+                    </div>
+
+                    <div class="ablock">
+                        <div class="ablock-head">
+                            <span class="abh-ico"><i class="fa-solid fa-font"></i></span>
+                            <span><b>Branding</b><small>HERO TEXT</small></span>
+                        </div>
+                        <div class="afield">
+                            <label>TAGLINE</label>
+                            <input class="atext" id="setTagline" placeholder="Market Se Sasta OTT 🔥">
+                        </div>
+                    </div>
+
+                    <div class="admin-actions">
+                        <button class="admin-primary wide" onclick="saveSettingsLive()">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>&nbsp; SAVE SETTINGS LIVE
+                        </button>
+                        <button class="soft-btn wide" onclick="previewSettingsLocal()"><i class="fa-solid fa-eye"></i> PREVIEW ON THIS DEVICE</button>
+                    </div>
+                </div>
+
+                <!-- ── VISITORS ── -->
+                <div id="pane-visitors" class="apane">
+                    <div class="admin-toolbar">
+                        <button class="soft-btn" onclick="exportAdminLogs()"><i class="fa-solid fa-file-export"></i> EXPORT JSON</button>
+                        <button class="soft-btn danger" onclick="clearLocalVisits()"><i class="fa-solid fa-trash"></i> CLEAR LOGS</button>
+                    </div>
+                    <div id="adminLogs"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1275,6 +1575,86 @@
             if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           ⚙️  SITE SETTINGS — admin panel se editable
+           ═══════════════════════════════════════════════════════════════════ */
+        const SITE = {
+            upi:      'pmharsh@fam',
+            razorpay: 'https://razorpay.me/@pmharsh',
+            telegram: 'pmharsh',
+            channel:  'TIMEPASS_BACKUP_1',
+            bot:      'Trackerhhbot',
+            email:    'pmharshu2035@gmail.com',
+            tagline:  'Market Se Sasta OTT 🔥'
+        };
+
+        /* code ke original defaults — "reset" ke liye */
+        const DEFAULT_PRICING = JSON.parse(JSON.stringify(PRICING));
+        const DEFAULT_SITE    = JSON.parse(JSON.stringify(SITE));
+
+        const CFG_KEY    = 'tp_config_draft';   // local preview draft
+        let   CFG_SOURCE = 'code';              // 'code' | 'draft' | 'live'
+        let   KV_READY   = false;               // /api/pricing configured hai ya nahi
+
+        /* overrides ko PRICING + SITE par apply karo */
+        function applyConfig(cfg) {
+            if (!cfg) return;
+            if (cfg.pricing) {
+                Object.keys(cfg.pricing).forEach(k => {
+                    if (!PRICING[k] || !Array.isArray(cfg.pricing[k].plans)) return;
+                    cfg.pricing[k].plans.forEach((plan, i) => {
+                        if (!PRICING[k].plans[i]) return;
+                        if (typeof plan.p === 'number' && plan.p >= 0) PRICING[k].plans[i].p = plan.p;
+                        if (typeof plan.b === 'string') PRICING[k].plans[i].b = plan.b;
+                    });
+                });
+            }
+            if (cfg.site) Object.keys(cfg.site).forEach(k => { if (k in SITE && cfg.site[k]) SITE[k] = cfg.site[k]; });
+        }
+
+        /* SITE values ko page ke DOM par chipka do */
+        function applySiteToDom() {
+            const set = (sel, fn) => document.querySelectorAll(sel).forEach(fn);
+            const tg  = u => 'https://t.me/' + String(u).replace(/^@/, '');
+
+            set('.upi-id-value', e => e.textContent = SITE.upi);
+            set('.tagline',      e => e.textContent = SITE.tagline);
+            set('[data-link="telegram"]', e => e.href = tg(SITE.telegram));
+            set('[data-link="channel"]',  e => e.href = tg(SITE.channel));
+            set('[data-link="bot"]',      e => e.href = tg(SITE.bot));
+            set('[data-link="razorpay"]', e => e.href = SITE.razorpay);
+            set('[data-link="email"]',    e => e.href = 'mailto:' + SITE.email);
+            set('[data-text="telegram"]', e => e.textContent = 'Telegram · @' + SITE.telegram);
+            set('[data-text="email"]',    e => e.textContent = SITE.email);
+            set('[data-text="channel"]',  e => e.textContent = '@' + SITE.channel);
+            set('[data-text="bot"]',      e => e.textContent = '@' + SITE.bot);
+
+            const qr = document.getElementById('qrImage');
+            if (qr) qr.src = 'https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=' +
+                             encodeURIComponent(tg(SITE.channel));
+        }
+
+        /* boot par: pehle local draft, phir server ka live config */
+        async function loadRemoteConfig() {
+            try {
+                const raw = localStorage.getItem(CFG_KEY);
+                if (raw) { applyConfig(JSON.parse(raw)); CFG_SOURCE = 'draft'; }
+            } catch (e) {}
+
+            try {
+                const r = await fetch('/api/pricing', { cache: 'no-store' });
+                if (r.ok) {
+                    const j = await r.json();
+                    KV_READY = !!j.configured;
+                    if (j.data && CFG_SOURCE !== 'draft') { applyConfig(j.data); CFG_SOURCE = 'live'; }
+                }
+            } catch (e) { KV_READY = false; }
+
+            renderPricingCards();
+            applySiteToDom();
+            if (typeof updateStoreChip === 'function') updateStoreChip();
+        }
+
         /* Pricing cards ko config se render karo (single source of truth) */
         function renderPricingCards() {
             Object.keys(PRICING).forEach(key => {
@@ -1337,6 +1717,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             renderPricingCards();
             setTheme(getTheme(), false);
+            loadRemoteConfig();
         });
 
         function closeModal() {
@@ -1611,80 +1992,332 @@
             `).join("");
         }
 
-        function openAdminPanel() {
-            const panel = document.getElementById("adminPanel");
-            const pass = document.getElementById("adminPassword");
-            const gate = document.getElementById("adminGate");
-            const dash = document.getElementById("adminDashboard");
+        /* ═══════════════════════════════════════════════════════════════════
+           🛡️  ADMIN CONTROL CENTER
+           ═══════════════════════════════════════════════════════════════════ */
+        let ADMIN_PW = '';           // sirf memory mein, kabhi localStorage mein nahi
+        let adminLoginAt = null;
 
+        function openAdminPanel() {
+            const panel = document.getElementById('adminPanel');
             if (!panel) return;
-            panel.classList.add("open");
-            document.body.style.overflow = "hidden";
-            if (gate) gate.style.display = "flex";
-            if (dash) dash.style.display = "none";
-            if (pass) {
-                pass.value = "";
-                setTimeout(() => pass.focus(), 150);
+            panel.classList.add('open');
+            panel.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            if (!ADMIN_PW) {
+                document.getElementById('adminGate').style.display = 'flex';
+                document.getElementById('adminDashboard').style.display = 'none';
+                const pass = document.getElementById('adminPassword');
+                if (pass) { pass.value = ''; setTimeout(() => pass.focus(), 150); }
             }
         }
 
         function closeAdminPanel() {
-            const panel = document.getElementById("adminPanel");
-            if (panel) panel.classList.remove("open");
-            document.body.style.overflow = "";
+            const panel = document.getElementById('adminPanel');
+            if (panel) { panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+            document.body.style.overflow = '';
+        }
+
+        function togglePw() {
+            const i = document.getElementById('adminPassword');
+            const ic = document.getElementById('pwEyeIcon');
+            if (!i) return;
+            const show = i.type === 'password';
+            i.type = show ? 'text' : 'password';
+            if (ic) ic.className = show ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+        }
+
+        function adminLogout() {
+            ADMIN_PW = ''; adminLoginAt = null;
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('adminGate').style.display = 'flex';
+            const pass = document.getElementById('adminPassword');
+            if (pass) { pass.value = ''; pass.type = 'password'; }
+            const ic = document.getElementById('pwEyeIcon');
+            if (ic) ic.className = 'fa-solid fa-eye';
+            showToast('🔒 Logged out');
         }
 
         async function verifyAdmin() {
-    const pass = document.getElementById("adminPassword")?.value || "";
-    const error = document.getElementById("adminError");
-    const button = document.querySelector("#adminGate .admin-primary");
+            const pass   = document.getElementById('adminPassword')?.value || '';
+            const error  = document.getElementById('adminError');
+            const button = document.querySelector('#adminGate .admin-primary');
 
-    if (!pass) {
-        if (error) {
-            error.textContent = "Enter admin password.";
-            error.classList.add("show");
-        }
-        return;
-    }
+            if (!pass) { if (error) error.textContent = 'Password daalo.'; return; }
+            if (button) { button.disabled = true; button.textContent = 'VERIFYING...'; }
+            if (error) error.textContent = '';
 
-    if (button) {
-        button.disabled = true;
-        button.textContent = "VERIFYING...";
-    }
+            try {
+                const response = await fetch('/api/admin-auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pass })
+                });
+                const result = await response.json().catch(() => ({}));
 
-    try {
-        const response = await fetch("/api/admin-auth", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password: pass })
-        });
-        const result = await response.json().catch(() => ({}));
-
-        if (response.ok && result.ok === true) {
-            document.getElementById("adminGate").style.display = "none";
-            document.getElementById("adminDashboard").style.display = "block";
-            if (error) error.classList.remove("show");
-            if (typeof renderAdminLogs === "function") renderAdminLogs();
-            return;
+                if (response.ok && result.ok === true) {
+                    ADMIN_PW = pass;
+                    adminLoginAt = new Date();
+                    document.getElementById('adminGate').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    bootAdminDashboard();
+                    return;
+                }
+                if (error) error.textContent = response.status === 401
+                    ? 'Galat password. Dubara try karo.'
+                    : 'Verification fail. Thodi der baad try karo.';
+            } catch (err) {
+                if (error) error.textContent = 'Admin server unavailable — ye sirf deployed site par chalta hai.';
+            } finally {
+                if (button) { button.disabled = false; button.textContent = 'UNLOCK ADMIN PANEL'; }
+            }
         }
 
-        if (error) {
-            error.textContent = "Invalid admin credentials.";
-            error.classList.add("show");
+        /* ---------- dashboard boot ---------- */
+        function bootAdminDashboard() {
+            const el = document.getElementById('awSession');
+            if (el && adminLoginAt) {
+                el.textContent = 'Session · ' + adminLoginAt.toLocaleString('en-IN',
+                    { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
+            }
+            updateStoreChip();
+            renderPriceEditor();
+            renderPriceSummary();
+            fillSettingsForm();
+            renderAdminLogs();
+            adminTab('overview');
         }
-    } catch (err) {
-        console.error("Admin auth error:", err);
-        if (error) {
-            error.textContent = "Admin server unavailable. Try again.";
-            error.classList.add("show");
+
+        function adminTab(name) {
+            document.querySelectorAll('.atab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+            document.querySelectorAll('.apane').forEach(p => p.classList.remove('active'));
+            const pane = document.getElementById('pane-' + name);
+            if (pane) pane.classList.add('active');
+            const shell = document.querySelector('.admin-overlay');
+            if (shell) shell.scrollTop = 0;
         }
-    } finally {
-        if (button) {
-            button.disabled = false;
-            button.textContent = "UNLOCK ADMIN PANEL";
+
+        function updateStoreChip() {
+            const chip = document.getElementById('storeChip');
+            if (!chip) return;
+            const map = {
+                live:  ['live',  'fa-circle-check', 'LIVE · SABKE LIYE ACTIVE'],
+                draft: ['draft', 'fa-triangle-exclamation', 'LOCAL DRAFT · SIRF IS DEVICE PAR'],
+                code:  ['code',  'fa-circle', KV_READY ? 'CODE DEFAULTS · KV READY' : 'CODE DEFAULTS · KV OFF']
+            };
+            const [cls, ico, txt] = map[CFG_SOURCE] || map.code;
+            chip.className = 'store-chip ' + cls;
+            chip.innerHTML = `<i class="fa-solid ${ico}"></i> ${txt}`;
+            const btn = document.getElementById('saveLiveBtn');
+            if (btn) btn.style.opacity = KV_READY ? '1' : '.55';
         }
-    }
-}
+
+        /* ---------- PRICE EDITOR ---------- */
+        const PACK_META = {
+            movies: { emoji: '🎬', name: 'Movies & Series', sub: 'ALL OTT CONTENT' },
+            adult:  { emoji: '🔞', name: 'Adult Pack',      sub: 'SINGLE CHANNEL'  },
+            combo:  { emoji: '🌟', name: 'Combo Pack',      sub: 'MOVIES + ADULT'  }
+        };
+
+        function renderPriceEditor() {
+            const host = document.getElementById('priceEditor');
+            if (!host) return;
+            host.innerHTML = Object.keys(PRICING).map(key => {
+                const meta = PACK_META[key];
+                const rows = PRICING[key].plans.map((plan, i) => `
+                    <div class="prow">
+                        <div class="prow-lab">
+                            <b>${plan.n}</b>
+                            <small>DEFAULT ₹${DEFAULT_PRICING[key].plans[i].p}</small>
+                        </div>
+                        <div class="price-input-wrap">
+                            <input class="price-input" type="number" inputmode="numeric" min="0" max="999999"
+                                   id="pi-${key}-${i}" value="${plan.p}"
+                                   oninput="onPriceInput('${key}',${i})" aria-label="${meta.name} ${plan.n} price">
+                        </div>
+                        <div class="rzp-line">
+                            <label>RZP ID</label>
+                            <input class="rzp-input" id="rz-${key}-${i}" value="${plan.b || ''}"
+                                   placeholder="pl_xxxxxxxx (khali = UPI par jayega)" spellcheck="false"
+                                   aria-label="${meta.name} ${plan.n} Razorpay button id">
+                        </div>
+                    </div>`).join('');
+                return `
+                <div class="ablock">
+                    <div class="ablock-head">
+                        <span class="abh-ico">${meta.emoji}</span>
+                        <span><b>${meta.name}</b><small>${meta.sub}</small></span>
+                    </div>
+                    ${rows}
+                </div>`;
+            }).join('');
+        }
+
+        function onPriceInput(key, i) {
+            const el = document.getElementById(`pi-${key}-${i}`);
+            if (!el) return;
+            el.classList.toggle('changed', Number(el.value) !== DEFAULT_PRICING[key].plans[i].p);
+        }
+
+        /* editor se values nikal kar config object banao */
+        function collectPricing() {
+            const out = {};
+            Object.keys(PRICING).forEach(key => {
+                out[key] = {
+                    plans: PRICING[key].plans.map((plan, i) => {
+                        const pv = document.getElementById(`pi-${key}-${i}`);
+                        const bv = document.getElementById(`rz-${key}-${i}`);
+                        return {
+                            n: plan.n,
+                            p: Math.max(0, Math.round(Number(pv ? pv.value : plan.p) || 0)),
+                            b: (bv ? bv.value : plan.b || '').trim()
+                        };
+                    })
+                };
+            });
+            return out;
+        }
+
+        function collectSettings() {
+            const v = id => (document.getElementById(id)?.value || '').trim();
+            return {
+                upi:      v('setUpi')      || SITE.upi,
+                razorpay: v('setRazorpay') || SITE.razorpay,
+                telegram: (v('setTelegram') || SITE.telegram).replace(/^@/, ''),
+                channel:  (v('setChannel')  || SITE.channel ).replace(/^@/, ''),
+                bot:      (v('setBot')      || SITE.bot     ).replace(/^@/, ''),
+                email:    v('setEmail')    || SITE.email,
+                tagline:  v('setTagline')  || SITE.tagline
+            };
+        }
+
+        function fillSettingsForm() {
+            const set = (id, val) => { const e = document.getElementById(id); if (e) e.value = val; };
+            set('setUpi', SITE.upi);           set('setRazorpay', SITE.razorpay);
+            set('setTelegram', SITE.telegram); set('setChannel', SITE.channel);
+            set('setBot', SITE.bot);           set('setEmail', SITE.email);
+            set('setTagline', SITE.tagline);
+        }
+
+        function refreshAfterConfigChange() {
+            renderPricingCards();
+            applySiteToDom();
+            renderPriceSummary();
+            updateStoreChip();
+            const count = Object.values(PRICING).reduce((a, p) => a + p.plans.length, 0);
+            const lowest = Math.min(...Object.values(PRICING).flatMap(p => p.plans.map(x => x.p)));
+            const c = document.getElementById('adminPlanCount'); if (c) c.textContent = count;
+            const l = document.getElementById('adminLowest');    if (l) l.textContent = '₹' + lowest;
+        }
+
+        /* ---------- SAVE: local preview ---------- */
+        function previewPricingLocal() {
+            const cfg = { pricing: collectPricing(), site: collectSettings() };
+            try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+            applyConfig(cfg); CFG_SOURCE = 'draft';
+            refreshAfterConfigChange(); renderPriceEditor();
+            showToast('👁️ Preview on — sirf is device par');
+        }
+        function previewSettingsLocal() { previewPricingLocal(); }
+
+        /* ---------- SAVE: live for everyone ---------- */
+        async function pushConfig(payload, okMsg) {
+            if (!ADMIN_PW) { showToast('⚠️ Pehle login karo'); return; }
+            try {
+                const r = await fetch('/api/pricing', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(Object.assign({ password: ADMIN_PW }, payload))
+                });
+                const j = await r.json().catch(() => ({}));
+                if (r.ok && j.ok) {
+                    try { localStorage.removeItem(CFG_KEY); } catch (e) {}
+                    applyConfig(payload); CFG_SOURCE = 'live';
+                    refreshAfterConfigChange(); renderPriceEditor();
+                    showToast(okMsg);
+                    return;
+                }
+                if (r.status === 501) {
+                    showToast('⚠️ KV storage off — "COPY CODE" use karo');
+                    showPricingCode();
+                } else {
+                    showToast('❌ ' + (j.error || 'Save fail ho gaya'));
+                }
+            } catch (e) {
+                showToast('❌ Server reachable nahi — "COPY CODE" use karo');
+                showPricingCode();
+            }
+        }
+
+        function savePricingLive()  { pushConfig({ pricing: collectPricing(), site: collectSettings() }, '✅ Prices live ho gaye!'); }
+        function saveSettingsLive() { pushConfig({ pricing: collectPricing(), site: collectSettings() }, '✅ Settings live ho gayi!'); }
+
+        /* ---------- RESET ---------- */
+        function resetPricing() {
+            if (!confirm('Sab prices code ke original defaults par wapas le aayein?')) return;
+            try { localStorage.removeItem(CFG_KEY); } catch (e) {}
+            Object.keys(DEFAULT_PRICING).forEach(k => {
+                PRICING[k].plans.forEach((plan, i) => {
+                    plan.p = DEFAULT_PRICING[k].plans[i].p;
+                    plan.b = DEFAULT_PRICING[k].plans[i].b;
+                });
+            });
+            Object.keys(DEFAULT_SITE).forEach(k => SITE[k] = DEFAULT_SITE[k]);
+            CFG_SOURCE = 'code';
+            refreshAfterConfigChange(); renderPriceEditor(); fillSettingsForm();
+            showToast('↩️ Code defaults restore ho gaye');
+        }
+
+        /* ---------- CODE EXPORT ---------- */
+        function buildPricingCode() {
+            const p = collectPricing();
+            const line = (x) => `                    { n: '${x.n}',${' '.repeat(Math.max(0, 9 - x.n.length))} p: ${x.p},${' '.repeat(Math.max(0, 5 - String(x.p).length))} b: '${x.b || ''}' }`;
+            const pack = (key) => {
+                const m = PRICING[key];
+                return `            ${key}: {
+                emoji: '${m.emoji}', title: '${m.title}', sub: '${m.sub}',
+                cta: '${m.cta}', suffix: '${m.suffix}',${m.crown ? ' crown: true,' : ''}
+                plans: [
+${p[key].plans.map(line).join(',\n')}
+                ]
+            }`;
+            };
+            return `const PRICING = {\n${Object.keys(PRICING).map(pack).join(',\n')}\n        };`;
+        }
+
+        function showPricingCode() {
+            const box = document.getElementById('codeBox');
+            const out = document.getElementById('codeOut');
+            if (out) out.value = buildPricingCode();
+            if (box) { box.style.display = 'block'; box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+        }
+
+        function copyPricingCode() {
+            const out = document.getElementById('codeOut');
+            if (!out) return;
+            const done = () => showToast('📋 Code copy ho gaya — ab GitHub pe paste karo');
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(out.value).then(done).catch(() => { out.select(); document.execCommand('copy'); done(); });
+            } else { out.select(); document.execCommand('copy'); done(); }
+        }
+
+        /* ---------- overview summary ---------- */
+        function renderPriceSummary() {
+            const host = document.getElementById('adminPriceSummary');
+            if (!host) return;
+            host.innerHTML = Object.keys(PRICING).map(key => {
+                const m = PACK_META[key];
+                const chips = PRICING[key].plans.map(x =>
+                    `<span style="font-family:'Space Mono',monospace;font-size:10.5px;color:var(--gold-hi);
+                       border:1px solid var(--line);border-radius:9px;padding:4px 8px;
+                       background:rgba(var(--acc-rgb),.05);">₹${x.p}</span>`).join('');
+                return `<div style="margin-bottom:11px;">
+                    <div style="font-size:9px;letter-spacing:1.3px;color:var(--faint);font-weight:900;margin-bottom:6px;">
+                        ${m.emoji} ${m.name.toUpperCase()}</div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">${chips}</div>
+                </div>`;
+            }).join('');
+        }
 
         function exportAdminLogs() {
             const data = JSON.stringify(readLocalVisits(), null, 2);
@@ -1775,7 +2408,7 @@
         }
         function closeInfo() { document.getElementById('infoModal').style.display = 'none'; }
 
-        const UPI = "pmharsh@fam";
+        /* UPI id ab SITE.upi se aati hai (admin panel se editable) */
         let selAmt = 0, selPlan = "", currentCat = "", selButtonId = "";
 
         const catEmoji = { movies: "🎬", adult: "🔞", combo: "🌟" };
@@ -1914,7 +2547,7 @@
 
         function getUpiPaymentUrl() {
             const amount = Number(selAmt || 0).toFixed(2);
-            return `upi://pay?pa=${encodeURIComponent(UPI)}&pn=${encodeURIComponent('TIMEPASS PREMIUM')}&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent(`Premium ${selPlan || 'Plan'} @Trackerhhbot`)}`;
+            return `upi://pay?pa=${encodeURIComponent(SITE.upi)}&pn=${encodeURIComponent('TIMEPASS PREMIUM')}&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent(`Premium ${selPlan || 'Plan'} @Trackerhhbot`)}`;
         }
 
         function updateUPIPaymentUI() {
@@ -1942,7 +2575,7 @@
 📦 <b>Pack:</b> ${catName[currentCat]}
 🗓️ <b>Plan:</b> ${selPlan}
 💵 <b>Amount:</b> <code>₹${selAmt}</code>
-🎯 <b>UPI Target:</b> <code>${UPI}</code>
+🎯 <b>UPI Target:</b> <code>${SITE.upi}</code>
 ━━━━━━━━━━━━━━━━━━━━━`;
             notifyBot(msg);
 
@@ -1952,9 +2585,9 @@
         function copyUPI() {
             const done = () => showToast("✅ UPI ID Copied!");
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(UPI).then(done).catch(() => {
+                navigator.clipboard.writeText(SITE.upi).then(done).catch(() => {
                     const ta = document.createElement('textarea');
-                    ta.value = UPI; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    ta.value = SITE.upi; ta.style.position = 'fixed'; ta.style.opacity = '0';
                     document.body.appendChild(ta); ta.select();
                     try { document.execCommand('copy'); done(); } catch (_) { alert("UPI ID: " + UPI); }
                     ta.remove();
@@ -1966,7 +2599,7 @@
             const msg =
 `📋 <b>CLIPBOARD · UPI COPIED</b>
 ━━━━━━━━━━━━━━━━━━━━━
-🎯 <b>ID:</b> <code>${UPI}</code>
+🎯 <b>ID:</b> <code>${SITE.upi}</code>
 📦 <b>Pack:</b> ${catName[currentCat] || 'N/A'}
 🗓️ <b>Plan:</b> ${selPlan || 'None'}
 💵 <b>Amount:</b> ₹${selAmt || 0}

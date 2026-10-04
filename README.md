@@ -2,61 +2,94 @@
 
 Market se sasta OTT — Movies, Adult aur Combo plans. UPI + Razorpay payment, Telegram verification.
 
-Single-file static site (`index.html`) + 2 Vercel serverless functions.
+Single-file static site (`index.html`) + 3 Vercel serverless functions.
 
 ---
 
 ## 🆕 Is update mein kya naya hai
 
-### 1. Multi-theme system (6 themes)
-Header ke **🎨 palette button** se ya drawer ke **APPEARANCE** section se theme badlo.
-Choice `localStorage` mein save hoti hai, next visit pe wahi theme khulta hai.
-
-| Theme | ID | Look |
-|---|---|---|
-| Obsidian Gold | `obsidian` | Black lacquer + gold (default, purana look) |
-| Royal Amethyst | `amethyst` | Deep violet + purple glow |
-| Neon Cyber | `cyber` | Midnight blue + electric cyan |
-| Crimson Blood | `crimson` | Near-black + blood red |
-| Emerald Luxe | `emerald` | Dark forest + emerald green |
-| Pearl Light | `pearl` | Light / day mode |
-
-Poori site CSS variables par chalti hai (`--acc-rgb`, `--ink`, `--surf-0` …), isliye
-naya theme add karna = bas ek naya `[data-theme="..."]` block + `THEMES` array mein ek entry.
-Theme first paint se pehle apply hota hai, so koi flash nahi hota.
-
-### 2. Naye prices
-
-| Pack | 1 Month | 3 Months | 6 Months | 1 Year |
-|---|---|---|---|---|
-| 🎬 Movies & Series | ₹50 | ₹250 | ₹420 | ₹465 |
-| 🔞 Adult Pack | **₹100** | **₹400** | **₹580** | ₹835 |
-| 🌟 Combo Pack | **₹250** | **₹520** | **₹780** | **₹1500** |
-
-### 3. Harsh Dev section redesign (drawer)
-Naya profile hero card (gradient avatar + online dot), stats strip, skill chips,
-"HIRE / CONTACT HARSH" CTA, inline theme picker, timeline-style purchase guide.
-Sticky header, independent scroll area, swipe-right to close, Esc to close, `aria` labels.
-
-### 4. Fully responsive
-320px se 4K tak test kiya — zero horizontal overflow.
-- Phone: 1 column · Tablet (560–759px): 2 columns + Combo full-width · Desktop: 3 columns
-- Plan grid 2-up → 4-up, prices `clamp()` se scale karte hain (₹1500 bhi fit hota hai)
-- 340px se neeche header "PREMIUM" word hide ho jaata hai taaki buttons na toote
-- Drawer 370px se neeche full-screen ho jaata hai
-- Landscape phone, `100dvh`, iOS safe-area, 38px+ touch targets, keyboard navigation
-
-### 5. Bonus
-- Plan cards pe **per-month price** aur auto **"BEST VALUE"** badge
-- Pricing cards pe **"FROM ₹X"** badge
-- Ek hi jagah se price control (neeche dekho)
+1. **Multi-theme system** — 6 themes, switcher, localStorage mein save
+2. **Naye prices** — Adult & Combo update
+3. **Harsh Dev drawer redesign** — naya profile card + theme picker
+4. **Fully responsive** — 320px se 4K tak, zero overflow
+5. **🆕 Admin Control Center** — login karke prices aur settings website par se edit karo
 
 ---
 
-## 💰 Price kaise badlein
+## 🛡️ ADMIN CONTROL CENTER
 
-`index.html` mein `<script>` ke bilkul top par **`PRICING`** object hai. Sirf wahan edit karo —
-pricing cards, plan grid, UPI amount, QR, Telegram message **sab apne aap update** ho jayenge.
+Header ke **🛡️ shield icon** se kholo → password daalo → **Welcome Admin** dashboard.
+
+### Tabs
+
+| Tab | Kya hai |
+|---|---|
+| **OVERVIEW** | Visits, active plans, lowest price + saare current prices ka snapshot |
+| **PRICING** | Saare 12 prices + Razorpay button IDs edit karo |
+| **SETTINGS** | UPI ID, Razorpay link, Telegram/channel/bot, email, tagline |
+| **VISITORS** | Visitor logs — export JSON / clear |
+
+### Save karne ke 3 tareeke
+
+| Button | Kya karta hai | Kaun dekhega |
+|---|---|---|
+| **SAVE LIVE** | Server (KV) par save | 🌍 **Sab customers** |
+| **PREVIEW** | Browser ke localStorage mein | 👤 Sirf tumhara device |
+| **COPY CODE** | `PRICING` block generate karke deta hai | GitHub pe paste karo → permanent |
+| **RESET** | Code ke original defaults wapas | — |
+
+Welcome banner par ek **status chip** hamesha batata hai abhi kaunsa source active hai:
+`LIVE · SABKE LIYE ACTIVE` / `LOCAL DRAFT · SIRF IS DEVICE PAR` / `CODE DEFAULTS`.
+
+> ⚠️ **Dhyan do:** "PREVIEW" sirf tumhare browser mein dikhta hai — customers ko purana price
+> hi dikhega. Sabke liye change karna hai to **SAVE LIVE** (KV chahiye) ya **COPY CODE** → GitHub.
+
+---
+
+## ⚙️ Vercel setup — Environment Variables
+
+Vercel → Project → **Settings → Environment Variables**
+
+| Variable | Value | Kiske liye |
+|---|---|---|
+| `ADMIN_PASSWORD` | `Harsh@2007` | Admin panel login + price save |
+| `TELEGRAM_BOT_TOKEN` | *(tumhara token)* | Visitor / purchase notifications |
+| `TELEGRAM_CHAT_ID` | *(tumhara chat id)* | Notifications kahan jayein |
+| `KV_REST_API_URL` | *(auto)* | **SAVE LIVE** ke liye |
+| `KV_REST_API_TOKEN` | *(auto)* | **SAVE LIVE** ke liye |
+
+Env var add/change karne ke baad **Deployments → Redeploy** zaroor karna.
+
+### 🔐 Password ke baare mein — zaroor padhna
+
+`Harsh@2007` **kaafi weak hai** — naam + birth year. Koi bhi guess kar sakta hai, aur
+admin panel se **prices aur UPI ID dono badle ja sakte hain** (yaani tumhara paisa kisi
+aur ke account mein ja sakta hai).
+
+Strong password rakho, jaise: `Tp$9kQ2mXw7#Lz4` — `ADMIN_PASSWORD` mein daalo,
+yaad rakhne ke liye password manager use karo. Password **kabhi code mein mat likhna**,
+sirf env var mein.
+
+---
+
+## 💾 SAVE LIVE chalane ke liye (KV storage) — optional
+
+Iske bina bhi site poori chalti hai, bas "SAVE LIVE" ki jagah "COPY CODE" use karna padega.
+
+1. Vercel → Project → **Storage** tab
+2. **Create Database → Upstash Redis** (free tier) → Connect to project
+3. Vercel khud `KV_REST_API_URL` + `KV_REST_API_TOKEN` env vars add kar dega
+4. **Redeploy** karo
+
+Bas. Ab admin panel se **SAVE LIVE** dabate hi prices duniya bhar ke liye badal jayenge.
+
+---
+
+## 💰 Price badalne ke 2 tareeke
+
+**A · Admin panel se (fast)** — site kholo → 🛡️ → login → PRICING → edit → SAVE LIVE
+
+**B · Code se (permanent)** — `index.html` mein `<script>` ke top par `PRICING` object hai:
 
 ```js
 const PRICING = {
@@ -70,58 +103,62 @@ const PRICING = {
 };
 ```
 
-- `p` = price (₹)
-- `b` = Razorpay Payment Button ID (optional)
+`p` = price (₹) · `b` = Razorpay Payment Button ID (optional)
+
+Admin panel ka **COPY CODE** button exactly yahi block bana ke deta hai — copy karke
+GitHub pe paste kar do.
 
 ---
 
-## ⚠️ Razorpay buttons — zaroori baat
+## 📊 Current prices
 
-Razorpay Payment Button ka amount **uske dashboard mein fixed** hota hai. Code mein price
-badalne se button ka amount **nahi** badalta.
-
-Isliye jin Adult plans ka price change hua (₹70→100, ₹200→400, ₹410→580), unke purane
-button IDs **hata diye gaye hain** (`b: ''`). Wo plans ab UPI + Universal Razorpay link par
-jaate hain — amount hamesha sahi jaata hai. ✅
-
-**₹835 (1 Year Adult)** ka price same hai, to uska button ID as-is kaam kar raha hai.
-
-**Naya button banane ke baad:**
-1. Razorpay Dashboard → Payment Buttons → naya button (sahi amount ke saath)
-2. Button ID copy karo (`pl_XXXXXXXXXX`)
-3. `PRICING` object mein us plan ki `b: ''` ki jagah paste kar do
-
-Combo pack ke kabhi button IDs the hi nahi — wo pehle se UPI/Universal par hai.
+| Pack | 1 Month | 3 Months | 6 Months | 1 Year |
+|---|---|---|---|---|
+| 🎬 Movies & Series | ₹50 | ₹250 | ₹420 | ₹465 |
+| 🔞 Adult Pack | ₹100 | ₹400 | ₹580 | ₹835 |
+| 🌟 Combo Pack | ₹250 | ₹520 | ₹780 | ₹1500 |
 
 ---
 
-## 🚀 Deploy
+## ⚠️ Razorpay buttons
 
-```bash
-# 1. files repo mein copy karo
-cp index.html vercel.json README.md /path/to/Verceel-timepass-/
-cp -r api /path/to/Verceel-timepass-/
+Razorpay Payment Button ka amount **uske dashboard mein fixed** hota hai. Code ya admin
+panel se price badalne par button ka amount **nahi** badalta.
 
-# 2. push
-git add -A
-git commit -m "6 themes, new Adult/Combo pricing, Harsh Dev drawer redesign, full responsive"
-git push origin main
-```
+Jin Adult plans ka price change hua (₹70→100, ₹200→400, ₹410→580), unke purane button IDs
+**hata diye gaye hain**. Wo plans ab UPI + Universal Razorpay par jaate hain — amount hamesha
+sahi jaata hai ✅. **₹835** ka price same hai, uska button as-is kaam kar raha hai.
 
-Vercel GitHub se connected hai, to push karte hi auto-deploy ho jayega →
-[verceel-timepass.vercel.app](https://verceel-timepass.vercel.app/)
+**Naya button banane ke baad:** Razorpay Dashboard → Payment Buttons → naya button →
+ID (`pl_xxxx`) copy → admin panel ke PRICING tab mein us plan ke **RZP ID** field mein paste → SAVE LIVE.
 
-Ya GitHub web UI se: repo kholo → `index.html` → ✏️ edit → poora content replace → Commit.
+---
 
-### Environment variables (Vercel → Settings → Environment Variables)
+## 🎨 Themes
 
-| Variable | Kiske liye |
+| Theme | ID |
 |---|---|
-| `ADMIN_PASSWORD` | `api/admin-auth.js` — admin panel ka password |
-| `TELEGRAM_BOT_TOKEN` | `api/telegram-notify.js` — visitor/purchase notifications |
-| `TELEGRAM_CHAT_ID` | `api/telegram-notify.js` — notifications kahan jayein |
+| Obsidian Gold (default) | `obsidian` |
+| Royal Amethyst | `amethyst` |
+| Neon Cyber | `cyber` |
+| Crimson Blood | `crimson` |
+| Emerald Luxe | `emerald` |
+| Pearl Light | `pearl` |
 
-Ye tumhare apne secrets hain — inhe kabhi code mein commit mat karna.
+Header 🎨 button ya drawer → APPEARANCE. Naya theme add karna = ek `[data-theme="..."]`
+CSS block + `THEMES` array mein ek entry.
+
+---
+
+## 📁 Files
+
+```
+index.html              — poori site (HTML + CSS + JS)
+api/admin-auth.js       — admin password verify
+api/pricing.js          — live pricing/settings store (Upstash Redis REST, zero deps)
+api/telegram-notify.js  — Telegram notifications
+vercel.json
+```
 
 ---
 
