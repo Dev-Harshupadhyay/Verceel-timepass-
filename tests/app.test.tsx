@@ -36,10 +36,11 @@ describe("site shell", () => {
     await flush();
 
     const toggle = screen.getByTestId("theme-toggle");
-    await user.click(toggle);
     expect(document.documentElement.getAttribute("data-theme")).toBe("obsidian");
     await user.click(toggle);
-    expect(document.documentElement.getAttribute("data-theme")).toBe("apple-light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("pearl");
+    await user.click(toggle);
+    expect(document.documentElement.getAttribute("data-theme")).toBe("obsidian");
   });
 
   it("navigates to the info page and shows trilingual content", async () => {

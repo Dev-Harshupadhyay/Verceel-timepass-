@@ -1,0 +1,228 @@
+/* ══════════════════════════════════════════════════════════════════════
+   TOUCH + RESPONSIVE POLISH
+   Mobile-first smoothness: real tap targets, press feedback, no hover
+   sticking on touch screens, no horizontal overflow, safe-area aware.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --tap: 44px;          /* Apple/WCAG minimum touch target */
+  --tap-sm: 38px;
+}
+
+/* ─────────── base feel ─────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-padding-top: 74px;
+}
+html, body {
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* every interactive surface responds immediately, no 300ms delay */
+button, a, [role="button"], input, select, textarea, .beam, .plan-card, .theme-chip {
+  touch-action: manipulation;
+}
+img { max-width: 100%; height: auto; }
+/* never let a long word / url break the layout */
+body { overflow-wrap: break-word; }
+.wrap, .page-shell, .buy-inner, .studio-wrap { max-width: 100%; }
+
+/* ─────────── press feedback (works on touch) ─────────── */
+.beam:active,
+.plan-card:active,
+.theme-chip:active,
+.drawer-link:active,
+.dev-cta:active,
+.dev-portfolio:active,
+.theme-toggle:active,
+.icon-btn:active,
+.pill:active,
+.st-btn:active:not(:disabled),
+.soft-btn:active,
+.premium-copy:active,
+.screenshot-btn:active,
+.universal-btn:active,
+.dynamic-upi-btn:active,
+.tg-btn-main:active,
+.faq-q:active,
+.footer-link:active,
+.lang-switch button:active,
+.seg button:active,
+.plan-mini:active,
+.studio-nav-btn:active,
+.announce-cta:active,
+.page-back:active {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+.dynamic-upi-btn:active { transform: scale(0.985); }
+.faq-q:active { transform: none; background: rgba(var(--acc-rgb), 0.07); }
+
+/* ─────────── hover only for real pointers ─────────── */
+@media (hover: none) {
+  .card:hover,
+  .plan-card:hover,
+  .theme-chip:hover,
+  .drawer-link:hover,
+  .beam:hover,
+  .universal-btn:hover,
+  .screenshot-btn:hover,
+  .premium-copy:hover,
+  .st-btn:hover,
+  .soft-btn:hover,
+  .studio-nav-btn:hover,
+  .dev-tags span:hover {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+  }
+}
+
+/* ─────────── comfortable tap targets on touch devices ─────────── */
+@media (pointer: coarse) {
+  .icon-btn,
+  .theme-toggle,
+  .x-btn,
+  .pw-eye {
+    min-width: var(--tap-sm);
+    min-height: var(--tap-sm);
+  }
+  .pill { min-height: var(--tap-sm); }
+  .plan-card { min-height: 88px; }
+  .theme-chip { min-height: 74px; }
+  .drawer-link,
+  .dev-portfolio,
+  .dev-cta,
+  .st-btn,
+  .soft-btn,
+  .screenshot-btn,
+  .universal-btn,
+  .dynamic-upi-btn,
+  .tg-btn-main,
+  .premium-copy { min-height: var(--tap); }
+  .faq-q { min-height: var(--tap); }
+  .lang-switch button,
+  .seg button,
+  .plan-mini,
+  .atab,
+  .studio-nav-btn { min-height: var(--tap-sm); }
+  .switch { min-width: 46px; min-height: 28px; }
+  .footer-link { min-height: 34px; padding: 0 4px; }
+  /* the announce × is a real tap target */
+  .announce-close { width: 34px; height: 34px; }
+}
+
+/* ─────────── header: stay tight on small screens ─────────── */
+@media (max-width: 380px) {
+  .hbtns { gap: 4px; }
+  .logo .brand-wordmark { letter-spacing: 1.6px; }
+  .brand-lockup { gap: 6px; }
+}
+@media (max-width: 340px) {
+  .logo .brand-wordmark { letter-spacing: 0.6px; font-size: 0.66rem; }
+  .pill { padding: 5px 7px; }
+}
+
+/* ─────────── fluid type that never overflows ─────────── */
+.main-title { font-size: clamp(1.7rem, 7.6vw, 3.3rem); overflow-wrap: anywhere; }
+.section-label { font-size: clamp(1rem, 4.4vw, 1.35rem); }
+.page-title { font-size: clamp(1.2rem, 5.4vw, 1.9rem); }
+.sec-title { font-size: clamp(1.05rem, 4.6vw, 1.3rem); }
+#payAmt { font-size: clamp(2.2rem, 11vw, 4.4rem); }
+.announce-text { overflow-wrap: anywhere; }
+
+/* ─────────── grid safety ─────────── */
+.cards,
+.plans,
+.trust,
+.admin-stats,
+.log-grid,
+.info-grid,
+.steps,
+.theme-grid {
+  min-width: 0;
+}
+.cards > *, .plans > *, .trust > *, .info-grid > *, .steps > * { min-width: 0; }
+
+@media (max-width: 359px) {
+  .plans { grid-template-columns: 1fr 1fr; gap: 7px; }
+  .plan-card { padding: 12px 4px 10px; }
+  .pc-amt { font-size: 1.05rem; }
+  .trust { gap: 6px; }
+  .trust-item { padding: 10px 3px 9px; }
+  .trust-item b { font-size: 9px; }
+  .trust-item small { font-size: 6.8px; letter-spacing: 0.5px; }
+}
+
+/* ─────────── sticky header + safe areas ─────────── */
+header {
+  padding-top: max(13px, env(safe-area-inset-top, 0px));
+}
+@supports (height: 100dvh) {
+  #buyPage,
+  .studio-overlay,
+  .admin-overlay { min-height: 100dvh; }
+}
+.page-shell,
+.drawer-scroll,
+.studio-body { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8px); }
+
+/* ─────────── modal / drawer: mobile friendly ─────────── */
+.modal { padding: max(12px, env(safe-area-inset-top, 0px)) 12px calc(12px + env(safe-area-inset-bottom, 0px)); align-items: center; }
+.modal-card { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+.drawer { overscroll-behavior: contain; }
+.drawer-scroll { -webkit-overflow-scrolling: touch; }
+
+/* ─────────── long strings never blow out the layout ─────────── */
+.upi-id-value,
+.dev-handle,
+.st-field-note,
+.rev-item .rev-main small,
+.log-grid b { overflow-wrap: anywhere; }
+
+/* ─────────── keyboard users still get a clear ring ─────────── */
+:focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+/* but no ugly outline after a tap */
+:focus:not(:focus-visible) { outline: none; }
+
+/* ─────────── reduced motion ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dev-crown,
+  .dev-crown::after,
+  .dev-avatar-ring,
+  .drawer-crown { animation: none !important; }
+  *:active { transform: none !important; }
+}
+
+/* ─────────── print: keep it sane ─────────── */
+@media print {
+  header, .drawer, .drawer-back, .modal, .modal-overlay, .announce, #toastHost { display: none !important; }
+  body { background: #fff; color: #000; }
+}
+
+/* ─────────── crown card: never overflow, no sticky hover ─────────── */
+.dev-crown { max-width: 100%; }
+.dev-crown span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dev-quote { overflow-wrap: anywhere; }
+.dev-name, .dev-handle, .dev-role { overflow-wrap: anywhere; }
+@media (hover: none) {
+  .dev-cta:hover .dev-cta-arrow { transform: none; }
+  .dev-portfolio:hover { color: var(--muted); border-color: var(--line-hi); background: transparent; }
+}

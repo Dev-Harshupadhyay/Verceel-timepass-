@@ -8,9 +8,10 @@ import { AuthProvider } from "./state/AuthProvider";
 import { LangProvider } from "./state/LangProvider";
 
 import "./styles/legacy.css";
-import "./styles/apple.css";
+import "./styles/themes.css";
 import "./styles/ui.css";
 import "./styles/studio.css";
+import "./styles/polish.css";
 
 const host = document.getElementById("root");
 if (!host) throw new Error("#root missing");

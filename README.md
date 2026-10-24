@@ -123,19 +123,30 @@ Env var change karne ke baad **Redeploy** karna padega.
 
 | Theme | Kya |
 |---|---|
-| **Apple Light** (`apple-light`) | **Default** — white surfaces, soft neutral grays, restrained gold accent |
-| **Obsidian Gold** (`obsidian`) | **Dark mode toggle ka destination — bilkul purani site jaisa** |
+| **Obsidian Gold** (`obsidian`) | **Default** — bilkul purani site jaisa: deep black surfaces + gold accents |
+| **Pearl Light** (`pearl`) | Light option — warm off-white surfaces, gold accent (☀️ toggle ka destination) |
 | Violet Dark (`violet-dark`) | Premium purple dark |
-| Amethyst / Cyber / Crimson / Emerald / Pearl | Purane 6 themes — sab preserved |
+| Amethyst / Cyber / Crimson / Emerald | Dark accent themes |
 
 - Header mein **☀️ / 🌙 toggle** hai (accessible `aria-pressed` + keyboard).
-  🌙 dabao → aaj wali exact dark site. ☀️ dabao → Apple Light.
-- **More themes** 🎨 button se saare 8 themes.
+  🌙 dabao → Obsidian Gold. ☀️ dabao → Pearl Light.
+- **More themes** 🎨 button se saare 7 themes.
 - Visitor ka choice `tp_theme` mein save hota hai. Refresh/reopen par wahi theme.
-- **First-time visitor** ko admin ka published default milta hai (factory default = Apple Light).
-- Pehle paint se hi theme apply hota hai — **koi flash nahi**. Corrupt saved value → Apple Light.
+- **First-time visitor** ko admin ka published default milta hai (factory default = **Obsidian Gold**).
+- Pehle paint se hi theme apply hota hai — **koi flash nahi**. Corrupt saved value → Obsidian Gold.
+- `apple-light` theme hata diya gaya hai — purane visitors/configs ka value automatically Obsidian Gold par migrate ho jata hai.
 - `meta theme-color` + `color-scheme` theme ke saath update hote hain.
 - Theme transition ~250ms, `prefers-reduced-motion` respect karta hai.
+- Saari theme screens (drawer, studio, modals, toasts) dono light/dark par legible hain.
+
+### Responsive + touch
+
+- Mobile-first: 320px se 4K tak koi horizontal scroll nahi.
+- Har interactive element **≥44×44px** tap target (coarse pointer par auto-expand).
+- Press par `scale(.97)` feedback — touch par turant response, koi 300ms delay nahi.
+- Hover effects sirf `@media (hover:hover)` par — tap ke baad "sticky hover" nahi.
+- `-webkit-tap-highlight-color: transparent`, `100dvh` modals, `env(safe-area-inset-*)` support.
+- `prefers-reduced-motion` par animations band.
 
 ---
 
@@ -209,7 +220,7 @@ src/
   state/                Theme, Config, Auth, Toast/Confirm, Lang providers
   config/               defaults + theme metadata
   lib/                  api, payments (UPI/RZP), router, storage, visits, notify
-  styles/               legacy.css (original design, untouched) + apple.css + ui.css + studio.css
+  styles/               legacy.css (original design) + themes.css + ui.css + studio.css + polish.css
 api/
   _lib/defaults.js        default content (aaj ka exact site data)
   _lib/config-schema.js   server-side validation / migration (v1 → v2)

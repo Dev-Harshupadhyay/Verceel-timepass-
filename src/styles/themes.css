@@ -1,0 +1,133 @@
+/* ══════════════════════════════════════════════════════════════════════
+   EXTRA THEMES
+   Obsidian Gold is the factory default and lives untouched in legacy.css,
+   so the site looks exactly like the original design.
+   Pearl (light) is what the ☀️/🌙 toggle switches to.
+   This file only carries Violet Dark + small legibility fixes.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ───────────── LIGHT THEME · PEARL tokens live in legacy.css ───────────── */
+
+/* ───────────── 8 · VIOLET DARK ───────────── */
+[data-theme="violet-dark"] {
+  --bg: #0b0b10;
+  --bg2: #12101a;
+  --surf-0: #0f0e15;
+  --surf-1: #15131d;
+  --surf-2: #1b1826;
+
+  --gold: #8b5cf6;
+  --gold-hi: #c4b5fd;
+  --gold-deep: #5b21b6;
+
+  --g1: #6d28d9;
+  --g2: #8b5cf6;
+  --g3: #ede9fe;
+
+  --on-acc: #0f0720;
+
+  --ink: #f4f2ff;
+  --muted: #b6b0cc;
+  --faint: #8a84a3;
+
+  --acc-rgb: 139, 92, 246;
+  --acc-hi-rgb: 196, 181, 253;
+  --acc-dp-rgb: 91, 33, 182;
+
+  --bg-rgb: 11, 11, 16;
+  --surf2-rgb: 27, 24, 38;
+  --hl-rgb: 255, 255, 255;
+  --shadow-rgb: 0, 0, 0;
+  --scrim-rgb: 5, 4, 10;
+
+  --meta-color: #0b0b10;
+
+  --line: rgba(167, 139, 250, 0.16);
+  --line-hi: rgba(167, 139, 250, 0.42);
+  --lacquer: linear-gradient(165deg, rgba(167, 139, 250, 0.06), rgba(139, 92, 246, 0.03) 55%, rgba(0, 0, 0, 0.22));
+  --gold-grad: linear-gradient(125deg, #7c3aed, #a78bfa 48%, #8b5cf6);
+  --err: #fca5a5;
+}
+
+/* ══════════════ PEARL (light theme) · legibility fixes ══════════════ */
+/* Obsidian Gold is the default; Pearl is what the sun toggle switches to. */
+[data-theme="pearl"] {
+  --err: #b42318;
+  --raised: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.055);
+  --raised-hi: 0 2px 6px rgba(0, 0, 0, 0.05), 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+[data-theme="pearl"] .theme-toggle { color: #5f4a0d; }
+
+/* ══════════════ LIGHT-THEME SAFE ERRORS / CHIPS ══════════════ */
+[data-theme="pearl"] .toast.tone-error { color: #b42318; }
+[data-theme="pearl"] .st-field-error,
+[data-theme="pearl"] .gate-card .gate-err { color: #b42318; }
+[data-theme="pearl"] .st-chip.live { color: #0a7a3d; }
+[data-theme="pearl"] .st-chip.draft { color: #9a5b00; }
+
+/* ── violet dark polish ── */
+[data-theme="violet-dark"] .amb::before {
+  background:
+    radial-gradient(760px 440px at 50% -8%, rgba(139, 92, 246, 0.16), transparent 68%),
+    radial-gradient(560px 420px at 100% 108%, rgba(167, 139, 250, 0.08), transparent 62%);
+}
+[data-theme="violet-dark"] .amb::after {
+  background: repeating-linear-gradient(115deg, transparent 0 22px, rgba(167, 139, 250, 0.02) 22px 23px);
+}
+[data-theme="violet-dark"] .logo em { color: #c4b5fd; }
+[data-theme="violet-dark"] .live-pill { color: #c4b5fd; }
+[data-theme="violet-dark"] ::selection { background: rgba(139, 92, 246, 0.4); color: #fff; }
+[data-theme="violet-dark"] .store-chip.live { color: #a7f3d0; }
+
+/* ══════════════ SUN / MOON THEME TOGGLE ══════════════ */
+.theme-toggle {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(var(--acc-rgb), 0.05);
+  color: var(--muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.theme-toggle:hover { color: var(--gold-hi); border-color: var(--line-hi); background: rgba(var(--acc-rgb), 0.12); }
+.theme-toggle:active { transform: scale(0.9); }
+.theme-toggle svg { width: 15px; height: 15px; display: block; transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.25, 1); }
+.theme-toggle[aria-pressed="true"] svg { transform: rotate(200deg); }
+[data-theme="pearl"] .theme-toggle { background: #fffdf8; border-color: rgba(120, 102, 62, 0.28); }
+[data-theme="pearl"] .theme-toggle:hover { background: #f6f1e4; }
+
+@media (max-width: 420px) {
+  .theme-toggle { width: 30px; height: 30px; }
+  .theme-toggle svg { width: 13px; height: 13px; }
+}
+@media (max-width: 340px) {
+  .theme-toggle { width: 27px; height: 27px; }
+}
+
+/* ══════════════ BRAND LOGO ══════════════ */
+.logo-img { width: 32px; height: 32px; border-radius: 9px; display: block; flex: 0 0 auto; }
+.logo .crest.logo-crest { background: none; box-shadow: none; padding: 0; width: 32px; height: 32px; }
+.logo .crest.logo-crest .logo-img { width: 100%; height: 100%; }
+[data-theme="pearl"] .logo-img { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); border-radius: 9px; }
+.brand-lockup { display: inline-flex; align-items: center; gap: 9px; }
+.brand-wordmark { font-weight: 900; letter-spacing: 2.5px; }
+.brand-wordmark em { font-style: normal; }
+.logo-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 8px; border-radius: 8px; font-size: 8.5px; font-weight: 900; letter-spacing: 1.4px;
+  border: 1px solid var(--line); color: var(--faint); background: rgba(var(--acc-rgb), 0.05);
+  margin-top: 10px;
+}
+.logo-hero-badge img { width: 13px; height: 13px; display: block; }
+@media (max-width: 420px) {
+  .logo-img, .logo .crest.logo-crest { width: 26px; height: 26px; }
+}
+@media (max-width: 340px) {
+  .logo-img, .logo .crest.logo-crest { width: 25px; height: 25px; }
+}

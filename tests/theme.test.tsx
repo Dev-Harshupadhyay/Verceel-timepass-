@@ -28,21 +28,25 @@ function renderTheme() {
 }
 
 describe("theme system", () => {
-  it("defaults a fresh visitor to Apple Light", () => {
+  it("defaults a fresh visitor to Obsidian Gold (today's design)", () => {
     mockFetchConfig(null);
     renderTheme();
-    expect(document.documentElement.getAttribute("data-theme")).toBe("apple-light");
-    expect(screen.getByTestId("theme").textContent).toBe("apple-light");
-    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("obsidian");
+    expect(screen.getByTestId("theme").textContent).toBe("obsidian");
+    expect(document.documentElement.style.colorScheme).toBe("dark");
   });
 
-  it("toggle switches to today's dark theme (obsidian)", async () => {
+  it("toggle switches gold -> pearl light -> gold", async () => {
     mockFetchConfig(null);
     const user = userEvent.setup();
     renderTheme();
     await user.click(screen.getByTestId("theme-toggle"));
+    expect(document.documentElement.getAttribute("data-theme")).toBe("pearl");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(localStorage.getItem("tp_theme")).toBe("pearl");
+
+    await user.click(screen.getByTestId("theme-toggle"));
     expect(document.documentElement.getAttribute("data-theme")).toBe("obsidian");
-    expect(document.documentElement.style.colorScheme).toBe("dark");
     expect(localStorage.getItem("tp_theme")).toBe("obsidian");
   });
 
@@ -51,11 +55,10 @@ describe("theme system", () => {
     const user = userEvent.setup();
     renderTheme();
     const btn = screen.getByTestId("theme-toggle");
+    expect(btn.getAttribute("aria-pressed")).toBe("true"); // gold is dark
+    await user.click(btn);
     expect(btn.getAttribute("aria-pressed")).toBe("false");
     expect(btn.getAttribute("aria-label")).toMatch(/dark/i);
-    await user.click(btn);
-    expect(btn.getAttribute("aria-pressed")).toBe("true");
-    expect(btn.getAttribute("aria-label")).toMatch(/light/i);
   });
 
   it("restores the saved choice on reload", async () => {
@@ -66,23 +69,25 @@ describe("theme system", () => {
     expect(document.documentElement.getAttribute("data-theme")).toBe("violet-dark");
   });
 
-  it("falls back to Apple Light for a corrupt saved value", () => {
+  it("falls back to Obsidian Gold for a corrupt saved value", () => {
     localStorage.setItem("tp_theme", "not-a-theme");
     mockFetchConfig(null);
     renderTheme();
-    expect(document.documentElement.getAttribute("data-theme")).toBe("apple-light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("obsidian");
   });
 
-  it("keeps all original six themes plus the new two", () => {
+  it("maps a removed 'apple-light' saved value to gold", async () => {
+    localStorage.setItem("tp_theme", "apple-light");
+    mockFetchConfig(null);
+    renderTheme();
+    await flush();
+    expect(document.documentElement.getAttribute("data-theme")).toBe("obsidian");
+  });
+
+  it("keeps all original six themes plus violet-dark, and drops apple-light", () => {
     const ids = THEMES.map((t) => t.id);
-    expect(ids).toContain("obsidian");
-    expect(ids).toContain("amethyst");
-    expect(ids).toContain("cyber");
-    expect(ids).toContain("crimson");
-    expect(ids).toContain("emerald");
-    expect(ids).toContain("pearl");
-    expect(ids).toContain("apple-light");
-    expect(ids).toContain("violet-dark");
+    expect(ids).toEqual(["obsidian", "pearl", "violet-dark", "amethyst", "cyber", "crimson", "emerald"]);
+    expect(ids).not.toContain("apple-light");
   });
 
   it("updates meta theme-color with the active theme", async () => {
@@ -94,6 +99,8 @@ describe("theme system", () => {
     mockFetchConfig(null);
     const user = userEvent.setup();
     renderTheme();
+    await user.click(screen.getByTestId("theme-toggle"));
+    expect(meta.getAttribute("content")).toBe("#f7f4ed");
     await user.click(screen.getByTestId("theme-toggle"));
     expect(meta.getAttribute("content")).toBe("#07060a");
     meta.remove();
@@ -118,7 +125,7 @@ describe("theme system", () => {
     localStorage.setItem("tp_theme", "emerald");
     const { DEFAULT_CONFIG } = await import("@/config");
     const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-    cfg.appearance.defaultTheme = "apple-light";
+    cfg.appearance.defaultTheme = "obsidian";
     mockFetchConfig(cfg);
     render(
       <Providers>

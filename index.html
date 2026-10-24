@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="apple-light">
+<html lang="en" data-theme="obsidian">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -8,7 +8,7 @@
       name="description"
       content="TIMEPASS PREMIUM — Market se sasta OTT. Movies & Web Series, Adult aur Combo plans. Instant UPI payment aur fast verification."
     />
-    <meta name="theme-color" id="themeColorMeta" content="#ffffff" />
+    <meta name="theme-color" id="themeColorMeta" content="#07060a" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/logo.svg" />
     <link rel="mask-icon" href="/logo.svg" color="#d4af37" />
@@ -25,20 +25,21 @@
     <!-- Apply the saved theme before first paint (zero flash / FOUC). -->
     <script>
       (function () {
-        var VALID = ["apple-light", "obsidian", "violet-dark", "amethyst", "cyber", "crimson", "emerald", "pearl"];
+        var VALID = ["obsidian", "pearl", "violet-dark", "amethyst", "cyber", "crimson", "emerald"];
         var DARK = ["obsidian", "violet-dark", "amethyst", "cyber", "crimson", "emerald"];
         var META = {
-          "apple-light": "#ffffff", obsidian: "#07060a", "violet-dark": "#0b0b10", amethyst: "#08060e",
-          cyber: "#04080c", crimson: "#0a0406", emerald: "#040907", pearl: "#f7f4ed"
+          obsidian: "#07060a", pearl: "#f7f4ed", "violet-dark": "#0b0b10", amethyst: "#08060e",
+          cyber: "#04080c", crimson: "#0a0406", emerald: "#040907"
         };
         var t = null;
         try { t = localStorage.getItem("tp_theme"); } catch (e) {}
-        if (VALID.indexOf(t) === -1) t = "apple-light";
+        if (t === "apple-light") t = "obsidian";
+        if (VALID.indexOf(t) === -1) t = "obsidian";
         var root = document.documentElement;
         root.setAttribute("data-theme", t);
         root.style.colorScheme = DARK.indexOf(t) === -1 ? "light" : "dark";
         var meta = document.getElementById("themeColorMeta");
-        if (meta) meta.setAttribute("content", META[t] || "#ffffff");
+        if (meta) meta.setAttribute("content", META[t] || "#07060a");
       })();
     </script>
 

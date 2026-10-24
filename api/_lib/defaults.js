@@ -21,12 +21,15 @@ export const DEFAULT_CONFIG = {
     shortName: "TIMEPASS PREMIUM",
     logoUrl: "",
     devName: "Harsh Dev",
+    devCrown: "👑 FOUNDER · CREATOR",
     devHandle: "pmharsh",
     devUrl: "https://new-profotilo-flame.vercel.app/",
-    devRole: "CREATOR · DEVELOPER · BUILDER",
+    devRole: "WEB DEVELOPER · UI DESIGNER",
     devBio:
-      "Premium web interfaces, responsive landing pages, Python / JavaScript projects aur Telegram automation par kaam karta hoon.",
-    devTags: ["HTML / CSS", "JavaScript", "Python", "Telegram Bots", "UI / UX"],
+      "Main Harsh — web developer aur UI designer. Is website ka design, code, payment flow aur Telegram automation, sab mera hi kaam hai. 30+ projects ship kiye hain — landing pages, dashboards, Python scripts aur bots. Kaam pasand aaye to seedha message karo.",
+    devQuote: "Design + Code + Automation — sab ek hi banda.",
+    devPortfolioLabel: "PORTFOLIO DEKHO",
+    devTags: ["HTML / CSS", "JavaScript", "React", "Python", "Telegram Bots", "UI / UX"],
     devStats: [
       { value: "30+", label: "PROJECTS" },
       { value: "24×7", label: "SUPPORT" },
@@ -539,7 +542,7 @@ export const DEFAULT_CONFIG = {
   ],
 
   appearance: {
-    defaultTheme: "apple-light",
+    defaultTheme: "obsidian",
     darkTheme: "obsidian"
   }
 };
