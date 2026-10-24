@@ -18,7 +18,7 @@ export function sameConfig(a: unknown, b: unknown): boolean {
 }
 
 export function effectiveThemeIds(): string[] {
-  return ["apple-light", "obsidian", "violet-dark", "amethyst", "cyber", "crimson", "emerald", "pearl"];
+  return ["obsidian", "pearl", "violet-dark", "amethyst", "cyber", "crimson", "emerald"];
 }
 
 export const DARK_THEME_IDS = ["obsidian", "violet-dark", "amethyst", "cyber", "crimson", "emerald"];
@@ -34,20 +34,20 @@ export interface ThemeMeta {
 
 export const THEMES: ThemeMeta[] = [
   {
-    id: "apple-light",
-    name: "Apple Light",
-    short: "Light",
-    dark: false,
-    meta: "#ffffff",
-    sw: "linear-gradient(135deg,#ffffff 45%,#d4af37)"
-  },
-  {
     id: "obsidian",
     name: "Obsidian Gold",
-    short: "Dark",
+    short: "Gold",
     dark: true,
     meta: "#07060a",
     sw: "linear-gradient(135deg,#0a090e 45%,#d4af37)"
+  },
+  {
+    id: "pearl",
+    name: "Pearl Light",
+    short: "Light",
+    dark: false,
+    meta: "#f7f4ed",
+    sw: "linear-gradient(135deg,#f7f4ed 45%,#b8912c)"
   },
   {
     id: "violet-dark",
@@ -88,14 +88,6 @@ export const THEMES: ThemeMeta[] = [
     dark: true,
     meta: "#040907",
     sw: "linear-gradient(135deg,#061210 45%,#10b981)"
-  },
-  {
-    id: "pearl",
-    name: "Pearl Light",
-    short: "Pearl",
-    dark: false,
-    meta: "#f7f4ed",
-    sw: "linear-gradient(135deg,#f7f4ed 45%,#b8912c)"
   }
 ];
 

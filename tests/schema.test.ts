@@ -27,11 +27,11 @@ describe("defaults", () => {
     expect(DEFAULT_CONFIG.packs.adult.plans[0].razorpayButtonId).toBe("");
   });
 
-  it("has the original links + apple-light default", () => {
+  it("has the original links + gold default", () => {
     expect(DEFAULT_CONFIG.links.telegram).toBe("pmharsh");
     expect(DEFAULT_CONFIG.links.bot).toBe("Trackerhhbot");
     expect(DEFAULT_CONFIG.links.channel).toBe("TIMEPASS_BACKUP_1");
-    expect(DEFAULT_CONFIG.appearance.defaultTheme).toBe("apple-light");
+    expect(DEFAULT_CONFIG.appearance.defaultTheme).toBe("obsidian");
     expect(DEFAULT_CONFIG.appearance.darkTheme).toBe("obsidian");
   });
 
@@ -125,7 +125,22 @@ describe("normalizeConfig", () => {
     const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     cfg.appearance.defaultTheme = "super-neon";
     const { config } = normalizeConfig(cfg);
-    expect(config.appearance.defaultTheme).toBe("apple-light");
+    expect(config.appearance.defaultTheme).toBe("obsidian");
+  });
+
+  it("migrates a removed apple-light default to gold", () => {
+    const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    cfg.appearance.defaultTheme = "apple-light";
+    const { config, errors } = normalizeConfig(cfg);
+    expect(config.appearance.defaultTheme).toBe("obsidian");
+    expect(errors.length).toBe(0);
+  });
+
+  it("keeps pearl as the light theme", () => {
+    const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    cfg.appearance.defaultTheme = "pearl";
+    const { config } = normalizeConfig(cfg);
+    expect(config.appearance.defaultTheme).toBe("pearl");
   });
 
   it("limits announcement text length", () => {

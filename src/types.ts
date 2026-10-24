@@ -4,7 +4,6 @@ export type Lang = "en" | "hinglish" | "hi";
 export type Tri = Record<Lang, string>;
 
 export type ThemeId =
-  | "apple-light"
   | "obsidian"
   | "violet-dark"
   | "amethyst"
@@ -29,10 +28,13 @@ export interface Brand {
   shortName: string;
   logoUrl: string;
   devName: string;
+  devCrown: string;
   devHandle: string;
   devUrl: string;
   devRole: string;
   devBio: string;
+  devQuote: string;
+  devPortfolioLabel: string;
   devTags: string[];
   devStats: DevStat[];
 }

@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { PricingCards } from "@/components/PricingCards";
 import { FaqAccordion } from "@/components/Faq";
 import { Announcement } from "@/components/Announcement";
+import { Drawer } from "@/components/Drawer";
 import { DEFAULT_CONFIG } from "@/config";
 import { LangSwitch } from "@/state/LangProvider";
 import { mockFetchConfig, renderWithProviders, flush } from "./_utils";
@@ -180,5 +181,55 @@ describe("announcement", () => {
     renderWithProviders(<Announcement />);
     const bar = await screen.findByTestId("announcement");
     expect(bar.querySelector("script")).toBeNull();
+  });
+});
+
+describe("harsh dev crown card (drawer)", () => {
+  it("renders crown, name, quote, bio, stats, tags and both CTAs", async () => {
+    mockFetchConfig(cfg());
+    renderWithProviders(<Drawer open onClose={() => {}} onThemeOpen={() => {}} />);
+    await flush();
+
+    expect(screen.getAllByText(/MADE BY/i).length).toBeGreaterThan(0);
+    // crown pill (emoji is stripped, crown icon + label remain)
+    expect(screen.getByText("FOUNDER · CREATOR")).toBeTruthy();
+    expect(screen.getAllByText(/Harsh/).length).toBeGreaterThan(0);
+    expect(screen.getByText("@" + DEFAULT_CONFIG.brand.devHandle)).toBeTruthy();
+    expect(screen.getByText("WEB DEVELOPER · UI DESIGNER")).toBeTruthy();
+    expect(screen.getByText(/sab ek hi banda/)).toBeTruthy();
+    expect(screen.getByText(DEFAULT_CONFIG.brand.devBio)).toBeTruthy();
+
+    for (const tag of DEFAULT_CONFIG.brand.devTags) {
+      expect(screen.getByText(tag)).toBeTruthy();
+    }
+    for (const st of DEFAULT_CONFIG.brand.devStats) {
+      expect(screen.getAllByText(st.value).length).toBeGreaterThan(0);
+    }
+
+    const hire = screen.getByText(/HIRE \/ CONTACT/i).closest("a");
+    expect(hire?.getAttribute("href")).toContain("t.me");
+    expect(hire?.getAttribute("rel")).toContain("noopener");
+    expect(screen.getByText(DEFAULT_CONFIG.brand.devPortfolioLabel)).toBeTruthy();
+  });
+
+  it("shows the live theme chips as pressed for the active theme", async () => {
+    mockFetchConfig(cfg());
+    renderWithProviders(<Drawer open onClose={() => {}} onThemeOpen={() => {}} />);
+    await flush();
+    const gold = screen.getByRole("button", { name: /OBSIDIAN GOLD/i });
+    expect(gold.getAttribute("aria-pressed")).toBe("true");
+    const pearl = screen.getByRole("button", { name: /PEARL LIGHT/i });
+    expect(pearl.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("uses a custom crown label + bio from the studio", async () => {
+    const c = cfg();
+    c.brand.devCrown = "👑 LEAD DEV";
+    c.brand.devBio = "Custom bio line for the test.";
+    mockFetchConfig(c);
+    renderWithProviders(<Drawer open onClose={() => {}} onThemeOpen={() => {}} />);
+    await flush();
+    expect(screen.getByText("LEAD DEV")).toBeTruthy();
+    expect(screen.getByText("Custom bio line for the test.")).toBeTruthy();
   });
 });

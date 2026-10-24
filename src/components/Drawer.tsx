@@ -33,7 +33,11 @@ export function Drawer({ open, onClose, onThemeOpen }: { open: boolean; onClose:
       >
         <div className="drawer-top">
           <h3>
-            <BrandLogo size={20} className="drawer-logo" /> MADE BY <em>{brand.devName.toUpperCase()}</em>
+            <BrandLogo size={20} className="drawer-logo" />
+            <span className="drawer-title-txt">
+              MADE BY <em>{brand.devName.toUpperCase()}</em>
+            </span>
+            <i className="fa-solid fa-crown drawer-crown" aria-hidden="true" />
           </h3>
           <button className="x-btn" style={{ position: "static" }} onClick={onClose} aria-label="Close menu" type="button">
             <i className="fa-solid fa-xmark" aria-hidden="true" />
@@ -41,39 +45,64 @@ export function Drawer({ open, onClose, onThemeOpen }: { open: boolean; onClose:
         </div>
 
         <div className="drawer-scroll">
-          {/* ░░ PROFILE ░░ */}
+          {/* ░░ PROFILE · CROWN CARD ░░ */}
           <section className="dev-hero">
             <div className="dev-hero-glow" aria-hidden="true" />
+
+            {brand.devCrown ? (
+              <div className="dev-crown">
+                <i className="fa-solid fa-crown" aria-hidden="true" />
+                <span>{brand.devCrown.replace(/^👑\s*/, "")}</span>
+              </div>
+            ) : null}
+
             <div className="dev-id">
               <div className="dev-avatar-wrap">
+                <span className="dev-avatar-ring" aria-hidden="true" />
                 <div className="dev-avatar">{brand.devName.slice(0, 1).toUpperCase()}</div>
-                <span className="dev-dot" title="Available" />
+                <span className="dev-dot" title="Available for work" />
               </div>
               <div className="dev-who">
-                <span className="dev-role">{brand.devRole}</span>
                 <b className="dev-name">
                   {brand.devName} <span className="dev-spark">⚡</span>
                 </b>
                 <span className="dev-handle">@{brand.devHandle}</span>
+                {brand.devRole ? <span className="dev-role">{brand.devRole}</span> : null}
               </div>
             </div>
+
+            {brand.devQuote ? <p className="dev-quote">“{brand.devQuote}”</p> : null}
+
             <p className="dev-bio">{brand.devBio}</p>
+
             <div className="dev-stats">
-              {brand.devStats.map((s, i) => (
-                <div className="ds" key={`${s.label}-${i}`}>
-                  <b>{s.value}</b>
-                  <small>{s.label}</small>
+              {brand.devStats.map((s2, i) => (
+                <div className="ds" key={`${s2.label}-${i}`}>
+                  <b>{s2.value}</b>
+                  <small>{s2.label}</small>
                 </div>
               ))}
             </div>
+
             <div className="dev-tags">
               {brand.devTags.map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
             </div>
+
             <a className="dev-cta" href={telegramUrl(links.telegram)} target="_blank" rel="noopener noreferrer">
-              <i className="fa-brands fa-telegram" aria-hidden="true" /> HIRE / CONTACT {brand.devName.toUpperCase()}
+              <i className="fa-brands fa-telegram" aria-hidden="true" />
+              <span>HIRE / CONTACT {brand.devName.toUpperCase()}</span>
+              <i className="fa-solid fa-arrow-right dev-cta-arrow" aria-hidden="true" />
             </a>
+
+            {brand.devUrl ? (
+              <a className="dev-portfolio" href={brand.devUrl} target="_blank" rel="noopener noreferrer">
+                <i className="fa-solid fa-globe" aria-hidden="true" />
+                {brand.devPortfolioLabel || "PORTFOLIO"}
+                <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />
+              </a>
+            ) : null}
           </section>
 
           {/* ░░ APPEARANCE ░░ */}

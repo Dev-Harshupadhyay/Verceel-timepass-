@@ -17,8 +17,8 @@ export function ThemeToggle() {
       className="theme-toggle"
       onClick={handle}
       aria-pressed={isDark}
-      aria-label={isDark ? "Dark mode on — switch to Apple Light" : "Switch to dark mode"}
-      title={isDark ? "Switch to light" : "Switch to dark"}
+      aria-label={isDark ? "Gold mode on — switch to Pearl Light" : "Switch to dark mode"}
+      title={isDark ? "Switch to Pearl Light" : "Switch to Obsidian Gold"}
       data-testid="theme-toggle"
     >
       {isDark ? (

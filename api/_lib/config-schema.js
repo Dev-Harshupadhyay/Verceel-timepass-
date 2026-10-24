@@ -29,7 +29,7 @@ export const MAX_PLANS_PER_PACK = 6;
 export const MAX_FAQ = 30;
 
 export const PACK_KEYS = ["movies", "adult", "combo"];
-export const LIGHT_THEMES = ["apple-light", "pearl"];
+export const LIGHT_THEMES = ["pearl"];
 export const DARK_THEMES = ["obsidian", "violet-dark", "amethyst", "cyber", "crimson", "emerald"];
 export const THEME_IDS = [...LIGHT_THEMES, ...DARK_THEMES];
 export const LANGS = ["en", "hinglish", "hi"];
@@ -230,10 +230,13 @@ export function normalizeConfig(raw) {
     shortName: str(b.shortName, "shortName", 60, D.brand.shortName, "brand.shortName"),
     logoUrl: url(b.logoUrl, "", "brand.logoUrl", { relative: true }),
     devName: str(b.devName, "devName", 40, D.brand.devName, "brand.devName"),
+    devCrown: str(b.devCrown, "devCrown", 48, D.brand.devCrown, "brand.devCrown"),
     devHandle: str(b.devHandle, "devHandle", 40, D.brand.devHandle, "brand.devHandle"),
     devUrl: url(b.devUrl, D.brand.devUrl, "brand.devUrl"),
     devRole: str(b.devRole, "devRole", 80, D.brand.devRole, "brand.devRole"),
-    devBio: multi(b.devBio, 300, D.brand.devBio, "brand.devBio"),
+    devBio: multi(b.devBio, 420, D.brand.devBio, "brand.devBio"),
+    devQuote: str(b.devQuote, "devQuote", 90, D.brand.devQuote, "brand.devQuote"),
+    devPortfolioLabel: str(b.devPortfolioLabel, "devPortfolioLabel", 32, D.brand.devPortfolioLabel, "brand.devPortfolioLabel"),
     devTags: strList(b.devTags, 10, 24, D.brand.devTags, "brand.devTags"),
     devStats: Array.isArray(b.devStats)
       ? b.devStats.slice(0, 4).map((s, i) => ({
@@ -448,10 +451,18 @@ export function normalizeConfig(raw) {
   });
 
   /* ---------- appearance ---------- */
+  /* "apple-light" was removed as a theme — old published configs and old
+     visitor localStorage values are mapped to the gold default instead of
+     erroring out. */
+  const THEME_ALIAS = { "apple-light": "obsidian" };
+  const themeVal = (v, list, fallback, path) => {
+    if (typeof v === "string" && THEME_ALIAS[v]) return THEME_ALIAS[v];
+    return oneOf(v, list, fallback, path);
+  };
   const ap = isPlainObject(src.appearance) ? src.appearance : {};
   out.appearance = {
-    defaultTheme: oneOf(ap.defaultTheme, THEME_IDS, D.appearance.defaultTheme, "appearance.defaultTheme"),
-    darkTheme: oneOf(ap.darkTheme, DARK_THEMES, D.appearance.darkTheme, "appearance.darkTheme"),
+    defaultTheme: themeVal(ap.defaultTheme, THEME_IDS, D.appearance.defaultTheme, "appearance.defaultTheme"),
+    darkTheme: themeVal(ap.darkTheme, DARK_THEMES, D.appearance.darkTheme, "appearance.darkTheme"),
   };
 
   /* ---------- meta ---------- */

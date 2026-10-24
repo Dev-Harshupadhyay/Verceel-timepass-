@@ -279,8 +279,11 @@ export function ContentPane({ draft, update }: PaneProps) {
         </Row>
       </div>
 
-      <div className="studio-h2">DEVELOPER PROFILE (DRAWER)</div>
+      <div className="studio-h2">DEVELOPER PROFILE (CROWN CARD)</div>
       <div className="studio-card">
+        <Row label="Crown label" hint="Card ke top par badge">
+          <TextField value={draft.brand.devCrown} maxLength={48} onChange={(v) => update((d) => { d.brand.devCrown = v; })} />
+        </Row>
         <Row label="Name">
           <TextField value={draft.brand.devName} maxLength={40} onChange={(v) => update((d) => { d.brand.devName = v; })} />
         </Row>
@@ -290,8 +293,14 @@ export function ContentPane({ draft, update }: PaneProps) {
         <Row label="Role line">
           <TextField value={draft.brand.devRole} maxLength={80} onChange={(v) => update((d) => { d.brand.devRole = v; })} />
         </Row>
+        <Row label="Quote" hint="Chhota highlight line" stack>
+          <TextField value={draft.brand.devQuote} maxLength={90} onChange={(v) => update((d) => { d.brand.devQuote = v; })} />
+        </Row>
         <Row label="Bio" stack>
-          <TextArea value={draft.brand.devBio} maxLength={300} onChange={(v) => update((d) => { d.brand.devBio = v; })} />
+          <TextArea value={draft.brand.devBio} maxLength={420} onChange={(v) => update((d) => { d.brand.devBio = v; })} />
+        </Row>
+        <Row label="Portfolio button label">
+          <TextField value={draft.brand.devPortfolioLabel} maxLength={32} onChange={(v) => update((d) => { d.brand.devPortfolioLabel = v; })} />
         </Row>
         <Row label="Tags" hint="Comma se separate karo">
           <TextField

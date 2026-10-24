@@ -5,6 +5,8 @@ import { THEMES, themeMeta, isDarkTheme } from "@/config";
 import type { ThemeId } from "@/types";
 
 const VALID = THEMES.map((t) => t.id);
+/** what the ☀️/🌙 toggle switches a dark theme to */
+const LIGHT_FALLBACK: ThemeId = "pearl";
 
 interface ThemeContextValue {
   theme: ThemeId;
@@ -40,9 +42,9 @@ function applyToDocument(id: ThemeId, animate: boolean) {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const saved = useRef<ThemeId | null>(readSaved());
 
-  const [theme, setThemeState] = useState<ThemeId>(saved.current || "apple-light");
+  const [theme, setThemeState] = useState<ThemeId>(saved.current || "obsidian");
   const [explicit, setExplicit] = useState<boolean>(!!saved.current);
-  const [globalDefault, setGlobalDefaultState] = useState<ThemeId>("apple-light");
+  const [globalDefault, setGlobalDefaultState] = useState<ThemeId>("obsidian");
   const [darkTheme, setDarkThemeState] = useState<ThemeId>("obsidian");
 
   /* keep <html> in sync on first mount */
@@ -52,7 +54,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setTheme = useCallback((id: string, opts: { persist?: boolean } = {}) => {
-    const next = (VALID.includes(id) ? id : "apple-light") as ThemeId;
+    const next = (VALID.includes(id) ? id : "obsidian") as ThemeId;
     const persist = opts.persist !== false;
     applyToDocument(next, true);
     setThemeState(next);
@@ -64,7 +66,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setGlobalDefault = useCallback((id: ThemeId, dark?: ThemeId) => {
-    setGlobalDefaultState(VALID.includes(id) ? id : "apple-light");
+    setGlobalDefaultState(VALID.includes(id) ? id : "obsidian");
     if (dark && VALID.includes(dark)) setDarkThemeState(dark);
   }, []);
 
@@ -76,7 +78,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [globalDefault, explicit]);
 
   const toggle = useCallback((): ThemeId => {
-    const next = isDarkTheme(theme) ? "apple-light" : darkTheme;
+    const next = isDarkTheme(theme) ? LIGHT_FALLBACK : darkTheme;
     setTheme(next);
     return next;
   }, [theme, darkTheme, setTheme]);
