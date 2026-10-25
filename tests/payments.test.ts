@@ -15,6 +15,7 @@ import type { Config, Plan } from "@/types";
 function plan(overrides: Partial<Plan> = {}): Plan {
   return {
     id: "p1",
+    sticker: "🔥",
     name: "1 Month",
     price: 50,
     razorpayButtonId: "pl_TcjHF0nZXCtlQO",

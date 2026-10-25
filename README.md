@@ -147,6 +147,17 @@ Env var change karne ke baad **Redeploy** karna padega.
 
 ---
 
+## 🎭 Pack stickers (emoji)
+
+Har plan ka apna emoji sticker hota hai — home cards, info tiles aur buy page ke plan cards par dikhta hai.
+
+- Default: Movies `🌙 ⭐ 🔥 👑` · Adult `🔓 🌶️ 🚀 💎` · Combo `🎟️ 🍿 💎 🏆`
+- **Studio → Plans →** har plan ke saamne chhota sticker box — koi bhi emoji (max 8 characters) daal do
+- Pack card par bada **watermark emoji** + crown pack par twinkle ✨ animation
+- Purani saved configs mein sticker na ho to index se default aa jata hai (koi crash/blank nahi)
+
+---
+
 ## 🎨 Themes
 
 | Theme | Kya |
@@ -234,10 +245,13 @@ Home page par pricing ke neeche ek live comparison card hai:
   - `Netflix / Prime vs Timepass Premium` — exact ₹ comparison
   - `Hidden charge ya auto-renew?` — one-time payment, koi renewal nahi
   - `Itna sasta kaise?` — bina middleman wala honest jawab
-- **FAQ page**: search + category chips **with counts** + `Sare kholo / Sab band karo` toggle +
-  smooth accordion (keyboard + screen reader friendly) + "answer nahi mila?" Telegram help card.
-- **Info page**: OTT se kam price, affordable kaise, kya milta hai, pack comparison, how it works,
-  policies aur support — teeno languages mein.
+- **FAQ page** — help-center style hero (badge, live stats, floating emoji stickers),
+  search jo match ko **highlight** karta hai, category chips **emoji + counts** ke saath,
+  "Popular right now" pills (click karo → question khud khul jata hai), `Sare kholo / Sab band karo`
+  toggle, har row par category emoji, aur "answer nahi mila?" Telegram help card.
+- **Info page** — premium hero (starting price / packs / instant access stats), numbered value
+  cards, **pack tiles** (bada emoji, per-plan stickers, FROM price, direct BUY button),
+  emoji steps (🛒 💳 📸 🔑), policy cards, FAQ teaser aur support card — teeno languages mein.
 - Saara text **Studio → Info & FAQ** se editable (har field ke 3 language inputs).
 - Default language **Hinglish** hai; visitor ka choice `tp_lang` mein save hota hai.
 

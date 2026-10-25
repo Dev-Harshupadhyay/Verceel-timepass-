@@ -113,6 +113,18 @@ export function PlansPane({ draft, update }: PaneProps) {
                       />
                     </div>
 
+                    <div className="st-inline" style={{ marginBottom: 4 }}>
+                      <div style={{ flex: "0 0 74px" }}>
+                        <TextField
+                          value={plan.sticker}
+                          maxLength={8}
+                          placeholder="🔥"
+                          onChange={(v) => update((d) => { d.packs[key].plans[i].sticker = v; })}
+                        />
+                      </div>
+                      <small className="st-field-note">Sticker — plan card par yahi emoji dikhega</small>
+                    </div>
+
                     <TextField
                       type="number"
                       value={String(plan.price)}
@@ -199,6 +211,7 @@ export function PlansPane({ draft, update }: PaneProps) {
                           list.push({
                             id: `${key}-${list.length + 1}-${Math.random().toString(36).slice(2, 6)}`,
                             name: `${list.length + 1} Month`,
+                            sticker: "✨",
                             price: 100,
                             razorpayButtonId: "",
                             razorpayAmount: null,

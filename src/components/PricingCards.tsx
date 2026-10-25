@@ -22,11 +22,15 @@ export function PricingCards({ onBuy }: { onBuy: (pack: PackKey) => void }) {
         const pack = config.packs[key];
         const plans = activePlans(pack);
         return (
-          <div className={`card${pack.crown ? " card-crown" : ""}`} key={key}>
+          <div className={`card pack-${key}${pack.crown ? " card-crown" : ""}`} key={key}>
+            <span className="p-watermark" aria-hidden="true">
+              {pack.emoji}
+            </span>
             {pack.crown ? <div className="crown">★ CROWN PICK</div> : null}
             <div className="p-head">
               <div className="p-emoji" aria-hidden="true">
-                {pack.emoji}
+                <span className="p-emoji-glyph">{pack.emoji}</span>
+                <span className="p-emoji-spark">✨</span>
               </div>
               <div className="p-meta">
                 <div className="p-title">{pack.title}</div>
@@ -40,7 +44,12 @@ export function PricingCards({ onBuy }: { onBuy: (pack: PackKey) => void }) {
             <div className="rows">
               {plans.map((plan) => (
                 <div className="price-row" key={plan.id}>
-                  <span>
+                  <span className="pr-name">
+                    {plan.sticker ? (
+                      <em className="pr-sticker" aria-hidden="true">
+                        {plan.sticker}
+                      </em>
+                    ) : null}
                     {plan.name} {pack.suffix}
                     {plan.soldOut ? " · SOLD OUT" : ""}
                   </span>

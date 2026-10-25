@@ -331,6 +331,7 @@ export function normalizeConfig(raw) {
 
       const plan = {
         id,
+        sticker: str(rp.sticker, "sticker", 8, def.sticker || "", `packs.${key}.plans.${i}.sticker`),
         name,
         price: planPrice,
         razorpayButtonId: rzp,
