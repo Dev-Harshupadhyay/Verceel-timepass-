@@ -119,3 +119,59 @@ export async function kvDel(env, keys) {
 export function kvStorageConfigured() {
   return !!devFile() || !!kvEnv();
 }
+
+/* ───────────────────────── diagnostics ───────────────────────── */
+
+const URL_VARS = ["KV_REST_API_URL", "UPSTASH_REDIS_REST_URL", "KV_URL", "REDIS_URL"];
+const TOKEN_VARS = ["KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_READ_ONLY_TOKEN"];
+
+/**
+ * Safe, secret-free report of what the deployment actually received.
+ * Variable NAMES and booleans only — never a token or a full URL.
+ */
+export function kvDiagnostics() {
+  const present = (name) => {
+    const v = process.env[name];
+    return typeof v === "string" && v.trim().length > 0;
+  };
+
+  const urlVars = URL_VARS.filter(present);
+  const tokenVars = TOKEN_VARS.filter(present);
+  const restUrl = ["KV_REST_API_URL", "UPSTASH_REDIS_REST_URL"].find(present) || null;
+  const restToken = ["KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_TOKEN"].find(present) || null;
+  const file = devFile();
+
+  let provider = "none";
+  if (file) provider = "file";
+  else if (restUrl && restToken) provider = restUrl.startsWith("UPSTASH") ? "upstash" : "vercel-kv";
+
+  // A "redis://" style URL (KV_URL / REDIS_URL) is NOT a REST url — flag it.
+  const onlyTcpUrl = !restUrl && urlVars.length > 0;
+
+  const missing = [];
+  if (!file && !restUrl) missing.push("KV_REST_API_URL (ya UPSTASH_REDIS_REST_URL)");
+  if (!file && !restToken) missing.push("KV_REST_API_TOKEN (ya UPSTASH_REDIS_REST_TOKEN)");
+
+  let hint = "";
+  if (provider === "none") {
+    if (onlyTcpUrl) {
+      hint = `${urlVars[0]} mila, par ye TCP url hai — is app ko REST url chahiye. Vercel → Storage se Upstash Redis connect karo (KV_REST_API_URL / KV_REST_API_TOKEN).`;
+    } else if (urlVars.length || tokenVars.length) {
+      hint = "Aadhe variables mile hain — URL aur TOKEN dono chahiye. Vercel → Settings → Environment Variables check karo, phir Redeploy.";
+    } else {
+      hint = "Koi KV variable hi nahi mila. Vercel → Storage → Upstash Redis → Connect to Project, phir Redeploy (env vars sirf naye deployment par lagte hain).";
+    }
+  }
+
+  return {
+    configured: !!file || !!(restUrl && restToken),
+    provider,
+    urlVar: restUrl,
+    tokenVar: restToken,
+    presentVars: [...urlVars, ...tokenVars],
+    missing,
+    needsRedeployLikely: !file && urlVars.length === 0 && tokenVars.length === 0,
+    hint,
+    envKeysSeen: Object.keys(process.env).filter((k) => /KV|UPSTASH|REDIS/i.test(k)).length
+  };
+}

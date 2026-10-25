@@ -3,7 +3,9 @@ import { Row, TextField, TextArea, SwitchRow, Seg, Select, Chip } from "./fields
 import { Announcement } from "@/components/Announcement";
 import { useConfig } from "@/state/ConfigProvider";
 import { useTheme } from "@/state/ThemeProvider";
+import { useAuth } from "@/state/AuthProvider";
 import { useToast } from "@/state/ToastProvider";
+import { fetchStorageStatus, type StorageReport } from "@/lib/api";
 import { THEMES } from "@/config";
 import { readVisits, clearVisits, exportVisits } from "@/lib/visits";
 import type { Config, DevStat, ThemeId, TrustItem, AnnounceTone, AnnounceAnim } from "@/types";
@@ -17,6 +19,25 @@ export interface PaneProps {
 
 export function OverviewPane({ draft }: PaneProps) {
   const { configured, revision, updatedAt, source, error } = useConfig();
+  const { password } = useAuth();
+  const [storage, setStorage] = useState<StorageReport | null>(null);
+  const [checking, setChecking] = useState(false);
+  const { toast } = useToast();
+
+  const checkStorage = async () => {
+    if (!password) return;
+    setChecking(true);
+    const res = await fetchStorageStatus(password);
+    setChecking(false);
+    if (!res) {
+      toast("Storage check fail — server se baat nahi hui", "error");
+      return;
+    }
+    setStorage(res);
+    if (res.storage.configured && res.ping === "ok") toast("✅ KV connected aur readable hai", "success");
+    else if (res.storage.configured) toast("KV vars mile, par read fail — token/url check karo", "warn");
+    else toast("❌ KV connect nahi hai — neeche reason dekho", "error");
+  };
   const plans = Object.values(draft.packs).flatMap((p) => (p.active ? p.plans.filter((x) => x.active) : []));
   const prices = plans.map((p) => p.price);
   const issues: string[] = [];
@@ -54,6 +75,48 @@ export function OverviewPane({ draft }: PaneProps) {
               <span className="st-field-note">
                 Publish karne ke liye Vercel par Upstash Redis connect karo (README dekho). Tab tak site code defaults par chalegi.
               </span>
+            ) : null}
+            <div className="st-inline" style={{ marginTop: 6 }}>
+              <button type="button" className="st-btn tiny" onClick={() => void checkStorage()} disabled={checking}>
+                <i className={`fa-solid ${checking ? "fa-spinner fa-spin" : "fa-stethoscope"}`} aria-hidden="true" /> Storage check
+              </button>
+            </div>
+            {storage ? (
+              <div className="storage-report">
+                <div className="sr-line">
+                  <Chip tone={storage.storage.configured ? "live" : "err"}>
+                    {storage.storage.configured ? "VARS MIL GAYE" : "VARS NAHI MILE"}
+                  </Chip>
+                  <span className="st-field-note">
+                    provider: <b>{storage.storage.provider}</b>
+                    {storage.ping ? ` · ping: ${storage.ping}` : ""}
+                  </span>
+                </div>
+                {storage.storage.presentVars.length ? (
+                  <div className="sr-line">
+                    <span className="st-field-note">mila: {storage.storage.presentVars.join(", ")}</span>
+                  </div>
+                ) : null}
+                {storage.storage.missing.length ? (
+                  <div className="sr-line">
+                    <span className="st-field-note" style={{ color: "#e5533d" }}>
+                      missing: {storage.storage.missing.join(" · ")}
+                    </span>
+                  </div>
+                ) : null}
+                {storage.storage.hint ? (
+                  <div className="sr-line">
+                    <span className="st-field-note">{storage.storage.hint}</span>
+                  </div>
+                ) : null}
+                {storage.storage.needsRedeployLikely ? (
+                  <div className="sr-line">
+                    <span className="st-field-note">
+                      <b>Redeploy kiya?</b> Env vars sirf naye deployment par lagte hain — Deployments → latest → ⋯ → Redeploy.
+                    </span>
+                  </div>
+                ) : null}
+              </div>
             ) : null}
           </div>
         </div>

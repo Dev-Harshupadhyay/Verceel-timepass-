@@ -209,3 +209,77 @@ describe("reset + methods", () => {
     expect(res.body.hint).toBeTruthy();
   });
 });
+
+/* ───────────────────────── storage diagnostics ───────────────────────── */
+
+describe("storage diagnostics", () => {
+  it("status action reports the file provider in dev", async () => {
+    const res = await call("POST", { password: PASSWORD, action: "status" });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.storage.provider).toBe("file");
+    expect(res.body.storage.configured).toBe(true);
+    expect(res.body.storage.missing).toEqual([]);
+    expect(res.body.ping).toBe("ok");
+  });
+
+  it("status action needs a password", async () => {
+    const res = await call("POST", { password: "wrong", action: "status" });
+    expect(res.statusCode).toBe(401);
+    expect(res.body.storage).toBeUndefined();
+  });
+
+  it("detects the Upstash integration variable pair", async () => {
+    delete process.env.TP_KV_FILE;
+    process.env.UPSTASH_REDIS_REST_URL = "https://example.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "not-a-real-token";
+    const res = await call("POST", { password: PASSWORD, action: "status" });
+    expect(res.body.storage.provider).toBe("upstash");
+    expect(res.body.storage.presentVars).toContain("UPSTASH_REDIS_REST_TOKEN");
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  });
+
+  it("names the missing token when only the url is present", async () => {
+    delete process.env.TP_KV_FILE;
+    process.env.KV_REST_API_URL = "https://example.upstash.io";
+    const res = await call("POST", { password: PASSWORD, action: "status" });
+    expect(res.body.storage.configured).toBe(false);
+    expect(res.body.storage.missing.join(" ")).toContain("TOKEN");
+    expect(res.body.storage.needsRedeployLikely).toBe(false);
+    delete process.env.KV_REST_API_URL;
+  });
+
+  it("flags a redeploy hint when nothing is set", async () => {
+    delete process.env.TP_KV_FILE;
+    const res = await call("POST", { password: PASSWORD, action: "status" });
+    expect(res.body.storage.configured).toBe(false);
+    expect(res.body.storage.needsRedeployLikely).toBe(true);
+    expect(res.body.storage.hint).toContain("Redeploy");
+  });
+
+  it("warns when only a TCP redis url is configured", async () => {
+    delete process.env.TP_KV_FILE;
+    process.env.KV_URL = "redis://default:pw@example:6379";
+    const res = await call("POST", { password: PASSWORD, action: "status" });
+    expect(res.body.storage.configured).toBe(false);
+    expect(res.body.storage.hint.toLowerCase()).toContain("tcp");
+    delete process.env.KV_URL;
+  });
+
+  it("publish 501 explains exactly what is missing", async () => {
+    delete process.env.TP_KV_FILE;
+    const res = await call("POST", { password: PASSWORD, action: "publish", config: valid() });
+    expect(res.statusCode).toBe(501);
+    expect(res.body.storage.missing.length).toBe(2);
+    expect(res.body.hint).toBeTruthy();
+  });
+
+  it("public GET exposes storage state without secrets", async () => {
+    delete process.env.TP_KV_FILE;
+    const res = await call("GET");
+    expect(res.body.configured).toBe(false);
+    expect(res.body.storage.provider).toBe("none");
+    expect(JSON.stringify(res.body)).not.toContain("not-a-real-token");
+    expect(res.body.storage.urlVar).toBeUndefined(); // public GET stays minimal
+  });
+});
