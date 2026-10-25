@@ -17,7 +17,10 @@ export interface PlanPayment {
  */
 export function resolvePayment(plan: Plan): PlanPayment {
   const hasButton = !!plan.razorpayButtonId;
-  const mismatch = hasButton && plan.razorpayAmount != null && plan.razorpayAmount !== plan.price;
+  /* UPI / universal plans never touch the Razorpay button, so a stale button
+     amount is not a problem there — only flag a mismatch we would actually charge. */
+  const couldUseRzp = plan.payMode === "auto" || plan.payMode === "razorpay";
+  const mismatch = couldUseRzp && hasButton && plan.razorpayAmount != null && plan.razorpayAmount !== plan.price;
 
   if (plan.payMode === "upi" || plan.payMode === "universal") {
     return { mode: "upi", razorpayButtonId: "", amount: plan.price, mismatch, reason: plan.payMode };

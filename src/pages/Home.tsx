@@ -3,6 +3,7 @@ import { useLang } from "@/state/LangProvider";
 import { Hero, TrustStrip } from "@/components/Hero";
 import { PricingCards } from "@/components/PricingCards";
 import { FaqAccordion, useFaqItems } from "@/components/Faq";
+import { PriceCompare } from "@/components/PriceCompare";
 import { Footer } from "@/components/Modals";
 import { navigate } from "@/lib/router";
 import type { PackKey } from "@/types";
@@ -22,6 +23,8 @@ export function Home({ onTrack }: { onTrack: () => void }) {
           {config.hero.sectionLabel} <small>{config.hero.sectionSub}</small>
         </div>
         <PricingCards onBuy={(pack: PackKey) => navigate(`/buy/${pack}`)} />
+
+        <PriceCompare onBuy={(pack: PackKey) => navigate(`/buy/${pack}`)} />
 
         {(config.info?.intro || faq.length) && (
           <section className="faq-teaser">

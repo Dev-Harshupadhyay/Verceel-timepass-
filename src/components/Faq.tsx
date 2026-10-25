@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useConfig } from "@/state/ConfigProvider";
 import { useLang } from "@/state/LangProvider";
 import type { FaqCat, FaqItem } from "@/types";
@@ -16,18 +16,26 @@ export function useFaqItems(): FaqItem[] {
   return useMemo(() => (config.faq || []).filter((f) => f.active), [config.faq]);
 }
 
+const ALL = "__all__";
+
 export function FaqAccordion({
   items,
   showCat = false,
-  limit
+  limit,
+  expandAll = false
 }: {
   items: FaqItem[];
   showCat?: boolean;
   limit?: number;
+  expandAll?: boolean;
 }) {
   const { t } = useLang();
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(expandAll ? ALL : null);
   const visible = typeof limit === "number" ? items.slice(0, limit) : items;
+
+  useEffect(() => {
+    setOpenId(expandAll ? ALL : null);
+  }, [expandAll]);
 
   if (!visible.length) {
     return <p className="st-note">FAQ jaldi aa raha hai.</p>;
@@ -36,7 +44,7 @@ export function FaqAccordion({
   return (
     <div className="faq-list">
       {visible.map((item, i) => {
-        const open = openId === item.id;
+        const open = openId === ALL || openId === item.id;
         return (
           <div className="faq-item" data-open={open} key={item.id}>
             <button
@@ -102,19 +110,25 @@ export function FaqSearch({
 
 export function FaqFilters({
   active,
-  onSelect
+  onSelect,
+  counts
 }: {
   active: FaqCat | "all";
   onSelect: (cat: FaqCat | "all") => void;
+  counts?: Record<string, number>;
 }) {
   const cats: (FaqCat | "all")[] = ["all", "pricing", "payment", "access", "support", "policy"];
   return (
-    <div className="seg" role="group" aria-label="FAQ categories" style={{ flexWrap: "wrap" }}>
-      {cats.map((c) => (
-        <button key={c} type="button" aria-pressed={active === c} onClick={() => onSelect(c)}>
-          {c === "all" ? "All" : CAT_LABEL[c]}
-        </button>
-      ))}
+    <div className="seg faq-filters" role="group" aria-label="FAQ categories" style={{ flexWrap: "wrap" }}>
+      {cats.map((c) => {
+        const n = counts ? counts[c] ?? 0 : null;
+        return (
+          <button key={c} type="button" aria-pressed={active === c} onClick={() => onSelect(c)}>
+            {c === "all" ? "All" : CAT_LABEL[c]}
+            {n !== null ? <span className="seg-count">{n}</span> : null}
+          </button>
+        );
+      })}
     </div>
   );
 }

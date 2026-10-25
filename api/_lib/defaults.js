@@ -77,10 +77,10 @@ export const DEFAULT_CONFIG = {
       crown: false,
       active: true,
       plans: [
-        { id: "movies-1m", name: "1 Month", price: 50, razorpayButtonId: "pl_TcjHF0nZXCtlQO", razorpayAmount: 50, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "movies-3m", name: "3 Months", price: 250, razorpayButtonId: "pl_TcjLIqo5ZVvgaY", razorpayAmount: 250, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "movies-6m", name: "6 Months", price: 420, razorpayButtonId: "pl_TcjMhB31QXHseK", razorpayAmount: 420, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "movies-12m", name: "1 Year", price: 465, razorpayButtonId: "pl_TcjSAK86Q3OvuC", razorpayAmount: 465, payMode: "auto", active: true, soldOut: false, featured: true }
+        { id: "movies-1m", name: "1 Month", price: 50, razorpayButtonId: "pl_TcjHF0nZXCtlQO", razorpayAmount: 50, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "movies-3m", name: "3 Months", price: 250, razorpayButtonId: "pl_TcjLIqo5ZVvgaY", razorpayAmount: 250, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "movies-6m", name: "6 Months", price: 420, razorpayButtonId: "pl_TcjMhB31QXHseK", razorpayAmount: 420, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "movies-12m", name: "1 Year", price: 465, razorpayButtonId: "pl_TcjSAK86Q3OvuC", razorpayAmount: 465, payMode: "universal", active: true, soldOut: false, featured: true }
       ]
     },
     adult: {
@@ -92,10 +92,10 @@ export const DEFAULT_CONFIG = {
       crown: false,
       active: true,
       plans: [
-        { id: "adult-1m", name: "1 Month", price: 100, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "adult-3m", name: "3 Months", price: 400, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "adult-6m", name: "6 Months", price: 580, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "adult-12m", name: "1 Year", price: 835, razorpayButtonId: "pl_TcjW9QKyHKuxPG", razorpayAmount: 835, payMode: "auto", active: true, soldOut: false, featured: true }
+        { id: "adult-1m", name: "1 Month", price: 100, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "adult-3m", name: "3 Months", price: 400, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "adult-6m", name: "6 Months", price: 580, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "adult-12m", name: "1 Year", price: 835, razorpayButtonId: "pl_TcjW9QKyHKuxPG", razorpayAmount: 835, payMode: "universal", active: true, soldOut: false, featured: true }
       ]
     },
     combo: {
@@ -107,10 +107,10 @@ export const DEFAULT_CONFIG = {
       crown: true,
       active: true,
       plans: [
-        { id: "combo-1m", name: "1 Month", price: 250, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "combo-3m", name: "3 Months", price: 520, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "combo-6m", name: "6 Months", price: 780, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: false },
-        { id: "combo-12m", name: "1 Year", price: 1500, razorpayButtonId: "", razorpayAmount: null, payMode: "auto", active: true, soldOut: false, featured: true }
+        { id: "combo-1m", name: "1 Month", price: 250, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "combo-3m", name: "3 Months", price: 520, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "combo-6m", name: "6 Months", price: 780, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "combo-12m", name: "1 Year", price: 1500, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: true }
       ]
     }
   },
@@ -538,7 +538,52 @@ export const DEFAULT_CONFIG = {
         hinglish: "Hum card details ya passwords store nahi karte. Sirf verification ke liye bheja gaya UPI reference number / screenshot use hota hai, wo bhi support ke paas hi rehta hai.",
         hi: "हम कार्ड डिटेल्स या पासवर्ड स्टोर नहीं करते। सिर्फ़ सत्यापन के लिए भेजा गया UPI रेफ़रेंस नंबर / स्क्रीनशॉट उपयोग होता है, वह भी सपोर्ट के पास ही रहता है।"
       }
-    }
+    },
+    {
+      id: "faq-vs-ott",
+      cat: "pricing",
+      active: true,
+      q: {
+        en: "Netflix or Prime vs Timepass Premium — how much cheaper exactly?",
+        hinglish: "Netflix ya Prime se compare karo to kitna sasta?",
+        hi: "Netflix या Prime से तुलना करें तो कितना सस्ता?"
+      },
+      a: {
+        en: "Timepass Premium starts at ₹50 for a full month, and the 1-year pack is ₹465 — roughly ₹39 per month. For reference, popular OTT list prices in India are around ₹99–₹499 per month (Netflix Standard ~₹499, JioHotstar Premium ~₹499, Amazon Prime ~₹299, Zee5 / SonyLIV ~₹299). So a whole year here often costs less than one month of a big OTT plan. OTT prices change with their own plans and offers.",
+        hinglish: "Timepass Premium poore mahine ka ₹50 se shuru hota hai, aur 1-year pack ₹465 — matlab approx ₹39/month. Reference ke liye, India mein popular OTT ka list price ₹99–₹499/month ke beech hota hai (Netflix Standard ~₹499, JioHotstar Premium ~₹499, Amazon Prime ~₹299, Zee5 / SonyLIV ~₹299). Yani yahan ka poora saal aksar ek bade OTT ke ek mahine se bhi sasta padta hai. OTT prices unke apne plans/offers ke hisaab se badalte rehte hain.",
+        hi: "Timepass Premium पूरे महीने का ₹50 से शुरू होता है, और 1-साल का पैक ₹465 — यानी लगभग ₹39/महीना। तुलना के लिए, भारत में लोकप्रिय OTT का लिस्ट प्राइस ₹99–₹499/महीना होता है (Netflix Standard ~₹499, JioHotstar Premium ~₹499, Amazon Prime ~₹299, Zee5 / SonyLIV ~₹299)। यानी यहाँ का पूरा साल अक्सर एक बड़े OTT के एक महीने से भी सस्ता पड़ता है। OTT कीमतें उनके अपने प्लान/ऑफ़र के हिसाब से बदलती रहती हैं।"
+      }
+    },
+    {
+      id: "faq-hidden-charge",
+      cat: "payment",
+      active: true,
+      q: {
+        en: "Any hidden charges or auto-renew?",
+        hinglish: "Koi hidden charge ya auto-renew hai?",
+        hi: "कोई छिपा चार्ज या ऑटो-रिन्यू है?"
+      },
+      a: {
+        en: "No. The price you see is the price you pay — no renewal, no saved card, no surprise deduction. Every plan is a one-time payment for that duration. If you choose not to renew, nothing is charged automatically.",
+        hinglish: "Nahi. Jo price dikhta hai wahi pay karte ho — koi renewal nahi, card save nahi, koi surprise deduction nahi. Har plan us duration ke liye one-time payment hai. Agar aap renew nahi karte to apne aap kuch charge nahi hota.",
+        hi: "नहीं। जो कीमत दिखती है वही चुकाते हैं — कोई रिन्यूअल नहीं, कार्ड सेव नहीं, कोई अचानक कटौती नहीं। हर प्लान उस अवधि के लिए एक बार का भुगतान है। अगर आप रिन्यू नहीं करते तो अपने आप कुछ चार्ज नहीं होता।"
+      }
+    },
+    {
+      id: "faq-why-cheap",
+      cat: "pricing",
+      active: true,
+      q: {
+        en: "How can the price be this low?",
+        hinglish: "Itna sasta kaise mil jata hai?",
+        hi: "इतना सस्ता कैसे मिल जाता है?"
+      },
+      a: {
+        en: "Because there is no middleman: no app-store commission, no ad budget, no big support team — just a direct Telegram setup run by Harsh Dev. You pay for the plan, send the screenshot, and get access. That is why a full year can cost less than one month elsewhere.",
+        hinglish: "Kyunki beech mein koi middleman nahi — na app-store commission, na bada ad budget, na badi support team. Seedha Harsh Dev ka Telegram setup. Aap plan ka payment karte ho, screenshot bhejte ho, access mil jata hai. Isi wajah se poora saal kahin ke ek mahine se sasta pad jata hai.",
+        hi: "क्योंकि बीच में कोई बिचौलिया नहीं — न ऐप-स्टोर कमीशन, न बड़ा विज्ञापन बजट, न बड़ी सपोर्ट टीम। सीधे Harsh Dev का Telegram सेटअप। आप प्लान का भुगतान करते हैं, स्क्रीनशॉट भेजते हैं, एक्सेस मिल जाता है। इसी वजह से पूरा साल कहीं के एक महीने से भी सस्ता पड़ जाता है।"
+      }
+    },
   ],
 
   appearance: {

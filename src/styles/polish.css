@@ -226,3 +226,30 @@ header {
   .dev-cta:hover .dev-cta-arrow { transform: none; }
   .dev-portfolio:hover { color: var(--muted); border-color: var(--line-hi); background: transparent; }
 }
+
+/* ─────────── new surfaces: tap targets + motion safety ─────────── */
+.cmp-cta,
+.faq-expand,
+.faq-help .fh-cta,
+.dynamic-upi-btn,
+.premium-copy { min-height: 44px; }
+.cmp-row,
+.cmp-bullets li { min-width: 0; }
+.cmp-name b,
+.cmp-name em { min-width: 0; }
+@media (hover: none) {
+  .cmp-cta:hover { transform: none; filter: none; }
+  .announce-cta:hover { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announce,
+  .announce::after,
+  .announce-track,
+  .announce-dot,
+  .cmp-bar span { animation: none !important; transition: none !important; }
+  .announce.anim-marquee .announce-track { animation: none !important; }
+  .announce-marquee { mask-image: none; -webkit-mask-image: none; overflow: visible; }
+  .announce-track { flex-wrap: wrap; white-space: normal; }
+  .announce-track > span[aria-hidden="true"] { display: none; }
+}
