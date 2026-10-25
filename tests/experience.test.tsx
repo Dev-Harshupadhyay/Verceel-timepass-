@@ -52,6 +52,29 @@ describe("device detection", () => {
     expect(d.payWithQr).toBe(false);
   });
 
+  it("still shows the QR on a touchscreen laptop (mouse is the primary pointer)", () => {
+    // touch support, but the primary pointer is fine → desktop flow
+    Object.defineProperty(window, "innerWidth", { value: 1440, configurable: true, writable: true });
+    Object.defineProperty(navigator, "maxTouchPoints", { value: 10, configurable: true });
+    vi.spyOn(window, "matchMedia").mockImplementation(
+      (query: string) =>
+        ({
+          matches: false, // neither "(pointer: coarse)" nor "(any-pointer: coarse)"
+          media: query,
+          onchange: null,
+          addListener: () => {},
+          removeListener: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => false
+        }) as unknown as MediaQueryList
+    );
+    const d = detectDevice();
+    expect(d.kind).toBe("desktop");
+    expect(d.hasTouch).toBe(true);
+    expect(d.payWithQr).toBe(true);
+  });
+
   it("labels a touch tablet as a touch device (deep link, not QR)", () => {
     setPointer({ coarse: true, width: 834, touch: true });
     const d = detectDevice();
@@ -217,6 +240,7 @@ describe("announcement banner v2", () => {
     expect(bar.querySelectorAll(".announce-track > span").length).toBe(4);
     const cta = screen.getByText(/GRAB DEAL/);
     expect(cta.getAttribute("href")).toBe("/buy/movies");
+    expect(cta.getAttribute("target")).toBeNull(); // internal → same tab
     expect(cta.querySelector("i.fa-arrow-right")).toBeTruthy();
   });
 
@@ -232,5 +256,23 @@ describe("announcement banner v2", () => {
     renderWithProviders(<Announcement />);
     const bar = await screen.findByTestId("announcement");
     expect(bar.querySelector(".announce-countdown")?.textContent).toMatch(/d/);
+  });
+});
+
+describe("announcement link handling", () => {
+  it("keeps external links in a new tab", async () => {
+    const c = cfg();
+    c.announcement = {
+      ...c.announcement,
+      enabled: true,
+      text: "Telegram par join karo",
+      ctaLabel: "JOIN",
+      ctaUrl: "https://t.me/pmharsh"
+    };
+    mockFetchConfig(c);
+    renderWithProviders(<Announcement />);
+    const cta = await screen.findByText(/JOIN/);
+    expect(cta.getAttribute("target")).toBe("_blank");
+    expect(cta.getAttribute("rel")).toContain("noopener");
   });
 });

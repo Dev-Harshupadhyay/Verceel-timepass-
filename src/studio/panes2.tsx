@@ -14,6 +14,46 @@ const PACK_KEYS: PackKey[] = ["movies", "adult", "combo"];
 
 /* ─────────────────────────── PLANS ─────────────────────────── */
 
+/**
+ * Price input that keeps the raw string while typing.
+ * A plain controlled number input can never be emptied (Number("") === 0),
+ * so editing a price meant select-all every time. This commits numbers but
+ * lets the field be blank for a moment.
+ */
+function PriceField({
+  value,
+  onChange,
+  label
+}: {
+  value: number;
+  onChange: (n: number) => void;
+  label: string;
+}) {
+  const [raw, setRaw] = useState(String(value));
+
+  /* adopt outside changes (revision load, restore, reset) — but never fight
+     the user while their raw text already represents the committed number */
+  useEffect(() => {
+    setRaw((current) => (Number(current) === value && current.trim() !== "" ? current : String(value)));
+  }, [value]);
+
+  return (
+    <TextField
+      type="number"
+      value={raw}
+      placeholder="0"
+      id={undefined}
+      onChange={(v) => {
+        setRaw(v);
+        const n = Number(v);
+        onChange(v.trim() === "" || !Number.isFinite(n) ? 0 : Math.max(0, Math.round(n)));
+      }}
+      note={label}
+    />
+  );
+}
+
+
 const PAY_MODE_OPTIONS: { value: PayMode; label: string }[] = [
   { value: "auto", label: "Auto" },
   { value: "razorpay", label: "Razorpay only" },
@@ -125,23 +165,23 @@ export function PlansPane({ draft, update }: PaneProps) {
                       <small className="st-field-note">Sticker — plan card par yahi emoji dikhega</small>
                     </div>
 
-                    <TextField
-                      type="number"
-                      value={String(plan.price)}
-                      onChange={(v) =>
+                    <PriceField
+                      value={plan.price}
+                      label={
+                        plan.price === 0
+                          ? "⚠️ ₹0 — publish se pehle theek karo"
+                          : `₹${plan.price} · mode auto-switch: Universal UPI`
+                      }
+                      onChange={(n) =>
                         update((d) => {
                           const target = d.packs[key].plans[i];
-                          target.price = Math.max(0, Math.round(Number(v) || 0));
+                          target.price = n;
                           /* price badla → Razorpay ka fixed amount ab match nahi karega,
                              isliye plan ko seedha Universal (UPI deep link) kar do */
                           target.payMode = "universal";
                         })
                       }
                     />
-                    <small className="st-field-note" style={{ display: "block", marginTop: -4, marginBottom: 4 }}>
-                      Price = {plan.price === 0 ? "⚠️ ₹0 — publish se pehle theek karo" : `₹${plan.price}`} · mode auto-switch:{" "}
-                      <b>Universal UPI</b>
-                    </small>
 
                     <div className="plan-head">
                       <div className="st-inline">

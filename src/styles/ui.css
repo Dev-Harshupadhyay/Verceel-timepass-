@@ -196,7 +196,7 @@
   width: 34px; height: 34px; border-radius: 11px; flex: 0 0 auto; display: grid; place-items: center;
   background: rgba(var(--acc-rgb), 0.1); border: 1px solid var(--line); color: var(--gold); font-size: 0.85rem;
 }
-.info-card b { display: block; font-size: 12px; margin-bottom: 4px; line-height: 1.35; }
+.info-card b { display: block; font-size: 12px; margin-bottom: 4px; line-height: 1.35; padding-right: 20px; }
 .info-card p { font-size: 11px; line-height: 1.7; color: var(--muted); }
 
 /* steps */
@@ -214,14 +214,6 @@
 .step b { display: block; font-size: 11.5px; margin-bottom: 3px; }
 .step p { font-size: 10.5px; line-height: 1.65; color: var(--muted); }
 
-/* pack comparison */
-.cmp-table { width: 100%; border-collapse: collapse; font-size: 11.5px; overflow: hidden; border-radius: 14px; }
-.cmp-table th { text-align: left; padding: 10px 10px; font-size: 9px; letter-spacing: 1.3px; color: var(--faint); border-bottom: 1px solid var(--line); font-weight: 900; }
-.cmp-table td { padding: 10px 10px; border-bottom: 1px solid var(--line); color: var(--muted); }
-.cmp-table tr:last-child td { border-bottom: none; }
-.cmp-table td:last-child, .cmp-table th:last-child { text-align: right; font-family: "Space Mono", monospace; color: var(--gold-hi); }
-.cmp-wrap { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--lacquer); overflow-x: auto; }
-
 /* policy list */
 .policy { border: 1px solid var(--line); border-radius: 14px; padding: 13px 14px; margin-bottom: 9px; background: rgba(var(--acc-rgb), 0.03); }
 .policy b { display: block; font-size: 11.5px; margin-bottom: 4px; }
@@ -236,33 +228,9 @@
 .support-note i { color: var(--gold); margin-top: 2px; }
 
 /* ─────────────── FAQ ACCORDION ─────────────── */
+/* accordion lives in the FAQ v2 block at the bottom of this file
+   (single source of truth — keep it there) */
 .faq-list { display: flex; flex-direction: column; gap: 9px; }
-.faq-item {
-  border: 1px solid var(--line); border-radius: 15px; background: var(--lacquer);
-  overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;
-}
-.faq-item[data-open="true"] { border-color: var(--line-hi); box-shadow: 0 6px 20px rgba(var(--shadow-rgb), 0.12); }
-.faq-q {
-  width: 100%; display: flex; align-items: center; gap: 11px; text-align: left;
-  padding: 14px 15px; background: none; border: none; cursor: pointer; color: var(--ink);
-  font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1.45;
-}
-.faq-q:hover { background: rgba(var(--acc-rgb), 0.04); }
-.faq-q .fq-mark {
-  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
-  border: 1px solid var(--line-hi); color: var(--gold); font-size: 9px;
-  transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.25, 1), background 0.2s;
-}
-.faq-item[data-open="true"] .fq-mark { transform: rotate(180deg); background: rgba(var(--acc-rgb), 0.14); }
-.faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.26s cubic-bezier(0.2, 0.9, 0.25, 1); }
-.faq-item[data-open="true"] .faq-a { grid-template-rows: 1fr; }
-.faq-a > div { overflow: hidden; }
-.faq-a p { padding: 0 15px 15px 48px; font-size: 11.3px; line-height: 1.8; color: var(--muted); }
-.faq-cat {
-  font-size: 7.5px; letter-spacing: 1.2px; font-weight: 900; text-transform: uppercase;
-  padding: 3px 7px; border-radius: 6px; background: rgba(var(--acc-rgb), 0.1); color: var(--gold-hi);
-  flex: 0 0 auto;
-}
 
 /* faq teaser on home */
 .faq-teaser { margin-top: 34px; }
@@ -1120,18 +1088,42 @@
 .storage-report .sr-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .storage-report .st-field-note { overflow-wrap: anywhere; }
 
+/* screen-reader-only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ══════════════════════════════════════════════════════════════
    PACK CARDS v2 — emoji stickers, watermark, plan badges
    ══════════════════════════════════════════════════════════════ */
 
-.card { overflow: hidden; isolation: isolate; }
+/* NOTE: no `overflow: hidden` on .card — the crown badge lives at top:-10px
+   and would be clipped. The watermark is clipped by its own wrapper instead. */
+.card { isolation: isolate; }
+
+/* clips the decorative watermark only, so badges can still overflow */
+.p-watermark-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
 
 /* huge faint emoji behind the card content */
 .p-watermark {
   position: absolute;
   right: -14px;
   bottom: -18px;
-  z-index: -1;
   font-size: 6.6rem;
   line-height: 1;
   opacity: 0.055;
@@ -1197,9 +1189,9 @@
   background: rgba(var(--acc-rgb), 0.1);
   border: 1px solid var(--line);
   filter: saturate(1.15);
+  transition: transform 0.18s, background 0.18s;
 }
 .price-row:hover .pr-sticker { background: rgba(var(--acc-rgb), 0.2); transform: scale(1.06); }
-.pr-sticker { transition: transform 0.18s, background 0.18s; }
 
 @media (max-width: 379px) {
   .p-watermark { font-size: 5rem; }
@@ -1376,6 +1368,7 @@
   width: 100%;
   padding: 13px 14px;
   text-align: left;
+  font-family: inherit;
   font-size: 11.6px;
   font-weight: 800;
   line-height: 1.45;
@@ -1384,6 +1377,7 @@
   border: none;
   cursor: pointer;
 }
+.faq-q:hover { background: rgba(var(--acc-rgb), 0.04); }
 .fq-ico {
   flex: 0 0 auto;
   width: 30px;
@@ -1411,6 +1405,9 @@
   transition: transform 0.25s ease, background 0.2s;
 }
 .faq-item[data-open="true"] .fq-mark { transform: rotate(180deg); background: rgba(var(--acc-rgb), 0.2); }
+.faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.26s cubic-bezier(0.2, 0.9, 0.25, 1); }
+.faq-item[data-open="true"] .faq-a { grid-template-rows: 1fr; }
+.faq-a > div { overflow: hidden; }
 .faq-a p { padding: 0 15px 15px 55px; font-size: 11.2px; line-height: 1.85; color: var(--muted); }
 .faq-cat {
   flex: 0 0 auto;
@@ -1488,11 +1485,17 @@
   position: absolute;
   right: -10px;
   bottom: -14px;
+  z-index: 0;
   font-size: 4.6rem;
   opacity: 0.07;
   transform: rotate(-12deg);
   pointer-events: none;
+  user-select: none;
 }
+/* content must sit above the watermark */
+.pt-head,
+.pt-plans,
+.pt-cta { position: relative; z-index: 1; }
 .pt-head { display: flex; align-items: center; gap: 10px; }
 .pt-emoji {
   width: 40px;

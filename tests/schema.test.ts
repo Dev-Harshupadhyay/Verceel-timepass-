@@ -207,3 +207,36 @@ describe("helpers", () => {
     expect(summary.prices[0]).toContain("₹50 → ₹55");
   });
 });
+
+describe("plan stickers", () => {
+  it("keeps a plain emoji", () => {
+    const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    cfg.packs.movies.plans[0].sticker = "🔥";
+    const { config, errors } = normalizeConfig(cfg);
+    expect(errors.length).toBe(0);
+    expect(config.packs.movies.plans[0].sticker).toBe("🔥");
+  });
+
+  it("lets the admin clear a sticker", () => {
+    const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    cfg.packs.movies.plans[0].sticker = "";
+    const { config, errors } = normalizeConfig(cfg);
+    expect(errors.length).toBe(0);
+    expect(config.packs.movies.plans[0].sticker).toBe("");
+  });
+
+  it("falls back to the seeded sticker when the field is absent", () => {
+    const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    delete cfg.packs.movies.plans[2].sticker;
+    const { config } = normalizeConfig(cfg);
+    expect(config.packs.movies.plans[2].sticker).toBe("🔥");
+  });
+
+  it("caps length and strips markup", () => {
+    const cfg = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    cfg.packs.movies.plans[0].sticker = "<b>★★★★★★★★★★</b>";
+    const { config } = normalizeConfig(cfg);
+    expect(config.packs.movies.plans[0].sticker.length).toBeLessThanOrEqual(8);
+    expect(config.packs.movies.plans[0].sticker).not.toContain("<");
+  });
+});

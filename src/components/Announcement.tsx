@@ -3,6 +3,9 @@ import { useConfig } from "@/state/ConfigProvider";
 import { storage, KEYS } from "@/lib/storage";
 import type { Announcement as AnnouncementType } from "@/types";
 
+/** site-relative links stay in this tab; only external ones open a new one */
+const isInternal = (url: string) => url.startsWith("/");
+
 function useCountdown(expiresAt: string | null): string | null {
   const [now, setNow] = useState(() => Date.now());
 
@@ -101,7 +104,11 @@ export function Announcement({
         ) : null}
 
         {ann.ctaLabel && ann.ctaUrl ? (
-          <a className="announce-cta" href={ann.ctaUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            className="announce-cta"
+            href={ann.ctaUrl}
+            {...(isInternal(ann.ctaUrl) ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+          >
             {ann.ctaLabel} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
           </a>
         ) : null}

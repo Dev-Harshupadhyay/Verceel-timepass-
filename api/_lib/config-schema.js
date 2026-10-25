@@ -329,9 +329,21 @@ export function normalizeConfig(raw) {
         rzp = def.razorpayButtonId || "";
       }
 
+      /* `str()` falls back when the value is empty, which would make a sticker
+         impossible to remove. Handle it explicitly so "" really clears it. */
+      let sticker;
+      if (rp.sticker === undefined || rp.sticker === null) {
+        sticker = def.sticker || "";
+      } else if (typeof rp.sticker === "string") {
+        sticker = cleanText(rp.sticker, 8, "");
+      } else {
+        err(`packs.${key}.plans.${i}.sticker`, "text expected");
+        sticker = "";
+      }
+
       const plan = {
         id,
-        sticker: str(rp.sticker, "sticker", 8, def.sticker || "", `packs.${key}.plans.${i}.sticker`),
+        sticker,
         name,
         price: planPrice,
         razorpayButtonId: rzp,
