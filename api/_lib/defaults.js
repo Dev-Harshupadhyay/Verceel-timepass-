@@ -77,10 +77,10 @@ export const DEFAULT_CONFIG = {
       crown: false,
       active: true,
       plans: [
-        { id: "movies-1m", name: "1 Month", price: 50, razorpayButtonId: "pl_TcjHF0nZXCtlQO", razorpayAmount: 50, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "movies-3m", name: "3 Months", price: 250, razorpayButtonId: "pl_TcjLIqo5ZVvgaY", razorpayAmount: 250, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "movies-6m", name: "6 Months", price: 420, razorpayButtonId: "pl_TcjMhB31QXHseK", razorpayAmount: 420, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "movies-12m", name: "1 Year", price: 465, razorpayButtonId: "pl_TcjSAK86Q3OvuC", razorpayAmount: 465, payMode: "universal", active: true, soldOut: false, featured: true }
+        { id: "movies-1m", sticker: "🌙", name: "1 Month", price: 50, razorpayButtonId: "pl_TcjHF0nZXCtlQO", razorpayAmount: 50, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "movies-3m", sticker: "⭐", name: "3 Months", price: 250, razorpayButtonId: "pl_TcjLIqo5ZVvgaY", razorpayAmount: 250, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "movies-6m", sticker: "🔥", name: "6 Months", price: 420, razorpayButtonId: "pl_TcjMhB31QXHseK", razorpayAmount: 420, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "movies-12m", sticker: "👑", name: "1 Year", price: 465, razorpayButtonId: "pl_TcjSAK86Q3OvuC", razorpayAmount: 465, payMode: "universal", active: true, soldOut: false, featured: true }
       ]
     },
     adult: {
@@ -92,10 +92,10 @@ export const DEFAULT_CONFIG = {
       crown: false,
       active: true,
       plans: [
-        { id: "adult-1m", name: "1 Month", price: 100, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "adult-3m", name: "3 Months", price: 400, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "adult-6m", name: "6 Months", price: 580, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "adult-12m", name: "1 Year", price: 835, razorpayButtonId: "pl_TcjW9QKyHKuxPG", razorpayAmount: 835, payMode: "universal", active: true, soldOut: false, featured: true }
+        { id: "adult-1m", sticker: "🔓", name: "1 Month", price: 100, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "adult-3m", sticker: "🌶️", name: "3 Months", price: 400, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "adult-6m", sticker: "🚀", name: "6 Months", price: 580, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "adult-12m", sticker: "💎", name: "1 Year", price: 835, razorpayButtonId: "pl_TcjW9QKyHKuxPG", razorpayAmount: 835, payMode: "universal", active: true, soldOut: false, featured: true }
       ]
     },
     combo: {
@@ -107,10 +107,10 @@ export const DEFAULT_CONFIG = {
       crown: true,
       active: true,
       plans: [
-        { id: "combo-1m", name: "1 Month", price: 250, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "combo-3m", name: "3 Months", price: 520, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "combo-6m", name: "6 Months", price: 780, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
-        { id: "combo-12m", name: "1 Year", price: 1500, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: true }
+        { id: "combo-1m", sticker: "🎟️", name: "1 Month", price: 250, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "combo-3m", sticker: "🍿", name: "3 Months", price: 520, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "combo-6m", sticker: "💎", name: "6 Months", price: 780, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: false },
+        { id: "combo-12m", sticker: "🏆", name: "1 Year", price: 1500, razorpayButtonId: "", razorpayAmount: null, payMode: "universal", active: true, soldOut: false, featured: true }
       ]
     }
   },

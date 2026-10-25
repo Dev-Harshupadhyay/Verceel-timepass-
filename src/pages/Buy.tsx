@@ -185,6 +185,11 @@ export function BuyPage({ packKey }: { packKey: string }) {
                     }}
                   >
                     {best ? <i className="pc-best">{p.featured ? "BEST VALUE" : "BEST ₹/MO"}</i> : null}
+                    {p.sticker ? (
+                      <span className="pc-sticker" aria-hidden="true">
+                        {p.sticker}
+                      </span>
+                    ) : null}
                     <div className="pc-dur">{p.name.toUpperCase()}</div>
                     <div className="pc-amt" style={p.soldOut ? { textDecoration: "line-through", opacity: 0.5 } : undefined}>
                       ₹{p.price}

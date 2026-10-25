@@ -73,6 +73,8 @@ export interface Announcement {
 
 export interface Plan {
   id: string;
+  /** small emoji sticker shown next to the plan on cards */
+  sticker: string;
   name: string;
   price: number;
   razorpayButtonId: string;

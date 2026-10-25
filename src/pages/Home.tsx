@@ -6,6 +6,7 @@ import { FaqAccordion, useFaqItems } from "@/components/Faq";
 import { PriceCompare } from "@/components/PriceCompare";
 import { Footer } from "@/components/Modals";
 import { navigate } from "@/lib/router";
+import { telegramUrl } from "@/lib/payments";
 import type { PackKey } from "@/types";
 
 export function Home({ onTrack }: { onTrack: () => void }) {
@@ -27,19 +28,36 @@ export function Home({ onTrack }: { onTrack: () => void }) {
         <PriceCompare onBuy={(pack: PackKey) => navigate(`/buy/${pack}`)} />
 
         {(config.info?.intro || faq.length) && (
-          <section className="faq-teaser">
-            <div className="section-label">
-              {config.hero.faqLabel} <small>{config.hero.faqSub}</small>
+          <section className="faq-teaser faq-zone">
+            <span className="fz-sticker fz-1" aria-hidden="true">💬</span>
+            <span className="fz-sticker fz-2" aria-hidden="true">⚡</span>
+            <div className="fz-head">
+              <span className="fz-icon" aria-hidden="true">💬</span>
+              <div className="fz-meta">
+                <div className="section-label" style={{ margin: 0 }}>
+                  {config.hero.faqLabel} <small>{config.hero.faqSub}</small>
+                </div>
+                <p className="st-note" style={{ margin: "4px 0 0" }}>
+                  {t(config.info.title)}
+                </p>
+              </div>
             </div>
-            <p className="st-note" style={{ margin: "-4px 0 14px" }}>
-              {t(config.info.title)}
-            </p>
             <FaqAccordion items={faq} limit={4} />
             <div className="faq-teaser-head" style={{ marginTop: 14 }}>
               <span className="st-caption">{config.content.faqTeaserTitle}</span>
-              <button type="button" className="faq-viewall" onClick={() => navigate("/faq")}>
-                {config.content.faqViewAll} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
-              </button>
+              <div className="fz-actions">
+                <a
+                  className="fz-tg"
+                  href={telegramUrl(config.links.telegram)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fa-brands fa-telegram" aria-hidden="true" /> Poochh lo
+                </a>
+                <button type="button" className="faq-viewall" onClick={() => navigate("/faq")}>
+                  {config.content.faqViewAll} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </section>
         )}
