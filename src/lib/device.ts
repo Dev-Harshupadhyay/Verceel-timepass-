@@ -41,10 +41,11 @@ export function detectDevice(): DeviceInfo {
   const width = window.innerWidth || document.documentElement.clientWidth || 1024;
   const ua = navigator.userAgent || "";
 
-  // `pointer: coarse` / `any-pointer: coarse` are the reliable signals;
-  // maxTouchPoints covers hybrids where the primary pointer is still a mouse.
-  const hasTouch =
-    mq("(pointer: coarse)") || mq("(any-pointer: coarse)") || (navigator.maxTouchPoints || 0) > 0;
+  /* `pointer: coarse` means the PRIMARY pointer is a finger — that (and only
+     that) is what decides the payment flow. A touchscreen laptop still has a
+     mouse as primary, so it must get the QR flow, not a `upi://` deep link. */
+  const coarsePrimary = mq("(pointer: coarse)");
+  const hasTouch = coarsePrimary || mq("(any-pointer: coarse)") || (navigator.maxTouchPoints || 0) > 0;
 
   const kind: DeviceKind = width < 640 ? "mobile" : width < 1024 ? "tablet" : "desktop";
   const os: DeviceInfo["os"] = /iphone|ipad|ipod/i.test(ua)
@@ -59,8 +60,8 @@ export function detectDevice(): DeviceInfo {
     isDesktop: kind === "desktop",
     isMobile: kind === "mobile",
     os,
-    // Desktop → QR flow. Any touch device → deep link flow.
-    payWithQr: !hasTouch
+    // Finger-first device → deep link. Mouse-first (even with a touchscreen) → QR.
+    payWithQr: !coarsePrimary
   };
 }
 

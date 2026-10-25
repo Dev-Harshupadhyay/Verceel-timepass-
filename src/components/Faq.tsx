@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import { useConfig } from "@/state/ConfigProvider";
 import { useLang } from "@/state/LangProvider";
 import type { FaqCat, FaqItem } from "@/types";
@@ -30,7 +31,7 @@ function Highlight({ text, query }: { text: string; query?: string }) {
   if (!q) return <>{text}</>;
   const needle = q.toLowerCase();
   const lower = text.toLowerCase();
-  const parts: React.ReactNode[] = [];
+  const parts: ReactNode[] = [];
   let at = 0;
   let key = 0;
   while (at < text.length) {
@@ -137,6 +138,16 @@ export function FaqAccordion({
   );
 }
 
+const SR_ONLY = { position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" } as const;
+const SEARCH_ICON = {
+  position: "absolute",
+  left: 14,
+  top: "50%",
+  transform: "translateY(-50%)",
+  fontSize: 11,
+  opacity: 0.65
+} as const;
+
 export function FaqSearch({
   value,
   onChange
@@ -144,23 +155,22 @@ export function FaqSearch({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const inputId = useId();
   return (
-    <label className="fq-search" style={{ position: "relative", display: "block", flex: "1 1 200px" }}>
-      <span className="sr-only" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>
+    <div className="fq-search" style={{ position: "relative", display: "block", flex: "1 1 200px" }}>
+      <label htmlFor={inputId} className="sr-only" style={SR_ONLY}>
         Search FAQ
-      </span>
-      <i
-        className="fa-solid fa-magnifying-glass"
-        aria-hidden="true"
-        style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 11, opacity: 0.65 }}
-      />
+      </label>
+      <i className="fa-solid fa-magnifying-glass" aria-hidden="true" style={SEARCH_ICON} />
       <input
+        id={inputId}
         className="st-input"
         style={{ paddingLeft: 36, paddingRight: value ? 38 : 12, minHeight: 44 }}
         type="search"
         placeholder="Search question… (UPI, refund, price)"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        autoComplete="off"
       />
       {value ? (
         <button
@@ -173,7 +183,7 @@ export function FaqSearch({
           <i className="fa-solid fa-xmark" aria-hidden="true" />
         </button>
       ) : null}
-    </label>
+    </div>
   );
 }
 

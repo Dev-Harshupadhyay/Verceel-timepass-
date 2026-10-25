@@ -23,8 +23,8 @@ export function PricingCards({ onBuy }: { onBuy: (pack: PackKey) => void }) {
         const plans = activePlans(pack);
         return (
           <div className={`card pack-${key}${pack.crown ? " card-crown" : ""}`} key={key}>
-            <span className="p-watermark" aria-hidden="true">
-              {pack.emoji}
+            <span className="p-watermark-wrap" aria-hidden="true">
+              <span className="p-watermark">{pack.emoji}</span>
             </span>
             {pack.crown ? <div className="crown">★ CROWN PICK</div> : null}
             <div className="p-head">

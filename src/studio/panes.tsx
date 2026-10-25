@@ -6,6 +6,7 @@ import { useTheme } from "@/state/ThemeProvider";
 import { useAuth } from "@/state/AuthProvider";
 import { useToast } from "@/state/ToastProvider";
 import { fetchStorageStatus, type StorageReport } from "@/lib/api";
+import { resolvePayment } from "@/lib/payments";
 import { THEMES } from "@/config";
 import { readVisits, clearVisits, exportVisits } from "@/lib/visits";
 import type { Config, DevStat, ThemeId, TrustItem, AnnounceTone, AnnounceAnim } from "@/types";
@@ -46,7 +47,9 @@ export function OverviewPane({ draft }: PaneProps) {
     if (!pack.active) return;
     pack.plans.forEach((plan) => {
       if (!plan.active) return;
-      if (plan.razorpayButtonId && plan.razorpayAmount != null && plan.razorpayAmount !== plan.price) {
+      /* only warn when the stale button amount could actually be charged —
+         UPI/universal plans never touch the Razorpay button */
+      if (resolvePayment(plan).mismatch) {
         issues.push(`${pack.title} · ${plan.name}: Razorpay button ₹${plan.razorpayAmount} vs price ₹${plan.price}`);
       }
     });

@@ -133,8 +133,7 @@ export function PriceCompare({ onBuy }: { onBuy: (pack: PackKey) => void }) {
     if (!priced.length) return null;
 
     const entry = priced.reduce((a, b) => (a.price <= b.price ? a : b));
-    const yearly = [...priced].sort((a, b) => b.price / monthsOf(b.name) - a.price / monthsOf(a.name)).reverse();
-    // best ₹/month plan = lowest price per month
+    /* best ₹/month plan = lowest price per month */
     const best = [...priced].sort((a, b) => a.price / monthsOf(a.name) - b.price / monthsOf(b.name))[0];
     const bestPerMonth = Math.max(1, Math.round(best.price / monthsOf(best.name)));
 
@@ -142,7 +141,7 @@ export function PriceCompare({ onBuy }: { onBuy: (pack: PackKey) => void }) {
     const save = Math.max(0, cheapestOtt - bestPerMonth);
     const pct = cheapestOtt > 0 ? Math.round((save / cheapestOtt) * 100) : 0;
 
-    return { entry, best, bestPerMonth, cheapestOtt, save, pct, any: yearly[0] };
+    return { entry, best, bestPerMonth, cheapestOtt, save, pct };
   }, [config.packs.movies]);
 
   if (!live) return null;
