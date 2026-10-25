@@ -26,7 +26,7 @@ import {
   isPlainObject
 } from "./_lib/config-schema.js";
 import { DEFAULT_CONFIG } from "./_lib/defaults.js";
-import { kvGetJson, kvSetMany, kvDel, kvEnv, kvStorageConfigured } from "./_lib/kv.js";
+import { kvGetJson, kvSetMany, kvDel, kvEnv, kvStorageConfigured, kvDiagnostics } from "./_lib/kv.js";
 
 /* ─────────────────────────── helpers ─────────────────────────── */
 
@@ -68,15 +68,22 @@ const attempts = new Map();
 const WINDOW_MS = 5 * 60 * 1000;
 const MAX_ATTEMPTS = 25;
 
+/** Is this IP over the failure budget? (only wrong passwords are counted) */
 function throttled(ip) {
+  const now = Date.now();
+  const rec = attempts.get(ip);
+  if (!rec || now - rec.start > WINDOW_MS) return false;
+  return rec.count >= MAX_ATTEMPTS;
+}
+
+function recordFailure(ip) {
   const now = Date.now();
   const rec = attempts.get(ip);
   if (!rec || now - rec.start > WINDOW_MS) {
     attempts.set(ip, { start: now, count: 1 });
-    return false;
+    return;
   }
   rec.count += 1;
-  return rec.count > MAX_ATTEMPTS;
 }
 
 function clientIp(req) {
@@ -96,6 +103,7 @@ function authorize(req, body, res) {
     return false;
   }
   if (!safeEqual(body.password, expected)) {
+    recordFailure(ip);
     res.status(401).json({ error: "Galat password" });
     return false;
   }
@@ -152,7 +160,15 @@ export default async function handler(req, res) {
   /* ───────────── READ (public) ───────────── */
   if (req.method === "GET" || req.method === "HEAD") {
     if (!configured) {
-      return res.status(200).json({ ok: true, configured: false, data: null, revision: 0, updatedAt: null });
+      const diag = kvDiagnostics();
+      return res.status(200).json({
+        ok: true,
+        configured: false,
+        data: null,
+        revision: 0,
+        updatedAt: null,
+        storage: { configured: false, provider: diag.provider, missing: diag.missing, hint: diag.hint }
+      });
     }
     try {
       const stored = await kvGetJson(env, CONFIG_KEY);
@@ -202,13 +218,30 @@ export default async function handler(req, res) {
   const action = typeof body.action === "string" ? body.action : "publish";
 
   if (!configured) {
+    const diag = kvDiagnostics();
     return res.status(501).json({
       error: "KV storage configured nahi hai",
-      hint: "Vercel → Storage → Upstash Redis create karke project se connect karo, phir redeploy."
+      hint: diag.hint,
+      storage: diag
     });
   }
 
   try {
+    /* ── storage diagnostics (auth) ── */
+    if (action === "status") {
+      const diag = kvDiagnostics();
+      let ping = null;
+      if (diag.configured) {
+        try {
+          await kvGetJson(kvEnv(), CONFIG_KEY);
+          ping = "ok";
+        } catch (e) {
+          ping = `failed: ${String((e && e.message) || e).slice(0, 140)}`;
+        }
+      }
+      return res.status(200).json({ ok: true, storage: diag, ping });
+    }
+
     /* ── history / revision are reads but need auth ── */
     if (action === "history") {
       const history = await kvGetJson(env, HISTORY_KEY);

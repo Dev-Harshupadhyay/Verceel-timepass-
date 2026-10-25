@@ -45,15 +45,43 @@ Vercel → **Add New → Project** → repo import karo.
 ### 2. KV storage (publish ke liye zaroori)
 
 1. Vercel → Project → **Storage** tab
-2. **Create Database → Upstash Redis** (free tier kaafi hai)
-3. **Connect to Project** → Vercel khud `KV_REST_API_URL` + `KV_REST_API_TOKEN` add kar dega
-4. **Redeploy**
+2. **Create Database → Upstash Redis** (free tier kaafi hai) — ya Marketplace se **Upstash**
+   integration install karo
+3. **Connect to Project** → Production + Preview + Development teeno tick karo
+4. ⚠️ **Redeploy** — Deployments → latest → ⋯ → **Redeploy**
 
-Manual Upstash use kar rahe ho to ye env vars bhi supported hain:
-`UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`.
+Vercel khud ye env vars add kar deta hai (dono jodi supported hain):
+
+| Jodi | Kab milti hai |
+|---|---|
+| `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Vercel KV / Storage tab se connect |
+| `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` | Upstash Marketplace integration |
+
+> **Ye project Next.js nahi hai.** Integration page par jo
+> `import { Redis } from "@upstash/redis"` / `Redis.fromEnv()` / `NextResponse` wala snippet
+> dikhta hai — **wo ignore karo**. Is project ko sirf **environment variables** chahiye;
+> `api/pricing.js` khud REST call karta hai (koi npm package nahi).
 
 > KV set nahi hai to site **phir bhi chalti hai** (code defaults se) — bas Publish 501 dega aur
 > Studio "KV OFF" chip dikhayega.
+
+#### KV kaise check karo (2 tareeke)
+
+1. Browser: `https://<site>.vercel.app/api/pricing` → **`"configured": false`** = off,
+   **`true`** = ho gaya. False hone par `storage.missing` mein exact var names likhe hote hain.
+2. **Studio → Overview → `Storage check` button** — provider, mile hue var names, missing vars
+   aur "redeploy kiya?" hint dikhata hai.
+
+#### Common galtiyan
+
+| Symptom | Wajah |
+|---|---|
+| Storage connect kiya par `configured:false` | **Redeploy nahi kiya** — env vars purane deployment par nahi lagte |
+| Vars sirf Preview par hain | Settings → Environment Variables → **Production** bhi tick karo |
+| `KV_URL` (redis://) mila hai | Ye **TCP** url hai, is app ko **REST** url chahiye |
+| Aadha jodi (sirf URL ya sirf TOKEN) | Dono chahiye — ek hi integration ki jodi use karo |
+| DB paused/delete | Upstash dashboard → DB active hai ya nahi |
+| Publish 200 par site purani | KV theek hai, par publish ke baad **hard refresh** karo (config cache 0 hai) |
 
 ### 3. Environment variables
 

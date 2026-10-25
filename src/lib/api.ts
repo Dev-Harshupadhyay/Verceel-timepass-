@@ -61,6 +61,32 @@ async function post(body: Record<string, unknown>): Promise<PublishResponse & { 
   }
 }
 
+export interface StorageReport {
+  ok?: boolean;
+  storage: {
+    configured: boolean;
+    provider: "none" | "file" | "upstash" | "vercel-kv";
+    urlVar: string | null;
+    tokenVar: string | null;
+    presentVars: string[];
+    missing: string[];
+    needsRedeployLikely: boolean;
+    hint: string;
+  };
+  ping: string | null;
+}
+
+export async function fetchStorageStatus(password: string): Promise<StorageReport | null> {
+  const res = await fetch("/api/pricing", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password, action: "status" })
+  });
+  const json = await readJson(res);
+  if (!res.ok || !json.storage) return null;
+  return json as StorageReport;
+}
+
 export interface PublishResult extends PublishResponse {
   status: number;
   details?: ValidationError[];
