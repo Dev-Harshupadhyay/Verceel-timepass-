@@ -4,6 +4,7 @@ import { useToast } from "@/state/ToastProvider";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Announcement } from "@/components/Announcement";
 import { navigate } from "@/lib/router";
+import { useDevice } from "@/lib/device";
 import {
   activePlans,
   buildUpiUri,
@@ -28,6 +29,7 @@ function monthsOf(name: string): number {
 export function BuyPage({ packKey }: { packKey: string }) {
   const { config } = useConfig();
   const { toast } = useToast();
+  const device = useDevice();
 
   const key: PackKey = (PACK_KEYS.includes(packKey as PackKey) ? packKey : "movies") as PackKey;
   const pack = config.packs[key];
@@ -224,13 +226,45 @@ export function BuyPage({ packKey }: { packKey: string }) {
               </div>
             </div>
 
-            <div className="upi-card">
+            <div className={`upi-card${device.payWithQr ? " qr-primary" : " link-primary"}`}>
               <div className="pay-label" style={{ textAlign: "center" }}>
                 {config.content.paymentHeading}
               </div>
+
+              {device.payWithQr ? (
+                <div className="device-hint hint-desktop" role="note">
+                  <span className="dh-ico">
+                    <i className="fa-solid fa-desktop" aria-hidden="true" />
+                  </span>
+                  <span className="dh-txt">
+                    <b>Desktop par ho? 📱</b> Phone ka UPI app kholo aur neeche wala QR scan karo — amount ₹{plan.price} already
+                    set hai. Ya UPI ID copy karke bhej do.
+                  </span>
+                </div>
+              ) : (
+                <div className="device-hint hint-mobile" role="note">
+                  <span className="dh-ico">
+                    <i className="fa-solid fa-mobile-screen-button" aria-hidden="true" />
+                  </span>
+                  <span className="dh-txt">
+                    <b>Mobile par ho? ⚡</b> Neeche <b>PAY ₹{plan.price} VIA UPI</b> dabao — GPay / PhonePe / Paytm seedha khulega,
+                    amount pehle se bhara hoga.
+                  </span>
+                </div>
+              )}
+
               <div className="qr-frame">
-                <img id="upiQrImage" alt="Dynamic UPI QR Code" src={upiQr} decoding="async" />
+                <span className="qr-amount-chip">SCAN · ₹{plan.price}</span>
+                <img id="upiQrImage" alt={`UPI QR code for ₹${plan.price} — ${pack.title} ${plan.name}`} src={upiQr} decoding="async" />
+                <span className="qr-brand">{config.brand.shortName || config.brand.name}</span>
               </div>
+
+              <ol className="qr-steps">
+                <li><b>1</b> UPI app kholo</li>
+                <li><b>2</b> QR scan karo</li>
+                <li><b>3</b> ₹{plan.price} pay karo</li>
+              </ol>
+
               <div className="upi-id-row">
                 <div style={{ minWidth: 0, textAlign: "left" }}>
                   <div className="upi-id-caption">{config.content.upiCaption}</div>
@@ -240,8 +274,15 @@ export function BuyPage({ packKey }: { packKey: string }) {
                   COPY
                 </button>
               </div>
-              <button id="dynamicUpiBtn" className="dynamic-upi-btn" onClick={payByUpi} type="button">
-                <i className="fa-solid fa-credit-card" aria-hidden="true" /> PAY ₹{plan.price} VIA UPI →
+
+              <button
+                id="dynamicUpiBtn"
+                className={`dynamic-upi-btn${device.payWithQr ? " is-secondary" : ""}`}
+                onClick={payByUpi}
+                type="button"
+              >
+                <i className={`fa-solid ${device.payWithQr ? "fa-arrow-up-right-from-square" : "fa-bolt"}`} aria-hidden="true" />{" "}
+                {device.payWithQr ? "YA ISI DEVICE PAR UPI APP KHOLO" : `PAY ₹${plan.price} VIA UPI →`}
               </button>
               <p className="upi-hint">{config.content.upiHint}</p>
             </div>

@@ -58,6 +58,8 @@ export function Announcement({
     if (!preview) storage.set(KEYS.announceDismiss, dismissKey);
   };
 
+  const marquee = ann.animation === "marquee";
+
   return (
     <div
       className={`announce tone-${ann.tone || "gold"} anim-${ann.animation || "shimmer"}`}
@@ -65,16 +67,46 @@ export function Announcement({
       aria-label="Announcement"
       data-testid="announcement"
     >
+      <span className="announce-glow" aria-hidden="true" />
+
       <div className="announce-inner">
-        {ann.badge ? <span className="announce-badge">{ann.badge}</span> : null}
-        <span className="announce-text">{ann.text}</span>
-        {countdown ? <span className="announce-countdown">⏳ {countdown}</span> : null}
+        {ann.badge ? (
+          <span className="announce-badge">
+            <i className="announce-dot" aria-hidden="true" />
+            {ann.badge}
+          </span>
+        ) : null}
+
+        {marquee ? (
+          <span className="announce-marquee">
+            <span className="announce-track">
+              <span>{ann.text}</span>
+              <span className="announce-sep" aria-hidden="true">
+                ✦
+              </span>
+              <span aria-hidden="true">{ann.text}</span>
+              <span className="announce-sep" aria-hidden="true">
+                ✦
+              </span>
+            </span>
+          </span>
+        ) : (
+          <span className="announce-text">{ann.text}</span>
+        )}
+
+        {countdown ? (
+          <span className="announce-countdown" title="Offer ends in">
+            <i className="fa-regular fa-clock" aria-hidden="true" /> {countdown}
+          </span>
+        ) : null}
+
         {ann.ctaLabel && ann.ctaUrl ? (
           <a className="announce-cta" href={ann.ctaUrl} target="_blank" rel="noopener noreferrer">
-            {ann.ctaLabel}
+            {ann.ctaLabel} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
           </a>
         ) : null}
       </div>
+
       {ann.dismissible ? (
         <button type="button" className="announce-close" onClick={close} aria-label="Dismiss announcement">
           <i className="fa-solid fa-xmark" aria-hidden="true" />

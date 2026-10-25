@@ -416,6 +416,61 @@ export function AnnouncementPane({ draft, update }: PaneProps) {
         )}
       </div>
 
+      <div className="studio-h2">QUICK PRESETS</div>
+      <div className="studio-card">
+        <Row label="One-tap fill" hint="Text, badge aur button ek click mein" stack>
+          <div className="st-inline">
+            {[
+              {
+                k: "50",
+                badge: "STARTING ₹50",
+                text: "🔥 Sab plans sirf ₹50 se shuru — OTT se sasta, instant access!",
+                label: "GRAB DEAL",
+                url: "/buy/movies"
+              },
+              {
+                k: "limited",
+                badge: "LIMITED TIME",
+                text: "⚡ Limited offer — 1 Year Combo ₹1500, aaj hi book karo!",
+                label: "BUY COMBO",
+                url: "/buy/combo"
+              },
+              {
+                k: "new",
+                badge: "NEW",
+                text: "🎬 Nayi movies aur series add ho gayi hain — abhi dekho!",
+                label: "DEKHO",
+                url: "/buy/movies"
+              },
+              {
+                k: "sale",
+                badge: "FESTIVE SALE",
+                text: "🎉 Festive sale live — har pack par best price, jaldi karo!",
+                label: "BUY NOW",
+                url: "/buy/combo"
+              }
+            ].map((preset) => (
+              <button
+                key={preset.k}
+                type="button"
+                className="st-btn tiny"
+                onClick={() =>
+                  update((d) => {
+                    d.announcement.enabled = true;
+                    d.announcement.badge = preset.badge;
+                    d.announcement.text = preset.text;
+                    d.announcement.ctaLabel = preset.label;
+                    d.announcement.ctaUrl = preset.url;
+                  })
+                }
+              >
+                {preset.badge.charAt(0) + preset.badge.slice(1).toLowerCase()}
+              </button>
+            ))}
+          </div>
+        </Row>
+      </div>
+
       <div className="studio-h2">SETTINGS</div>
       <div className="studio-card">
         <SwitchRow

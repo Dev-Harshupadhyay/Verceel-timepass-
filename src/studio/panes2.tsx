@@ -25,11 +25,47 @@ export function PlansPane({ draft, update }: PaneProps) {
   return (
     <div className="studio-pane">
       <div className="warn-inline" style={{ marginTop: 0, marginBottom: 14 }}>
-        <i className="fa-solid fa-triangle-exclamation" aria-hidden="true" />
+        <i className="fa-solid fa-circle-info" aria-hidden="true" />
         <span>
-          <b>Razorpay button ka amount dashboard mein fixed hota hai.</b> Isliye har plan ke saath “Button amount” bhi store hota
-          hai. Price se mismatch hote hi site automatically UPI + Universal par bhej deti hai — galat amount charge nahi hoga.
+          <b>Price badalne par plan khud “Universal” ho jata hai</b> — matlab buyer ko seedha UPI deep link + QR milta hai, naya
+          amount already bhara hua. Razorpay button ka purana amount kabhi galat charge nahi karega.
         </span>
+      </div>
+
+      <div className="studio-card">
+        <Row label="Payment mode (sab plans)" hint="Ek click mein poori site set karo" stack>
+          <div className="st-inline">
+            <button
+              type="button"
+              className="st-btn tiny"
+              onClick={() =>
+                update((d) => {
+                  (Object.keys(d.packs) as PackKey[]).forEach((k) =>
+                    d.packs[k].plans.forEach((pl) => {
+                      pl.payMode = "universal";
+                    })
+                  );
+                })
+              }
+            >
+              <i className="fa-solid fa-bolt" aria-hidden="true" /> Sab → Universal UPI
+            </button>
+            <button
+              type="button"
+              className="st-btn tiny"
+              onClick={() =>
+                update((d) => {
+                  (Object.keys(d.packs) as PackKey[]).forEach((k) => d.packs[k].plans.forEach((pl) => { pl.payMode = "auto"; }));
+                })
+              }
+            >
+              <i className="fa-solid fa-credit-card" aria-hidden="true" /> Sab → Razorpay Auto
+            </button>
+          </div>
+          <small className="st-field-note">
+            Universal = UPI deep link + QR (naya price hamesha sahi). Auto = button amount match ho to Razorpay, warna UPI.
+          </small>
+        </Row>
       </div>
 
       {PACK_KEYS.map((key) => {
@@ -80,8 +116,20 @@ export function PlansPane({ draft, update }: PaneProps) {
                     <TextField
                       type="number"
                       value={String(plan.price)}
-                      onChange={(v) => update((d) => { d.packs[key].plans[i].price = Math.max(0, Math.round(Number(v) || 0)); })}
+                      onChange={(v) =>
+                        update((d) => {
+                          const target = d.packs[key].plans[i];
+                          target.price = Math.max(0, Math.round(Number(v) || 0));
+                          /* price badla → Razorpay ka fixed amount ab match nahi karega,
+                             isliye plan ko seedha Universal (UPI deep link) kar do */
+                          target.payMode = "universal";
+                        })
+                      }
                     />
+                    <small className="st-field-note" style={{ display: "block", marginTop: -4, marginBottom: 4 }}>
+                      Price = {plan.price === 0 ? "⚠️ ₹0 — publish se pehle theek karo" : `₹${plan.price}`} · mode auto-switch:{" "}
+                      <b>Universal UPI</b>
+                    </small>
 
                     <div className="plan-head">
                       <div className="st-inline">

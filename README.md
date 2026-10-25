@@ -152,37 +152,64 @@ Env var change karne ke baad **Redeploy** karna padega.
 
 ## 📢 Announcement / discount bar
 
-Studio → **Announcement** → enable + text likho.
+Studio → **Announcement** — poori site ka offer banner wahin se control hota hai.
 
-- Tones: Gold / Violet / Urgent
-- Animation: **Shimmer** (text par gradient sweep), **Marquee** (lamba text), None
-- Optional badge, CTA button, countdown (`expiresAt` se), dismissible
-- Dismissal per revision save hota hai — naya publish karne par dobara dikhega
+- **Quick presets** — ek click mein: `Starting ₹50`, `Limited time`, `New content`, `Festive sale`
+  (text + badge + button + link sab bhar jate hain). Phir chahe to edit karo.
+- **Live preview** pane ke sabse upar — publish se pehle wahi dikhega jo visitor ko dikhega.
+- Tones: Gold / Violet / Urgent · Animation: **Shimmer**, **Marquee** (seamless loop), None
+- Optional badge (pulsing dot ke saath), CTA button, **countdown chip** (`expiresAt` se)
+- Dismissible — dismissal per revision save hota hai, naya publish karne par dobara dikhega
 - Buy page par dikhana hai ya nahi — toggle
-- Reduced-motion users ko static readable bar milta hai
+- Mobile par bar do saaf rows mein rehta hai (text cut nahi hota); reduced-motion users ko static bar
 
 ---
 
-## 💳 Razorpay + UPI
+## 💳 Payment — Universal UPI (default) + desktop QR
 
-- **Razorpay Payment Button ka amount unke dashboard mein fixed hota hai.** Isliye har plan ke saath
-  `razorpayAmount` bhi store hota hai.
-- `payMode = auto` (default): button amount **price se match** kare to Razorpay button, warna
-  **automatically UPI + Universal** par jata hai — galat amount charge nahi hoga.
-- Studio mein mismatch hone par red warning dikhti hai.
-- UPI deep link (`upi://pay?...`) aur QR dono **`links.upi` se generate** hote hain — UPI ID
-  badloge to QR + button + DM sab update.
-- Naya Razorpay button: Dashboard → Payment Buttons → ID (`pl_xxxx`) copy → Studio → Plans →
-  us plan ke RZP field mein paste → amount bhi likho → Publish.
+**Aaj ka rule simple hai: price badlo, pay ka amount khud sahi ho jata hai.**
+
+- Har plan ka `payMode = universal` hai → buyer ko **UPI deep link** (`upi://pay?pa=…&am=…`)
+  aur **dynamic QR** milta hai, naya price pehle se bhara hua. Razorpay button ka purana
+  amount kabhi galat charge nahi karega.
+- **Studio → Plans → price field** badalte hi us plan ka mode automatic **Universal UPI**
+  ho jata hai (mismatch warning bhi khatam).
+- **Bulk buttons**: `Sab → Universal UPI` / `Sab → Razorpay Auto` — ek click mein poori site.
+- **Desktop par** (mouse, koi touch nahi): bada **QR + amount chip + UPI ID + COPY** aur
+  3-step scan guide dikhta hai — phone se scan karke pay karo.
+- **Mobile / tablet par** (touch): primary button **`PAY ₹X VIA UPI →`** — GPay / PhonePe / Paytm
+  seedha khulta hai. QR fallback ke roop mein chhota sa rehta hai.
+- Device detection `pointer: coarse` + `maxTouchPoints` se hoti hai (sirf user-agent guess nahi),
+  isliye touch-laptop ya tablet par bhi sahi flow chalta hai.
+- Razorpay tabhi dikhta hai jab button ka amount **exactly** price ke barabar ho (`auto` mode).
+  Naya button: Dashboard → Payment Buttons → `pl_xxxx` → Studio → Plans → RZP field + amount.
+- UPI ID badloge to deep link, QR aur copy button sab update — `links.upi` single source hai.
+
+---
+
+### 💰 OTT vs Timepass Premium (price comparison)
+
+Home page par pricing ke neeche ek live comparison card hai:
+
+- Netflix / JioHotstar / Prime / Zee5 / SonyLIV / Apple TV+ ke **typical ₹/month** vs
+  aapka **best ₹/month** plan (config se calculate hota hai — price badlo, card khud update).
+- Bar chart + `₹39/month` vs `₹499/month` wala seedha comparison + bachat line + footnote
+  ki OTT prices approximate hain.
+- **Teeno languages** (English / Hinglish / हिन्दी) — language switcher ke saath badalta hai.
 
 ---
 
 ## ❓ FAQ + Info (English / Hinglish / हिन्दी)
 
-- **Info** page: OTT se kam price, affordable kaise, kya milta hai, pack comparison, how it works,
-  policies aur support — teeno languages mein, language switcher ke saath.
-- **FAQ**: search + category filters + smooth accordion (keyboard + screen-reader friendly).
-  Home page par top 4 questions ka teaser.
+- **15 FAQs** — pricing, payment, access, support, policy. Core message: *OTT se kam price,
+  affordable mein kya milega*, plus:
+  - `Netflix / Prime vs Timepass Premium` — exact ₹ comparison
+  - `Hidden charge ya auto-renew?` — one-time payment, koi renewal nahi
+  - `Itna sasta kaise?` — bina middleman wala honest jawab
+- **FAQ page**: search + category chips **with counts** + `Sare kholo / Sab band karo` toggle +
+  smooth accordion (keyboard + screen reader friendly) + "answer nahi mila?" Telegram help card.
+- **Info page**: OTT se kam price, affordable kaise, kya milta hai, pack comparison, how it works,
+  policies aur support — teeno languages mein.
 - Saara text **Studio → Info & FAQ** se editable (har field ke 3 language inputs).
 - Default language **Hinglish** hai; visitor ka choice `tp_lang` mein save hota hai.
 
@@ -214,7 +241,7 @@ npm run build      # tsc + vite build → dist/
 index.html              Vite shell + FOUC-free theme boot
 src/
   App.tsx               routes + site chrome
-  components/           Header, Hero, PricingCards, BuyPage, FAQ, Drawer, Modals, Announcement
+  components/           Header, Hero, PricingCards, PriceCompare, BuyPage, FAQ, Drawer, Modals, Announcement
   pages/                Home, Buy, Info, Faq
   studio/               Live Website Studio (gate, shell, panes, fields)
   state/                Theme, Config, Auth, Toast/Confirm, Lang providers

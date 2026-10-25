@@ -12,6 +12,7 @@ export function FaqPage() {
   const items = useFaqItems();
   const [cat, setCat] = useState<FaqCat | "all">("all");
   const [query, setQuery] = useState("");
+  const [expandAll, setExpandAll] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -22,6 +23,12 @@ export function FaqPage() {
       return hay.includes(q);
     });
   }, [items, cat, query]);
+
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: items.length };
+    for (const it of items) c[it.cat] = (c[it.cat] || 0) + 1;
+    return c;
+  }, [items]);
 
   return (
     <div className="page-shell">
@@ -44,12 +51,16 @@ export function FaqPage() {
         <LangSwitch />
       </div>
 
-      <div style={{ marginBottom: 14 }}>
-        <FaqFilters active={cat} onSelect={setCat} />
+      <div className="faq-toolbar">
+        <FaqFilters active={cat} onSelect={setCat} counts={counts} />
+        <button type="button" className="faq-expand" aria-pressed={expandAll} onClick={() => setExpandAll((v) => !v)}>
+          <i className={`fa-solid ${expandAll ? "fa-compress" : "fa-expand"}`} aria-hidden="true" />
+          {expandAll ? "Sab band karo" : "Sare kholo"}
+        </button>
       </div>
 
       {filtered.length ? (
-        <FaqAccordion items={filtered} showCat />
+        <FaqAccordion items={filtered} showCat expandAll={expandAll} />
       ) : (
         <div className="admin-empty">
           <i className="fa-solid fa-comment-dots" aria-hidden="true" />
@@ -58,9 +69,22 @@ export function FaqPage() {
         </div>
       )}
 
-      <div className="support-note">
-        <i className="fa-brands fa-telegram" aria-hidden="true" />
-        <span>{t(config.info.supportNote)}</span>
+      <div className="faq-help">
+        <div className="fh-ico">
+          <i className="fa-solid fa-headset" aria-hidden="true" />
+        </div>
+        <div className="fh-txt">
+          <b>Answer nahi mila? Seedha poochh lo 👋</b>
+          <span>{t(config.info.supportNote)}</span>
+        </div>
+        <a
+          className="fh-cta"
+          href={`https://t.me/${config.links.telegram.replace(/^@/, "")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="fa-brands fa-telegram" aria-hidden="true" /> TELEGRAM
+        </a>
       </div>
 
       <div style={{ marginTop: 18 }}>
