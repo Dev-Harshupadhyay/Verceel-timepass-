@@ -116,7 +116,7 @@ export const DEFAULT_CONFIG = {
   },
 
   links: {
-    upi: "pmharsh@fam",
+    upi: "pmharshu@naviaxis",
     payeeMobile: "",
     razorpay: "https://razorpay.me/@pmharsh",
     telegram: "pmharsh",
@@ -128,8 +128,8 @@ export const DEFAULT_CONFIG = {
 
   content: {
     payLabel: "PAYMENT AMOUNT",
-    paymentHeading: "⚡ SECURE UPI PAYMENT",
-    upiCaption: "FAMPAY / UPI ID",
+    paymentHeading: "⚡ SECURE PAYMENT",
+    upiCaption: "UPI ID",
     upiHint:
       "QR scan karo ya UPI app se pay karo. Agar Paytm/GPay \"UPI Risk Policy\" alert dikhaye, to \"Pay via Mobile Number\" ya \"Pay via Scanning QR\" chuno — ya neeche Razorpay se pay karo.",
     upiNoteTemplate: "Premium {plan} @{bot}",
@@ -293,9 +293,9 @@ export const DEFAULT_CONFIG = {
       {
         title: { en: "Pay the exact amount", hinglish: "Payment karo", hi: "भुगतान करें" },
         desc: {
-          en: "UPI button, QR scan, Razorpay button or the universal Razorpay link — amount auto-fills.",
-          hinglish: "UPI button, QR scan, Razorpay button ya universal Razorpay link — amount khud bharta hai.",
-          hi: "UPI बटन, QR स्कैन, Razorpay बटन या यूनिवर्सल Razorpay लिंक — अमाउंट अपने आप भरता है।"
+          en: "Easiest is the Razorpay Universal link (card / UPI / netbanking). UPI button and QR scan also work — amount auto-fills everywhere.",
+          hinglish: "Sabse aasan Razorpay Universal link hai (card / UPI / netbanking). UPI button aur QR scan bhi chalte hain — amount har jagah khud bharta hai.",
+          hi: "सबसे आसान Razorpay Universal लिंक है (कार्ड / UPI / नेटबैंकिंग)। UPI बटन और QR स्कैन भी चलते हैं — रकम हर जगह अपने आप भर जाती है।"
         }
       },
       {
@@ -400,9 +400,9 @@ export const DEFAULT_CONFIG = {
         hi: "भुगतान कैसे करूँ?"
       },
       a: {
-        en: "Choose a plan, then pay with the UPI button (GPay / PhonePe / Paytm), scan the QR, or use the Razorpay button / universal Razorpay link shown on the payment page.",
-        hinglish: "Plan choose karo, phir UPI button (GPay / PhonePe / Paytm) se pay karo, QR scan karo, ya payment page par dikhne wala Razorpay button / universal Razorpay link use karo.",
-        hi: "प्लान चुनें, फिर UPI बटन (GPay / PhonePe / Paytm) से भुगतान करें, QR स्कैन करें, या पेमेंट पेज पर दिखने वाला Razorpay बटन / यूनिवर्सल Razorpay लिंक इस्तेमाल करें।"
+        en: "Easiest: the Razorpay Universal button on the payment page — card, UPI or netbanking in one link, and no risk-policy alert. UPI ID (pmharshu@naviaxis) with the QR or the deep-link button also works, but Paytm/GPay may block it as per their UPI Risk Policy; if that happens, just pay through Razorpay.",
+        hinglish: "Sabse aasan: payment page par Razorpay Universal button — card, UPI ya netbanking ek hi link se, aur koi risk-policy alert nahi. UPI ID (pmharshu@naviaxis) se QR ya deep-link button bhi chalta hai, par Paytm/GPay apni UPI Risk Policy ke hisaab se rok sakta hai; aisa ho to Razorpay se pay kar do.",
+        hi: "सबसे आसान: पेमेंट पेज पर Razorpay Universal बटन — कार्ड, UPI या नेटबैंकिंग एक ही लिंक में, और कोई रिस्क-पॉलिसी अलर्ट नहीं। UPI ID (pmharshu@naviaxis) से QR या डीप-लिंक बटन भी चलता है, पर Paytm/GPay अपनी UPI Risk Policy के हिसाब से रोक सकता है; ऐसा हो तो Razorpay से भुगतान कर दें।"
       }
     },
     {

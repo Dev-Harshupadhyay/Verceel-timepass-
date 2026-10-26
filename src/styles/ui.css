@@ -1861,3 +1861,123 @@
   .pay-route .pr-txt small { font-size: 8px; }
   .pn-list p { font-size: 9.6px; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   PAYMENT · RAZORPAY UNIVERSAL FIRST, UPI AS FALLBACK
+   ══════════════════════════════════════════════════════════════ */
+
+.pay-primary {
+  position: relative;
+  margin: 6px 0 14px;
+  padding: 14px 13px 12px;
+  border-radius: 18px;
+  border: 1.5px solid var(--gold);
+  background:
+    radial-gradient(120% 140% at 12% -20%, rgba(var(--acc-rgb), 0.22), transparent 62%),
+    var(--surf-1);
+  box-shadow: 0 16px 40px -26px rgba(var(--acc-rgb), 0.9), inset 0 1px 0 rgba(var(--hl-rgb), 0.1);
+  text-align: center;
+}
+.pp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 9px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 7.6px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: var(--on-acc);
+  background: var(--gold-grad);
+  background-size: 220% 100%;
+  box-shadow: 0 3px 10px rgba(var(--acc-rgb), 0.32);
+}
+.pp-badge i { font-size: 7px; }
+
+.pay-primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 12px;
+  border-radius: 14px;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+  text-decoration: none;
+  color: var(--on-acc);
+  background: var(--gold-grad);
+  background-size: 220% 100%;
+  box-shadow: 0 14px 34px -16px rgba(var(--acc-rgb), 0.95), inset 0 1px 0 rgba(var(--hl-rgb), 0.45);
+  transition: transform 0.15s, filter 0.2s;
+}
+.pay-primary-btn i:first-child { font-size: 13px; }
+.pay-primary-btn i:last-child { font-size: 10px; transition: transform 0.18s; }
+.pay-primary-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.pay-primary-btn:hover i:last-child { transform: translateX(3px); }
+.pay-primary-btn:active { transform: scale(0.98); }
+.pp-note {
+  margin: 9px auto 0;
+  max-width: 44ch;
+  font-size: 9.6px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.pp-note b { color: var(--ink); }
+
+/* "YA UPI ID SE TRY KARO" divider */
+.pay-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 14px;
+  color: var(--faint);
+  font-size: 7.8px;
+  font-weight: 900;
+  letter-spacing: 1.6px;
+}
+.pay-divider::before,
+.pay-divider::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-hi), transparent);
+}
+.pay-divider span { flex: 0 0 auto; }
+
+/* warning directly under the UPI deep-link button */
+.pay-warn {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 10px 0 2px;
+  padding: 10px 11px;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 168, 36, 0.38);
+  background: rgba(255, 168, 36, 0.1);
+  text-align: left;
+}
+.pay-warn i {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #ffb020;
+}
+.pay-warn span { font-size: 9.8px; line-height: 1.65; color: var(--muted); }
+.pay-warn b { color: var(--ink); }
+
+/* on a phone the UPI zone reads as the alternative, not the hero */
+.upi-card.link-primary .qr-frame { width: min(190px, 52vw); margin-bottom: 12px; }
+
+@media (max-width: 379px) {
+  .pay-primary-btn { font-size: 10px; letter-spacing: 0.6px; gap: 7px; padding: 13px 8px; }
+  .pay-warn span { font-size: 9.2px; }
+  .pp-note { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pay-primary-btn:hover,
+  .pay-primary-btn:active { transform: none; }
+}

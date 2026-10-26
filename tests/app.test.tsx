@@ -93,11 +93,11 @@ describe("site shell", () => {
     await user.click(screen.getByText("₹100"));
     await user.click(screen.getAllByRole("button", { name: /PROCEED TO PAY/i })[0]);
 
-    expect(await screen.findByText(/SECURE UPI PAYMENT/)).toBeTruthy();
+    expect(await screen.findByText(/SECURE PAYMENT/)).toBeTruthy();
     const qr = document.querySelector("#upiQrImage") as HTMLImageElement;
     const decoded = decodeURIComponent(decodeURIComponent(qr.src));
     expect(decoded).toContain("upi://pay");
-    expect(decoded).toContain("pmharsh@fam");
+    expect(decoded).toContain("pmharshu@naviaxis");
     expect(decoded).toContain("am=100.00");
   });
 

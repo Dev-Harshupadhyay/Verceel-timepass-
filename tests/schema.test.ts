@@ -180,7 +180,7 @@ describe("legacy migration", () => {
 
 describe("helpers", () => {
   it("validates formats", () => {
-    expect(isUpiId("pmharsh@fam")).toBe(true);
+    expect(isUpiId("pmharshu@naviaxis")).toBe(true);
     expect(isUpiId("nope")).toBe(false);
     expect(isRzpId("pl_TcjHF0nZXCtlQO")).toBe(true);
     expect(isRzpId("pl_123")).toBe(false);

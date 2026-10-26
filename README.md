@@ -228,30 +228,35 @@ Studio → **Announcement** — poori site ka offer banner wahin se control hota
 
 ### ⚠️ "UPI Risk Policy" alert (Paytm / GPay)
 
-Paytm kabhi deep link (`upi://pay?...`) par **"This payment may fail as per UPI Risk Policy"**
-dikhata hai. Ye **P2P collect request** par app ki safety restriction hai — paisa nahi katta,
-payment fail nahi hota, bas app doosra tareeka maangta hai.
+Personal VPA par P2P transfer karne par Paytm/GPay kabhi **"This payment may fail as per UPI
+Risk Policy"** dikhate hain. Paisa nahi katta, payment register nahi hota — bas app doosra
+tareeka maangta hai.
 
-Site iske liye 3 route deti hai (payment page par, har plan ke saath):
+**Isliye site ka primary route Razorpay Universal hai:**
 
 | Route | Kab | Kahan |
 |---|---|---|
-| **QR scan** | Desktop par, ya doosre phone se | Bada QR + `SCAN · ₹X` chip |
-| **Mobile number se pay** | Paytm ka "Pay via Mobile Number" | Studio → Links → *Payee mobile number* set karo, phir ek-tap copy button aata hai |
-| **Razorpay (merchant)** | Alert baar-baar aaye | Razorpay link — merchant gateway, wahan personal-UPI risk alert nahi aata |
+| **Razorpay Universal** (primary) | Hamesha — card / UPI / netbanking ek link mein | Payment page par sabse upar, gold **RECOMMENDED** button |
+| **UPI ID** (`pmharshu@naviaxis`) | Jab UPI se hi pay karna ho | QR + UPI ID + COPY + deep-link button (secondary section) |
+| **Mobile number** | Paytm ka "Pay via Mobile Number" | Studio → Links → *Payee mobile number* set karne par |
 
-- Payment page par **"IMPORTANT NOTES · PAYMENT"** panel sab explain karta hai — **English /
-  Hinglish / हिन्दी** mein, aur config se independent hai (publish kiye bina bhi dikhta hai).
-- UPI app na khule to 2.8s baad toast guide karta hai ("QR scan karo ya mobile number se pay karo").
-- QR image load na ho to graceful fallback: UPI ID + COPY + deep link — buyer kabhi stuck nahi hota.
-- **Payee mobile number**: Studio → Links → `Payee mobile number` (10 digit, optional).
-  Khali chhodo to wo button nahi dikhega. Ye wahi number hona chahiye jo UPI ID se juda hai.
+- UPI deep-link button ke **theek neeche warning** hai: *"UPI ID se payment fail ho sakti hai —
+  Paytm/GPay personal UPI par risk-policy alert dikha ke rok dete hain. Aisa ho to **Razorpay
+  Universal** se pay karo."*
+- Payment page par **"IMPORTANT NOTES · PAYMENT"** panel (English / Hinglish / हिन्दी) —
+  code se aata hai, publish kiye bina bhi live.
+- UPI app na khule to 2.8s baad toast guide karta hai; QR image fail ho to UPI ID + COPY dikh jate hain.
+- Razorpay raaste par koi risk alert nahi aata (merchant gateway), isliye wahi recommended hai.
 
-> Long-term: personal VPA (`@fam`, `@okhdfcbank` etc.) par repeated P2P transfers PSP ko flag
-> kar dete hain. Agar alert roz aaye to **business/merchant UPI** lo ya **Razorpay** ko primary
-> route banao — dono par ye restriction nahi aati.
+#### UPI ID migration
+Purana id `pmharsh@fam` retire ho gaya (wallet VPA par blocks zyada the). Ab default
+**`pmharshu@naviaxis`** hai, aur already-published configs ka `pmharsh@fam` automatically
+migrate ho jata hai — **dobara publish karne ki zaroorat nahi**.
+Purana heading (`⚡ SECURE UPI PAYMENT`) aur caption (`FAMPAY / UPI ID`) bhi naye values par
+move ho jate hain; admin ka apna custom text kabhi overwrite nahi hota.
 
----
+> Long-term: personal VPA par repeated P2P transfers PSP ko flag kar dete hain. Agar alert roz
+> aaye to **business/merchant UPI** lo ya Razorpay ko hi default rakho.
 
 ### 💰 OTT vs Timepass Premium (price comparison)
 

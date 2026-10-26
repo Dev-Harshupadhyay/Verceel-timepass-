@@ -382,12 +382,20 @@ export function normalizeConfig(raw) {
   };
   out.links = {
     upi: (() => {
+      /* The site used to collect on `pmharsh@fam`. That personal wallet VPA
+         triggers Paytm/GPay "UPI Risk Policy" blocks, so it was replaced by
+         `pmharshu@naviaxis`. Old published configs (and old drafts) are moved
+         over automatically instead of keeping a dead payment address. */
+      const UPI_MIGRATION = { "pmharsh@fam": "pmharshu@naviaxis" };
       if (l.upi === undefined || l.upi === null || l.upi === "") return D.links.upi;
-      if (!isUpiId(l.upi)) {
+      const raw = typeof l.upi === "string" ? l.upi.trim() : l.upi;
+      const migrated = typeof raw === "string" ? UPI_MIGRATION[raw.toLowerCase()] : undefined;
+      if (migrated) return migrated;
+      if (!isUpiId(raw)) {
         err("links.upi", "valid UPI id expected (name@bank)");
         return D.links.upi;
       }
-      return l.upi.trim();
+      return String(raw).trim();
     })(),
     payeeMobile: (() => {
       if (l.payeeMobile === undefined || l.payeeMobile === null || l.payeeMobile === "") return "";
@@ -426,6 +434,17 @@ export function normalizeConfig(raw) {
   };
   for (const [key, max] of Object.entries(textFields)) {
     out.content[key] = str(c[key], key, max, D.content[key], `content.${key}`);
+  }
+  /* The payment step is no longer UPI-only ("Razorpay universal" is the primary
+     route), so the old shipped heading is modernised instead of being frozen in
+     every already-published config. */
+  const OLD_HEADINGS = ["⚡ SECURE UPI PAYMENT"];
+  if (typeof c.paymentHeading === "string" && OLD_HEADINGS.includes(c.paymentHeading.trim())) {
+    out.content.paymentHeading = D.content.paymentHeading;
+  }
+  /* "FAMPAY / UPI ID" was tied to the retired @fam handle */
+  if (typeof c.upiCaption === "string" && c.upiCaption.trim() === "FAMPAY / UPI ID") {
+    out.content.upiCaption = D.content.upiCaption;
   }
 
   /* ---------- info ---------- */
