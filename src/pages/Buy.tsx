@@ -38,6 +38,16 @@ const PAY_NOTES: Record<
     lead: "Paytm / GPay kabhi “UPI Risk Policy” ka alert dikha sakta hai. Ghabrana nahi — aapka paisa safe hai, kuch kata nahi. Bas neeche diye tareeke se pay karo:",
     items: [
       {
+        icon: "fa-shield-halved",
+        title: "Sabse pehle: Razorpay Universal",
+        body: "Card / UPI / Netbanking — ek hi link. Merchant gateway hai, isliye personal UPI ka risk alert wahan nahi aata. Yahi sabse safe rasta hai."
+      },
+      {
+        icon: "fa-triangle-exclamation",
+        title: "UPI ID se payment fail ho sakti hai",
+        body: "Paytm / GPay personal UPI par “UPI Risk Policy” dikha ke transfer rok dete hain. Paisa nahi katta — bas dobara Razorpay se kar do."
+      },
+      {
         icon: "fa-mobile-screen",
         title: "Paytm alert aaya? “Pay via Mobile Number” chuno",
         body: "Number paste karo aur amount apne aap aa jayega. (Number upar “MOBILE NUMBER SE PAY” button se copy ho jata hai.)"
@@ -46,11 +56,6 @@ const PAY_NOTES: Record<
         icon: "fa-qrcode",
         title: "Ya “Pay via Scanning QR” chuno",
         body: "Is page ka QR scan karo — same UPI ID, same amount, aur ye route Paytm khud suggest karta hai."
-      },
-      {
-        icon: "fa-credit-card",
-        title: "Phir bhi na ho? Razorpay se pay karo",
-        body: "Razorpay ek merchant gateway hai — wahan personal UPI ka risk alert nahi aata. Neeche “Universal Payment” button use karo."
       },
       {
         icon: "fa-indian-rupee-sign",
@@ -70,19 +75,24 @@ const PAY_NOTES: Record<
     lead: "Paytm / GPay may show a “UPI Risk Policy” alert. Nothing is broken and no money is deducted — the app just wants you to confirm another way. Use one of these routes:",
     items: [
       {
+        icon: "fa-shield-halved",
+        title: "Start with Razorpay Universal",
+        body: "Card / UPI / netbanking in one link. It is a merchant gateway, so the personal-UPI risk alert never appears there — this is the safest route."
+      },
+      {
+        icon: "fa-triangle-exclamation",
+        title: "UPI ID payments can fail",
+        body: "Paytm / GPay may block a personal-UPI transfer with a “UPI Risk Policy” alert. No money is deducted — just pay through Razorpay instead."
+      },
+      {
         icon: "fa-mobile-screen",
         title: "Seeing the Paytm alert? Choose “Pay via Mobile Number”",
-        body: "Paste the number and the amount fills in automatically. (Copy it with the “PAY VIA MOBILE NUMBER” button above.)"
+        body: "Paste the number and the amount fills in automatically. (Copy it with the “MOBILE NUMBER SE PAY” button above.)"
       },
       {
         icon: "fa-qrcode",
         title: "Or choose “Pay via Scanning QR”",
         body: "Scan the QR on this page — same UPI ID, same amount. Paytm itself suggests this route."
-      },
-      {
-        icon: "fa-credit-card",
-        title: "Still blocked? Pay through Razorpay",
-        body: "Razorpay is a merchant gateway, so the personal-UPI risk alert does not apply there. Use the “Universal Payment” button below."
       },
       {
         icon: "fa-indian-rupee-sign",
@@ -102,6 +112,16 @@ const PAY_NOTES: Record<
     lead: "Paytm / GPay कभी “UPI Risk Policy” का अलर्ट दिखा सकता है। घबराएँ नहीं — पैसा सुरक्षित है, कुछ कटा नहीं। बस इनमें से कोई एक तरीका चुनें:",
     items: [
       {
+        icon: "fa-shield-halved",
+        title: "सबसे पहले: Razorpay Universal",
+        body: "कार्ड / UPI / नेटबैंकिंग — एक ही लिंक। यह मर्चेंट गेटवे है, इसलिए पर्सनल UPI का रिस्क अलर्ट वहाँ नहीं आता। सबसे सुरक्षित तरीका यही है।"
+      },
+      {
+        icon: "fa-triangle-exclamation",
+        title: "UPI ID से भुगतान फेल हो सकता है",
+        body: "Paytm / GPay पर्सनल UPI पर “UPI Risk Policy” दिखाकर ट्रांसफ़र रोक देते हैं। पैसा नहीं कटता — बस Razorpay से भुगतान कर दें।"
+      },
+      {
         icon: "fa-mobile-screen",
         title: "Paytm अलर्ट आया? “Pay via Mobile Number” चुनें",
         body: "नंबर पेस्ट करें, रकम अपने आप भर जाएगी। (ऊपर “MOBILE NUMBER SE PAY” बटन से नंबर कॉपी हो जाता है।)"
@@ -110,11 +130,6 @@ const PAY_NOTES: Record<
         icon: "fa-qrcode",
         title: "या “Pay via Scanning QR” चुनें",
         body: "इस पेज का QR स्कैन करें — वही UPI ID, वही रकम। यह तरीका Paytm खुद सुझाता है।"
-      },
-      {
-        icon: "fa-credit-card",
-        title: "फिर भी न हो? Razorpay से भुगतान करें",
-        body: "Razorpay एक मर्चेंट गेटवे है — वहाँ पर्सनल UPI का रिस्क अलर्ट नहीं आता। नीचे “Universal Payment” बटन दबाएँ।"
       },
       {
         icon: "fa-indian-rupee-sign",
@@ -423,6 +438,32 @@ export function BuyPage({ packKey }: { packKey: string }) {
                 {config.content.paymentHeading}
               </div>
 
+              {/* ── PRIMARY · Razorpay universal (works on every device) ── */}
+              <div className="pay-primary">
+                <span className="pp-badge">
+                  <i className="fa-solid fa-star" aria-hidden="true" /> RECOMMENDED
+                </span>
+                <a
+                  className="pay-primary-btn"
+                  href={config.links.razorpay}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={universal}
+                >
+                  <i className="fa-solid fa-shield-halved" aria-hidden="true" />
+                  <span>PAY ₹{plan.price} · RAZORPAY UNIVERSAL</span>
+                  <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                </a>
+                <p className="pp-note">
+                  Card · UPI · Netbanking — sab ek hi link se. Merchant gateway hai, isliye{" "}
+                  <b>“UPI Risk Policy” wala alert yahan nahi aata</b>.
+                </p>
+              </div>
+
+              <div className="pay-divider" role="separator">
+                <span>YA UPI ID SE TRY KARO</span>
+              </div>
+
               {device.payWithQr ? (
                 <div className="device-hint hint-desktop" role="note">
                   <span className="dh-ico">
@@ -490,6 +531,17 @@ export function BuyPage({ packKey }: { packKey: string }) {
                 <i className={`fa-solid ${device.payWithQr ? "fa-arrow-up-right-from-square" : "fa-bolt"}`} aria-hidden="true" />{" "}
                 {device.payWithQr ? "YA ISI DEVICE PAR UPI APP KHOLO" : `PAY ₹${plan.price} VIA UPI →`}
               </button>
+
+              {/* the warning the buyer needs *right here*, next to the button */}
+              <div className="pay-warn" role="note">
+                <i className="fa-solid fa-triangle-exclamation" aria-hidden="true" />
+                <span>
+                  <b>UPI ID se payment fail ho sakti hai.</b> Paytm / GPay personal UPI par “UPI Risk
+                  Policy” alert dikha ke transfer rok dete hain — paisa nahi katta. Aisa ho to{" "}
+                  <b>upar wale Razorpay Universal</b> button se pay karo, wahan ye dikkat nahi aati.
+                </span>
+              </div>
+
               <div className="pay-routes">
                 {payeeMobile ? (
                   <button type="button" className="pay-route" onClick={() => void copyPayeeMobile()}>
@@ -508,12 +560,13 @@ export function BuyPage({ packKey }: { packKey: string }) {
                   href={config.links.razorpay}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={universal}
                 >
                   <span className="pr-ico" aria-hidden="true">
                     <i className="fa-solid fa-shield-halved" />
                   </span>
                   <span className="pr-txt">
-                    <b>ALERT AAYA? RAZORPAY SE PAY</b>
+                    <b>UPI FAIL HUI? RAZORPAY SE PAY</b>
                     <small>merchant gateway · koi risk alert nahi</small>
                   </span>
                   <i className="fa-solid fa-arrow-up-right-from-square pr-end" aria-hidden="true" />

@@ -58,10 +58,12 @@ describe("payment notes (UPI risk policy)", () => {
     expect(notes).toBeTruthy();
     expect(notes!.textContent).toContain("IMPORTANT NOTES · PAYMENT");
     expect(notes!.textContent).toMatch(/UPI Risk Policy/);
-    expect(notes!.querySelectorAll(".pn-list li").length).toBe(5);
+    expect(notes!.querySelectorAll(".pn-list li").length).toBe(6);
+    // razorpay is now the first thing recommended
+    expect(notes!.querySelectorAll(".pn-list li")[0].textContent).toMatch(/Razorpay Universal/);
+    expect(notes!.textContent).toMatch(/UPI ID se payment fail ho sakti hai/);
     expect(notes!.textContent).toMatch(/Pay via Mobile Number/);
     expect(notes!.textContent).toMatch(/Pay via Scanning QR/);
-    expect(notes!.textContent).toMatch(/Razorpay/);
   });
 
   it("speaks the visitor's language", async () => {
