@@ -413,6 +413,15 @@ export function LinksPane({ draft, update }: PaneProps) {
             note={`UPI link: upi://pay?pa=${draft.links.upi || "…"}`}
           />
         </Row>
+        <Row label="Payee mobile number" hint="Optional — Paytm 'mobile number se pay' ke liye">
+          <TextField
+            value={draft.links.payeeMobile || ""}
+            placeholder="98XXXXXXXX"
+            maxLength={10}
+            onChange={(v) => update((d) => { d.links.payeeMobile = v.replace(/[^0-9]/g, ""); })}
+            note="Khali chhodne par ye option site par nahi dikhega. UPI ID se juda number hi daalo."
+          />
+        </Row>
         <Row label="Razorpay universal link">
           <TextField value={draft.links.razorpay} onChange={(v) => update((d) => { d.links.razorpay = v; })} />
         </Row>

@@ -1695,3 +1695,169 @@
 }
 .fz-tg:hover { color: var(--gold-hi); border-color: var(--gold); }
 .fz-tg i { color: #229ed9; }
+
+/* ══════════════════════════════════════════════════════════════
+   PAYMENT ROUTES + "UPI RISK POLICY" NOTES
+   (Paytm/GPay P2P deep links can be blocked — always give a way out)
+   ══════════════════════════════════════════════════════════════ */
+
+.pay-routes {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+@media (min-width: 520px) { .pay-routes { grid-template-columns: 1fr 1fr; } }
+
+.pay-route {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 9px 11px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surf-1);
+  color: var(--ink);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.16s, background 0.16s, transform 0.12s;
+}
+.pay-route:hover { border-color: var(--gold); background: rgba(var(--acc-rgb), 0.08); }
+.pay-route:active { transform: scale(0.985); }
+.pay-route.is-safe { border-style: dashed; border-color: var(--line-hi); }
+.pay-route .pr-ico {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--on-acc);
+  background: var(--gold-grad);
+  box-shadow: 0 3px 10px rgba(var(--acc-rgb), 0.28);
+}
+.pay-route.is-safe .pr-ico { background: rgba(var(--acc-rgb), 0.14); color: var(--gold-hi); box-shadow: none; }
+.pay-route .pr-txt { flex: 1 1 auto; min-width: 0; }
+.pay-route .pr-txt b {
+  display: block;
+  font-size: 8.6px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1.35;
+}
+.pay-route .pr-txt small {
+  display: block;
+  font-size: 8.6px;
+  color: var(--faint);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.pay-route .pr-end { flex: 0 0 auto; font-size: 9px; color: var(--faint); opacity: 0.8; }
+
+/* ── notes panel ── */
+.pay-notes {
+  margin-top: 16px;
+  padding: 14px 13px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(var(--acc-rgb), 0.32);
+  background:
+    linear-gradient(160deg, rgba(var(--acc-rgb), 0.1), rgba(var(--acc-rgb), 0.02) 60%),
+    var(--surf-1);
+  text-align: left;
+}
+.pn-head { display: flex; gap: 10px; align-items: flex-start; }
+.pn-ico {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-size: 11px;
+  color: #ffca6b;
+  background: rgba(255, 168, 36, 0.16);
+  border: 1px solid rgba(255, 168, 36, 0.3);
+}
+.pn-head b {
+  display: block;
+  font-size: 8.8px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  color: var(--gold-hi);
+  margin-bottom: 4px;
+}
+.pn-head p { font-size: 10.4px; line-height: 1.7; color: var(--muted); margin: 0; }
+
+.pn-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  counter-reset: pn;
+}
+.pn-list li { display: flex; gap: 9px; align-items: flex-start; }
+.pn-list .pn-i {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-size: 9.5px;
+  color: var(--gold);
+  background: rgba(var(--acc-rgb), 0.12);
+  border: 1px solid var(--line);
+  margin-top: 1px;
+}
+.pn-list b {
+  display: block;
+  font-size: 10.4px;
+  font-weight: 800;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.pn-list p { margin: 2px 0 0; font-size: 10px; line-height: 1.65; color: var(--muted); }
+
+.pn-foot {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  font-size: 9.4px;
+  line-height: 1.6;
+  color: var(--faint);
+}
+.pn-foot i { margin-top: 2px; color: var(--gold); font-size: 9px; }
+
+/* ── QR load failure fallback ── */
+.qr-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px dashed var(--line-hi);
+  background: rgba(var(--acc-rgb), 0.06);
+  text-align: center;
+}
+.qr-fallback i { font-size: 1.6rem; color: var(--gold); opacity: 0.8; }
+.qr-fallback b { font-size: 11px; }
+.qr-fallback small { font-size: 9.4px; line-height: 1.6; color: var(--faint); max-width: 22ch; }
+
+@media (max-width: 379px) {
+  .pay-route .pr-txt b { font-size: 8px; letter-spacing: 0.8px; }
+  .pay-route .pr-txt small { font-size: 8px; }
+  .pn-list p { font-size: 9.6px; }
+}

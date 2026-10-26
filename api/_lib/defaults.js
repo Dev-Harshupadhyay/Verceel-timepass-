@@ -117,6 +117,7 @@ export const DEFAULT_CONFIG = {
 
   links: {
     upi: "pmharsh@fam",
+    payeeMobile: "",
     razorpay: "https://razorpay.me/@pmharsh",
     telegram: "pmharsh",
     channel: "TIMEPASS_BACKUP_1",
@@ -130,7 +131,7 @@ export const DEFAULT_CONFIG = {
     paymentHeading: "⚡ SECURE UPI PAYMENT",
     upiCaption: "FAMPAY / UPI ID",
     upiHint:
-      "Button dabate hi selected amount ke saath UPI payment request open hogi. Agar app chooser na aaye, QR scan ya UPI ID se payment kar sakte ho.",
+      "QR scan karo ya UPI app se pay karo. Agar Paytm/GPay \"UPI Risk Policy\" alert dikhaye, to \"Pay via Mobile Number\" ya \"Pay via Scanning QR\" chuno — ya neeche Razorpay se pay karo.",
     upiNoteTemplate: "Premium {plan} @{bot}",
     paymentNoteTitle: "PAYMENT KE BAAD:",
     paymentNote:
@@ -552,6 +553,21 @@ export const DEFAULT_CONFIG = {
         en: "Timepass Premium starts at ₹50 for a full month, and the 1-year pack is ₹465 — roughly ₹39 per month. For reference, popular OTT list prices in India are around ₹99–₹499 per month (Netflix Standard ~₹499, JioHotstar Premium ~₹499, Amazon Prime ~₹299, Zee5 / SonyLIV ~₹299). So a whole year here often costs less than one month of a big OTT plan. OTT prices change with their own plans and offers.",
         hinglish: "Timepass Premium poore mahine ka ₹50 se shuru hota hai, aur 1-year pack ₹465 — matlab approx ₹39/month. Reference ke liye, India mein popular OTT ka list price ₹99–₹499/month ke beech hota hai (Netflix Standard ~₹499, JioHotstar Premium ~₹499, Amazon Prime ~₹299, Zee5 / SonyLIV ~₹299). Yani yahan ka poora saal aksar ek bade OTT ke ek mahine se bhi sasta padta hai. OTT prices unke apne plans/offers ke hisaab se badalte rehte hain.",
         hi: "Timepass Premium पूरे महीने का ₹50 से शुरू होता है, और 1-साल का पैक ₹465 — यानी लगभग ₹39/महीना। तुलना के लिए, भारत में लोकप्रिय OTT का लिस्ट प्राइस ₹99–₹499/महीना होता है (Netflix Standard ~₹499, JioHotstar Premium ~₹499, Amazon Prime ~₹299, Zee5 / SonyLIV ~₹299)। यानी यहाँ का पूरा साल अक्सर एक बड़े OTT के एक महीने से भी सस्ता पड़ता है। OTT कीमतें उनके अपने प्लान/ऑफ़र के हिसाब से बदलती रहती हैं।"
+      }
+    },
+    {
+      id: "faq-upi-risk",
+      cat: "payment",
+      active: true,
+      q: {
+        en: "Paytm shows a \"UPI Risk Policy\" alert — will my payment fail?",
+        hinglish: "Paytm par \"UPI Risk Policy\" alert aa raha hai — payment fail hoga?",
+        hi: "Paytm पर \"UPI Risk Policy\" अलर्ट आ रहा है — भुगतान फेल होगा?"
+      },
+      a: {
+        en: "No money is deducted and nothing is broken — the app is only asking you to confirm through another route. Tap \"Pay via Mobile Number\" (number is on the payment page, one tap to copy) or \"Pay via Scanning QR\" and scan the QR shown there. If it still blocks, use the Razorpay link — it is a merchant gateway, so the personal-UPI risk alert does not appear there. Always pay the exact amount shown.",
+        hinglish: "Koi paisa nahi katta aur kuch toota nahi — app bas doosra tareeka chunne ko keh raha hai. \"Pay via Mobile Number\" dabao (number payment page par hai, ek tap mein copy) ya \"Pay via Scanning QR\" chun ke wahan dikha QR scan karo. Phir bhi block ho to Razorpay link use karo — wo merchant gateway hai, wahan personal UPI ka risk alert nahi aata. Amount hamesha exactly wahi rakho jo page par hai.",
+        hi: "कोई पैसा नहीं कटता और कुछ टूटा नहीं है — ऐप बस दूसरा तरीका चुनने को कह रहा है। \"Pay via Mobile Number\" दबाएँ (नंबर पेमेंट पेज पर है, एक टैप में कॉपी) या \"Pay via Scanning QR\" चुनकर वहाँ दिख रहा QR स्कैन करें। फिर भी ब्लॉक हो तो Razorpay लिंक इस्तेमाल करें — वह मर्चेंट गेटवे है, वहाँ पर्सनल UPI का रिस्क अलर्ट नहीं आता। रकम हमेशा वही रखें जो पेज पर लिखी है।"
       }
     },
     {

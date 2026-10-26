@@ -109,6 +109,11 @@ export function validUrl(v, { relative = false } = {}) {
 export function isTelegramUser(v) {
   return typeof v === "string" && /^[A-Za-z0-9_]{4,32}$/.test(v.trim());
 }
+/** Indian mobile number, 10 digits starting 6-9. Empty string = not set. */
+export function isMobileNo(v) {
+  return typeof v === "string" && /^[6-9]\d{9}$/.test(v.replace(/[\s-]/g, ""));
+}
+
 export function isUpiId(v) {
   return typeof v === "string" && /^[A-Za-z0-9._-]{2,64}@[A-Za-z][A-Za-z0-9.]{1,32}$/.test(v.trim());
 }
@@ -383,6 +388,14 @@ export function normalizeConfig(raw) {
         return D.links.upi;
       }
       return l.upi.trim();
+    })(),
+    payeeMobile: (() => {
+      if (l.payeeMobile === undefined || l.payeeMobile === null || l.payeeMobile === "") return "";
+      if (!isMobileNo(l.payeeMobile)) {
+        err("links.payeeMobile", "10-digit Indian mobile number expected (ya khali chhod do)");
+        return "";
+      }
+      return l.payeeMobile.replace(/[\s-]/g, "");
     })(),
     razorpay: url(l.razorpay, D.links.razorpay, "links.razorpay"),
     telegram: handle(l.telegram, D.links.telegram, "links.telegram"),

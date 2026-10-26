@@ -98,6 +98,9 @@ export interface Pack {
 
 export interface Links {
   upi: string;
+  /** optional 10-digit mobile linked to the UPI id — lets Paytm/GPay users
+      "pay via mobile number" when the UPI risk policy blocks a deep link */
+  payeeMobile: string;
   razorpay: string;
   telegram: string;
   channel: string;
