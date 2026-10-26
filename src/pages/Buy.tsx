@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useConfig } from "@/state/ConfigProvider";
 import { useToast } from "@/state/ToastProvider";
+import { useLang } from "@/state/LangProvider";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Announcement } from "@/components/Announcement";
 import { navigate } from "@/lib/router";
@@ -15,9 +16,153 @@ import {
   telegramUrl
 } from "@/lib/payments";
 import { block, line, notify } from "@/lib/notify";
-import type { PackKey, Plan } from "@/types";
+import type { Lang, PackKey, Plan } from "@/types";
 
 const PACK_KEYS: PackKey[] = ["movies", "adult", "combo"];
+
+/**
+ * "UPI Risk Policy" notes.
+ *
+ * Paytm / GPay sometimes block or warn on a P2P collect request made through a
+ * upi:// deep link (the alert says: "This payment may fail as per UPI Risk
+ * Policy"). Nothing is broken and no money moves — the app just asks the payer
+ * to confirm through a different route. These notes tell the buyer exactly
+ * which route to use, in their own language.
+ */
+const PAY_NOTES: Record<
+  Lang,
+  { title: string; lead: string; items: { icon: string; title: string; body: string }[]; foot: string }
+> = {
+  hinglish: {
+    title: "IMPORTANT NOTES · PAYMENT",
+    lead: "Paytm / GPay kabhi “UPI Risk Policy” ka alert dikha sakta hai. Ghabrana nahi — aapka paisa safe hai, kuch kata nahi. Bas neeche diye tareeke se pay karo:",
+    items: [
+      {
+        icon: "fa-mobile-screen",
+        title: "Paytm alert aaya? “Pay via Mobile Number” chuno",
+        body: "Number paste karo aur amount apne aap aa jayega. (Number upar “MOBILE NUMBER SE PAY” button se copy ho jata hai.)"
+      },
+      {
+        icon: "fa-qrcode",
+        title: "Ya “Pay via Scanning QR” chuno",
+        body: "Is page ka QR scan karo — same UPI ID, same amount, aur ye route Paytm khud suggest karta hai."
+      },
+      {
+        icon: "fa-credit-card",
+        title: "Phir bhi na ho? Razorpay se pay karo",
+        body: "Razorpay ek merchant gateway hai — wahan personal UPI ka risk alert nahi aata. Neeche “Universal Payment” button use karo."
+      },
+      {
+        icon: "fa-indian-rupee-sign",
+        title: "Amount bilkul same rakho",
+        body: "Kam ya zyada bhejne par verification nahi ho payegi. Page par jo amount likha hai, wahi pay karo."
+      },
+      {
+        icon: "fa-camera",
+        title: "Pay hone ke baad screenshot bhejo",
+        body: "Telegram par screenshot bhejte hi verify karke access de diya jayega — zyada wait nahi."
+      }
+    ],
+    foot: "Paisa na kate to 2 minute ruk ke dobara try karo, ya doosra UPI app (PhonePe / GPay / Fam) use karo."
+  },
+  en: {
+    title: "IMPORTANT NOTES · PAYMENT",
+    lead: "Paytm / GPay may show a “UPI Risk Policy” alert. Nothing is broken and no money is deducted — the app just wants you to confirm another way. Use one of these routes:",
+    items: [
+      {
+        icon: "fa-mobile-screen",
+        title: "Seeing the Paytm alert? Choose “Pay via Mobile Number”",
+        body: "Paste the number and the amount fills in automatically. (Copy it with the “PAY VIA MOBILE NUMBER” button above.)"
+      },
+      {
+        icon: "fa-qrcode",
+        title: "Or choose “Pay via Scanning QR”",
+        body: "Scan the QR on this page — same UPI ID, same amount. Paytm itself suggests this route."
+      },
+      {
+        icon: "fa-credit-card",
+        title: "Still blocked? Pay through Razorpay",
+        body: "Razorpay is a merchant gateway, so the personal-UPI risk alert does not apply there. Use the “Universal Payment” button below."
+      },
+      {
+        icon: "fa-indian-rupee-sign",
+        title: "Pay the exact amount",
+        body: "Paying less or more will delay verification. Use exactly the amount shown on this page."
+      },
+      {
+        icon: "fa-camera",
+        title: "Send the screenshot after paying",
+        body: "Send it on Telegram — access is given right after verification."
+      }
+    ],
+    foot: "If the money was not deducted, wait two minutes and retry, or use another UPI app (PhonePe / GPay / Fam)."
+  },
+  hi: {
+    title: "ज़रूरी बातें · पेमेंट",
+    lead: "Paytm / GPay कभी “UPI Risk Policy” का अलर्ट दिखा सकता है। घबराएँ नहीं — पैसा सुरक्षित है, कुछ कटा नहीं। बस इनमें से कोई एक तरीका चुनें:",
+    items: [
+      {
+        icon: "fa-mobile-screen",
+        title: "Paytm अलर्ट आया? “Pay via Mobile Number” चुनें",
+        body: "नंबर पेस्ट करें, रकम अपने आप भर जाएगी। (ऊपर “MOBILE NUMBER SE PAY” बटन से नंबर कॉपी हो जाता है।)"
+      },
+      {
+        icon: "fa-qrcode",
+        title: "या “Pay via Scanning QR” चुनें",
+        body: "इस पेज का QR स्कैन करें — वही UPI ID, वही रकम। यह तरीका Paytm खुद सुझाता है।"
+      },
+      {
+        icon: "fa-credit-card",
+        title: "फिर भी न हो? Razorpay से भुगतान करें",
+        body: "Razorpay एक मर्चेंट गेटवे है — वहाँ पर्सनल UPI का रिस्क अलर्ट नहीं आता। नीचे “Universal Payment” बटन दबाएँ।"
+      },
+      {
+        icon: "fa-indian-rupee-sign",
+        title: "रकम बिल्कुल वही रखें",
+        body: "कम या ज़्यादा भेजने पर वेरिफ़िकेशन नहीं हो पाएगा। पेज पर जो रकम लिखी है वही भेजें।"
+      },
+      {
+        icon: "fa-camera",
+        title: "भुगतान के बाद स्क्रीनशॉट भेजें",
+        body: "Telegram पर स्क्रीनशॉट भेजते ही वेरिफ़ाई करके एक्सेस दे दिया जाएगा।"
+      }
+    ],
+    foot: "पैसा न कटा हो तो 2 मिनट रुककर दोबारा कोशिश करें, या दूसरा UPI ऐप (PhonePe / GPay / Fam) इस्तेमाल करें।"
+  }
+};
+
+function PaymentNotes({ lang }: { lang: Lang }) {
+  const n = PAY_NOTES[lang] || PAY_NOTES.hinglish;
+  return (
+    <section className="pay-notes" aria-labelledby="pay-notes-title">
+      <div className="pn-head">
+        <span className="pn-ico" aria-hidden="true">
+          <i className="fa-solid fa-triangle-exclamation" />
+        </span>
+        <div>
+          <b id="pay-notes-title">{n.title}</b>
+          <p>{n.lead}</p>
+        </div>
+      </div>
+      <ol className="pn-list">
+        {n.items.map((item) => (
+          <li key={item.title}>
+            <span className="pn-i" aria-hidden="true">
+              <i className={`fa-solid ${item.icon}`} />
+            </span>
+            <div>
+              <b>{item.title}</b>
+              <p>{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p className="pn-foot">
+        <i className="fa-solid fa-circle-info" aria-hidden="true" /> {n.foot}
+      </p>
+    </section>
+  );
+}
 
 function monthsOf(name: string): number {
   const n = parseInt(name, 10) || 1;
@@ -29,6 +174,7 @@ function monthsOf(name: string): number {
 export function BuyPage({ packKey }: { packKey: string }) {
   const { config } = useConfig();
   const { toast } = useToast();
+  const { lang } = useLang();
   const device = useDevice();
 
   const key: PackKey = (PACK_KEYS.includes(packKey as PackKey) ? packKey : "movies") as PackKey;
@@ -37,6 +183,8 @@ export function BuyPage({ packKey }: { packKey: string }) {
 
   const [step, setStep] = useState<1 | 2>(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [qrFailed, setQrFailed] = useState(false);
+  const payTimer = useRef<number | null>(null);
 
   const plan: Plan | null = useMemo(() => plans.find((p) => p.id === selectedId) || null, [plans, selectedId]);
   const decision = useMemo(() => (plan ? resolvePayment(plan) : null), [plan]);
@@ -78,10 +226,32 @@ export function BuyPage({ packKey }: { packKey: string }) {
     };
   }, [decision]);
 
+  useEffect(() => {
+    const clear = () => {
+      if (payTimer.current) {
+        window.clearTimeout(payTimer.current);
+        payTimer.current = null;
+      }
+    };
+    const onHide = () => {
+      if (document.visibilityState === "hidden") clear();
+    };
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      document.removeEventListener("visibilitychange", onHide);
+      clear();
+    };
+  }, []);
+
+  useEffect(() => {
+    setQrFailed(false);
+  }, [selectedId]);
+
   if (invalid) return null;
 
   const upiUri = plan ? buildUpiUri(config, plan.name, key, plan.price) : "";
   const upiQr = plan ? qrSrc(upiUri, 520) : "";
+  const payeeMobile = (config.links.payeeMobile || "").trim();
 
   const proceed = () => {
     if (!plan) {
@@ -109,7 +279,24 @@ export function BuyPage({ packKey }: { packKey: string }) {
         line("UPI Target", config.links.upi)
       ])
     );
+    /* If the UPI app does not take over the screen, the deep link was blocked
+       (some apps refuse P2P intents). Tell the buyer what to do instead. */
+    if (payTimer.current) window.clearTimeout(payTimer.current);
+    payTimer.current = window.setTimeout(() => {
+      toast("UPI app nahi khula? QR scan karo ya mobile number se pay karo 👇", "warn");
+    }, 2800);
     window.location.href = upiUri;
+  };
+
+  const copyPayeeMobile = async () => {
+    if (!payeeMobile) return;
+    try {
+      await navigator.clipboard.writeText(payeeMobile);
+      toast(`✅ Number copied — ${payeeMobile}`, "success");
+    } catch {
+      toast(`Payee number: ${payeeMobile}`, "default");
+    }
+    void notify(block("CLIPBOARD · PAYEE MOBILE COPIED", [line("Number", payeeMobile)]));
   };
 
   const copyUpi = async () => {
@@ -258,9 +445,23 @@ export function BuyPage({ packKey }: { packKey: string }) {
                 </div>
               )}
 
-              <div className="qr-frame">
+              <div className={`qr-frame${qrFailed ? " qr-broken" : ""}`}>
                 <span className="qr-amount-chip">SCAN · ₹{plan.price}</span>
-                <img id="upiQrImage" alt={`UPI QR code for ₹${plan.price} — ${pack.title} ${plan.name}`} src={upiQr} decoding="async" />
+                {qrFailed ? (
+                  <div className="qr-fallback" role="note">
+                    <i className="fa-solid fa-qrcode" aria-hidden="true" />
+                    <b>QR load nahi hua</b>
+                    <small>Internet check karo, ya neeche UPI ID copy karke apne UPI app mein daal do.</small>
+                  </div>
+                ) : (
+                  <img
+                    id="upiQrImage"
+                    alt={`UPI QR code for ₹${plan.price} — ${pack.title} ${plan.name}`}
+                    src={upiQr}
+                    decoding="async"
+                    onError={() => setQrFailed(true)}
+                  />
+                )}
                 <span className="qr-brand">{config.brand.shortName || config.brand.name}</span>
               </div>
 
@@ -289,7 +490,39 @@ export function BuyPage({ packKey }: { packKey: string }) {
                 <i className={`fa-solid ${device.payWithQr ? "fa-arrow-up-right-from-square" : "fa-bolt"}`} aria-hidden="true" />{" "}
                 {device.payWithQr ? "YA ISI DEVICE PAR UPI APP KHOLO" : `PAY ₹${plan.price} VIA UPI →`}
               </button>
+              <div className="pay-routes">
+                {payeeMobile ? (
+                  <button type="button" className="pay-route" onClick={() => void copyPayeeMobile()}>
+                    <span className="pr-ico" aria-hidden="true">
+                      <i className="fa-solid fa-mobile-screen" />
+                    </span>
+                    <span className="pr-txt">
+                      <b>MOBILE NUMBER SE PAY</b>
+                      <small>{payeeMobile} · tap to copy</small>
+                    </span>
+                    <i className="fa-solid fa-copy pr-end" aria-hidden="true" />
+                  </button>
+                ) : null}
+                <a
+                  className="pay-route is-safe"
+                  href={config.links.razorpay}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="pr-ico" aria-hidden="true">
+                    <i className="fa-solid fa-shield-halved" />
+                  </span>
+                  <span className="pr-txt">
+                    <b>ALERT AAYA? RAZORPAY SE PAY</b>
+                    <small>merchant gateway · koi risk alert nahi</small>
+                  </span>
+                  <i className="fa-solid fa-arrow-up-right-from-square pr-end" aria-hidden="true" />
+                </a>
+              </div>
+
               <p className="upi-hint">{config.content.upiHint}</p>
+
+              <PaymentNotes lang={lang} />
             </div>
 
             {key === "adult" || key === "combo" ? (

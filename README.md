@@ -226,6 +226,33 @@ Studio → **Announcement** — poori site ka offer banner wahin se control hota
 
 ---
 
+### ⚠️ "UPI Risk Policy" alert (Paytm / GPay)
+
+Paytm kabhi deep link (`upi://pay?...`) par **"This payment may fail as per UPI Risk Policy"**
+dikhata hai. Ye **P2P collect request** par app ki safety restriction hai — paisa nahi katta,
+payment fail nahi hota, bas app doosra tareeka maangta hai.
+
+Site iske liye 3 route deti hai (payment page par, har plan ke saath):
+
+| Route | Kab | Kahan |
+|---|---|---|
+| **QR scan** | Desktop par, ya doosre phone se | Bada QR + `SCAN · ₹X` chip |
+| **Mobile number se pay** | Paytm ka "Pay via Mobile Number" | Studio → Links → *Payee mobile number* set karo, phir ek-tap copy button aata hai |
+| **Razorpay (merchant)** | Alert baar-baar aaye | Razorpay link — merchant gateway, wahan personal-UPI risk alert nahi aata |
+
+- Payment page par **"IMPORTANT NOTES · PAYMENT"** panel sab explain karta hai — **English /
+  Hinglish / हिन्दी** mein, aur config se independent hai (publish kiye bina bhi dikhta hai).
+- UPI app na khule to 2.8s baad toast guide karta hai ("QR scan karo ya mobile number se pay karo").
+- QR image load na ho to graceful fallback: UPI ID + COPY + deep link — buyer kabhi stuck nahi hota.
+- **Payee mobile number**: Studio → Links → `Payee mobile number` (10 digit, optional).
+  Khali chhodo to wo button nahi dikhega. Ye wahi number hona chahiye jo UPI ID se juda hai.
+
+> Long-term: personal VPA (`@fam`, `@okhdfcbank` etc.) par repeated P2P transfers PSP ko flag
+> kar dete hain. Agar alert roz aaye to **business/merchant UPI** lo ya **Razorpay** ko primary
+> route banao — dono par ye restriction nahi aati.
+
+---
+
 ### 💰 OTT vs Timepass Premium (price comparison)
 
 Home page par pricing ke neeche ek live comparison card hai:
